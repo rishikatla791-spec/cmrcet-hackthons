@@ -1,0 +1,140 @@
+rules_version = '2';
+
+// Access model
+//   - Only verified Google accounts from settings/public.allowedDomain can use the portal.
+//   - Roles live in roles/{email}: "admin" | "coordinator". No document means "student".
+//   - Staff = admin or coordinator.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Helpers ----------
+
+    function settingsDoc() {
+      return get(/databases/$(database)/documents/settings/public).data;
+    }
+
+    function signedIn() {
+      return request.auth != null && request.auth.token.email is string;
+    }
+
+    function userEmail() {
+      return request.auth.token.email.lower();
+    }
+
+    function isMember() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && userEmail().split('@')[1] == settingsDoc().allowedDomain;
+    }
+
+    function roleOf() {
+      let rolePath = /databases/$(database)/documents/roles/$(userEmail());
+      return exists(rolePath) ? get(rolePath).data.role : 'student';
+    }
+
+    function isStaff() {
+      return isMember() && roleOf() in ['admin', 'coordinator'];
+    }
+
+    function isAdmin() {
+      return isMember() && roleOf() == 'admin';
+    }
+
+    function unchanged(field) {
+      return request.resource.data.get(field, null) == resource.data.get(field, null);
+    }
+
+    function validEvent() {
+      let d = request.resource.data;
+      return d.name is string && d.name.size() > 0 && d.name.size() <= 150
+        && d.mode in ['offline', 'online', 'hybrid']
+        && d.visibility in ['published', 'pending', 'hidden'];
+    }
+
+    function validTeam() {
+      let d = request.resource.data;
+      return d.eventId is string
+        && d.teamName is string && d.teamName.size() > 0 && d.teamName.size() <= 80
+        && d.members is list && d.members.size() >= 1 && d.members.size() <= 15;
+    }
+
+    // ---------- Settings ----------
+    // Public so the sign-in screen can show the college name and restrict the Google account picker.
+    match /settings/public {
+      allow read: if true;
+      allow create: if false;
+      allow update: if isAdmin() && unchanged('allowedDomain');
+      allow delete: if false;
+    }
+
+    // ---------- Roles ----------
+    match /roles/{roleEmail} {
+      allow read: if isMember() && (roleEmail == userEmail() || isStaff());
+      allow create, update: if isAdmin()
+        && roleEmail == roleEmail.lower()
+        && request.resource.data.role in ['admin', 'coordinator'];
+      allow delete: if isAdmin() && roleEmail != userEmail();
+    }
+
+    // ---------- User profiles ----------
+    match /users/{uid} {
+      allow read: if isMember() && (uid == request.auth.uid || isStaff());
+      allow create: if isMember()
+        && uid == request.auth.uid
+        && request.resource.data.email == userEmail();
+      allow update: if isMember() && uid == request.auth.uid && unchanged('email');
+      allow delete: if isAdmin();
+    }
+
+    // ---------- Events ----------
+    // Imported events may be "pending" (awaiting approval) or "hidden"; only staff see those.
+    match /events/{eventId} {
+      allow read: if isStaff() || (isMember() && resource.data.visibility == 'published');
+      allow create, update: if isStaff() && validEvent();
+      allow delete: if isStaff();
+    }
+
+    // ---------- Team registrations ----------
+    match /teams/{teamId} {
+      allow read: if isMember();
+
+      allow create: if isMember() && validTeam()
+        && request.resource.data.leaderUid == request.auth.uid
+        && request.resource.data.status == 'pending';
+
+      // Leaders may edit their own team only while it is still pending verification.
+      allow update: if isStaff()
+        || (isMember() && validTeam()
+            && resource.data.leaderUid == request.auth.uid
+            && resource.data.status == 'pending'
+            && request.resource.data.status == 'pending'
+            && unchanged('leaderUid')
+            && unchanged('eventId')
+            && unchanged('result'));
+
+      allow delete: if isStaff()
+        || (isMember()
+            && resource.data.leaderUid == request.auth.uid
+            && resource.data.status == 'pending');
+    }
+
+    // ---------- Importer health (written by the importer with the Admin SDK) ----------
+    match /status/{statusId} {
+      allow read: if isStaff();
+      allow write: if false;
+    }
+
+    // ---------- Event suggestions from students ----------
+    match /suggestions/{suggestionId} {
+      allow read: if isStaff()
+        || (isMember() && resource.data.submittedBy == request.auth.uid);
+      allow create: if isMember()
+        && request.resource.data.submittedBy == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0;
+      allow update, delete: if isStaff();
+    }
+  }
+}

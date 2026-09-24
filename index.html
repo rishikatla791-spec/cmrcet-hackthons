@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hackathon and project competition tracker for the college.">
+  <meta name="theme-color" content="#1f3a93">
+  <title>Hackathon Portal</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f3a93'/%3E%3Cpath d='M9 11h14M9 16h10M9 21h12' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* =====================================================================
+       1. DESIGN TOKENS
+       ===================================================================== */
+    :root {
+      --bg: #f5f6fa;
+      --surface: #ffffff;
+      --surface-2: #f0f2f7;
+      --surface-3: #e6e9f1;
+      --border: #dfe3ec;
+      --border-strong: #c8cedb;
+      --text: #151a2d;
+      --text-2: #4a5270;
+      --text-3: #7b8299;
+      --ink: #1f3a93;          /* whiteboard blue marker */
+      --ink-soft: #e8edfb;
+      --marker: #d23f35;       /* whiteboard red marker */
+      --marker-soft: #fdecea;
+      --green: #16804a;
+      --green-soft: #e3f5eb;
+      --amber: #b86a00;
+      --amber-soft: #fff3de;
+      --violet: #6b3fc2;
+      --violet-soft: #f0e9fd;
+      --grey-soft: #eceef3;
+      --shadow-sm: 0 1px 2px rgba(20, 26, 45, .06);
+      --shadow: 0 1px 3px rgba(20, 26, 45, .06), 0 8px 24px rgba(20, 26, 45, .06);
+      --shadow-lg: 0 24px 64px rgba(20, 26, 45, .22);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --focus: 0 0 0 3px rgba(31, 58, 147, .28);
+      --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0e111b;
+        --surface: #161a28;
+        --surface-2: #1c2132;
+        --surface-3: #252b40;
+        --border: #2a3047;
+        --border-strong: #3a4260;
+        --text: #eceef6;
+        --text-2: #b3b9cf;
+        --text-3: #7f87a3;
+        --ink: #8aa6ff;
+        --ink-soft: #1d2745;
+        --marker: #ff7a70;
+        --marker-soft: #3a1d1d;
+        --green: #4cc98a;
+        --green-soft: #15301f;
+        --amber: #f0b454;
+        --amber-soft: #33270f;
+        --violet: #b89bff;
+        --violet-soft: #2a2143;
+        --grey-soft: #22273a;
+        --shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+        --shadow-lg: 0 24px 64px rgba(0, 0, 0, .6);
+        --focus: 0 0 0 3px rgba(138, 166, 255, .35);
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0e111b;
+      --surface: #161a28;
+      --surface-2: #1c2132;
+      --surface-3: #252b40;
+      --border: #2a3047;
+      --border-strong: #3a4260;
+      --text: #eceef6;
+      --text-2: #b3b9cf;
+      --text-3: #7f87a3;
+      --ink: #8aa6ff;
+      --ink-soft: #1d2745;
+      --marker: #ff7a70;
+      --marker-soft: #3a1d1d;
+      --green: #4cc98a;
+      --green-soft: #15301f;
+      --amber: #f0b454;
+      --amber-soft: #33270f;
+      --violet: #b89bff;
+      --violet-soft: #2a2143;
+      --grey-soft: #22273a;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+      --shadow-lg: 0 24px 64px rgba(0, 0, 0, .6);
+      --focus: 0 0 0 3px rgba(138, 166, 255, .35);
+      color-scheme: dark;
+    }
+
+    /* =====================================================================
+       2. BASE
+       ===================================================================== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { margin: 0; line-height: 1.25; letter-spacing: -.01em; }
+    p { margin: 0; }
+    a { color: var(--ink); }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    img { max-width: 100%; display: block; }
+    .num { font-variant-numeric: tabular-nums; }
+    .muted { color: var(--text-3); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    :focus-visible { outline: none; box-shadow: var(--focus); border-radius: 6px; }
+
+    /* =====================================================================
+       3. LAYOUT
+       ===================================================================== */
+    .container { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+    @media (max-width: 600px) { .container { padding: 0 16px; } }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      backdrop-filter: saturate(1.4) blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner { display: flex; align-items: center; gap: 20px; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; min-width: 0; }
+    .brand-mark {
+      min-width: 38px; height: 38px; padding: 0 9px; border-radius: 10px; flex: none;
+      display: grid; place-items: center;
+      background: var(--ink); color: #fff; font-weight: 800; font-size: 13px; letter-spacing: .02em;
+      overflow: hidden;
+    }
+    .brand-mark:has(img) { padding: 0; width: 38px; }
+    .brand-mark img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+    .brand-text { display: flex; flex-direction: column; min-width: 0; }
+    .brand-title { font-weight: 800; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-sub { font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .nav { display: flex; gap: 4px; margin-left: auto; }
+    .nav a {
+      padding: 8px 12px; border-radius: 8px; text-decoration: none;
+      color: var(--text-2); font-weight: 600; font-size: 14px; white-space: nowrap;
+    }
+    .nav a:hover { background: var(--surface-2); color: var(--text); }
+    .nav a.active { background: var(--ink-soft); color: var(--ink); }
+
+    .user-menu { position: relative; }
+    .avatar-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+      background: var(--surface-2); cursor: pointer; padding: 0; overflow: hidden;
+      display: grid; place-items: center; font-weight: 700; font-size: 13px;
+    }
+    .avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+    .menu {
+      position: absolute; right: 0; top: calc(100% + 8px); min-width: 240px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      box-shadow: var(--shadow-lg); padding: 6px; display: none;
+    }
+    .menu.open { display: block; }
+    .menu-head { padding: 10px 12px; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
+    .menu-head strong { display: block; font-size: 14px; }
+    .menu-head span { font-size: 12px; color: var(--text-3); word-break: break-all; }
+    .menu button {
+      display: flex; width: 100%; align-items: center; gap: 10px; text-align: left;
+      padding: 9px 12px; border: 0; background: none; border-radius: 8px; cursor: pointer; font-size: 14px;
+    }
+    .menu button:hover { background: var(--surface-2); }
+
+    .mobile-nav { display: none; }
+    @media (max-width: 860px) {
+      .nav { display: none; }
+      .user-menu { margin-left: auto; }
+      .mobile-nav {
+        display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+        background: var(--surface); border-top: 1px solid var(--border);
+        padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+      }
+      .mobile-nav a {
+        flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+        padding: 6px 4px; font-size: 11px; font-weight: 600; color: var(--text-3); text-decoration: none; border-radius: 8px;
+      }
+      .mobile-nav a.active { color: var(--ink); background: var(--ink-soft); }
+      .mobile-nav svg { width: 20px; height: 20px; }
+      main { padding-bottom: 84px; }
+    }
+
+    main { padding: 28px 0 56px; }
+    .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+    .page-head h1 { font-size: 26px; font-weight: 800; }
+    .page-head p { color: var(--text-2); margin-top: 4px; }
+    .page-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* =====================================================================
+       4. COMPONENTS
+       ===================================================================== */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 38px; padding: 0 16px; border-radius: 9px; border: 1px solid var(--border-strong);
+      background: var(--surface); color: var(--text); font-weight: 700; font-size: 14px;
+      cursor: pointer; text-decoration: none; white-space: nowrap; transition: background .15s, border-color .15s;
+    }
+    .btn:hover { background: var(--surface-2); }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    .btn svg { width: 16px; height: 16px; flex: none; }
+    .btn-primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+    :root[data-theme="dark"] .btn-primary { color: #0e111b; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn-primary { color: #0e111b; } }
+    .btn-primary:hover { background: color-mix(in srgb, var(--ink) 88%, #000); }
+    .btn-danger { color: var(--marker); border-color: color-mix(in srgb, var(--marker) 40%, var(--border)); }
+    .btn-danger:hover { background: var(--marker-soft); }
+    .btn-ghost { border-color: transparent; background: transparent; }
+    .btn-sm { height: 32px; padding: 0 12px; font-size: 13px; border-radius: 8px; }
+    .btn-lg { height: 48px; padding: 0 22px; font-size: 15px; border-radius: 11px; }
+    .icon-btn { width: 36px; padding: 0; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+    .card-pad { padding: 20px; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px;
+      border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap;
+    }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .badge.plain::before { display: none; }
+    .b-open { background: var(--green-soft); color: var(--green); }
+    .b-closing { background: var(--marker-soft); color: var(--marker); }
+    .b-ongoing { background: var(--violet-soft); color: var(--violet); }
+    .b-closed { background: var(--amber-soft); color: var(--amber); }
+    .b-completed { background: var(--grey-soft); color: var(--text-3); }
+    .b-pending { background: var(--amber-soft); color: var(--amber); }
+    .b-verified, .b-approved { background: var(--green-soft); color: var(--green); }
+    .b-rejected { background: var(--marker-soft); color: var(--marker); }
+    .b-info { background: var(--ink-soft); color: var(--ink); }
+
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 9px;
+      border-radius: 6px; font-size: 12px; font-weight: 700;
+      background: var(--surface-2); color: var(--text-2); white-space: nowrap;
+    }
+    .chip svg { width: 13px; height: 13px; }
+    .chip-home { background: var(--ink-soft); color: var(--ink); }
+    .chip-review { background: var(--amber-soft); color: var(--amber); }
+
+    /* Forms */
+    .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .field label { font-size: 13px; font-weight: 700; color: var(--text-2); }
+    .field .hint { font-size: 12px; color: var(--text-3); }
+    .req { color: var(--marker); }
+    .input, .select, .textarea {
+      width: 100%; height: 40px; padding: 0 12px; border-radius: 9px;
+      border: 1px solid var(--border-strong); background: var(--surface); color: var(--text);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .textarea { height: auto; min-height: 90px; padding: 10px 12px; resize: vertical; }
+    .select { appearance: none; padding-right: 34px; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237b8299' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; }
+    .input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--ink); box-shadow: var(--focus); }
+    .input[readonly] { background: var(--surface-2); color: var(--text-2); }
+    .check { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
+    .check input { width: 18px; height: 18px; accent-color: var(--ink); }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .form-grid .span-2 { grid-column: 1 / -1; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-section { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--text-3); grid-column: 1 / -1; padding-top: 6px; border-top: 1px solid var(--border); margin-top: 4px; }
+    .form-section:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+    .form-error { color: var(--marker); font-size: 13px; font-weight: 600; min-height: 1px; }
+
+    /* Tabs & filters */
+    .tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px;
+      border-radius: 10px; border: 1px solid var(--border); background: var(--surface);
+      font-weight: 700; font-size: 14px; color: var(--text-2); cursor: pointer; white-space: nowrap;
+    }
+    .tab:hover { border-color: var(--border-strong); color: var(--text); }
+    .tab.active { background: var(--text); border-color: var(--text); color: var(--bg); }
+    .tab .count { font-size: 12px; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); }
+    .tab.active .count { background: color-mix(in srgb, var(--bg) 20%, transparent); color: var(--bg); }
+
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 24px; align-items: center; }
+    .search { position: relative; flex: 1 1 260px; }
+    .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-3); pointer-events: none; }
+    .search .input { padding-left: 36px; }
+    .filters .select { width: auto; flex: 0 1 180px; }
+    @media (max-width: 600px) { .filters .select { flex: 1 1 calc(50% - 5px); } }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 24px; }
+    @media (max-width: 860px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .stat { padding: 16px 18px; }
+    .stat-label { font-size: 12px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; }
+    .stat-value { font-size: 28px; font-weight: 800; margin-top: 4px; letter-spacing: -.02em; }
+    .stat-note { font-size: 12px; color: var(--text-3); }
+
+    /* Event cards */
+    .section-title { display: flex; align-items: center; gap: 10px; margin: 28px 0 12px; font-size: 17px; font-weight: 800; }
+    .section-title:first-child { margin-top: 0; }
+    .section-title .count { font-size: 13px; color: var(--text-3); font-weight: 700; }
+    .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    @media (max-width: 400px) { .event-grid { grid-template-columns: 1fr; } }
+    .event-card {
+      position: relative; display: flex; flex-direction: column; gap: 12px; padding: 18px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; text-align: left;
+    }
+    .event-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); transform: translateY(-1px); }
+    .event-card.is-completed { opacity: .72; }
+    .event-card.is-pinned { border-color: color-mix(in srgb, var(--ink) 45%, var(--border)); }
+    .card-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .pin { margin-left: auto; color: var(--ink); display: inline-flex; }
+    .pin svg { width: 16px; height: 16px; }
+    .event-name { font-size: 17px; font-weight: 800; }
+    .event-org { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+    .meta { display: grid; gap: 6px; font-size: 13px; color: var(--text-2); margin: 0; }
+    .meta div { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .meta svg { width: 15px; height: 15px; color: var(--text-3); flex: none; }
+    .meta span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .card-foot { display: flex; align-items: center; gap: 14px; padding-top: 12px; margin-top: auto; border-top: 1px dashed var(--border); font-size: 13px; }
+    .card-foot .tally { display: flex; align-items: baseline; gap: 4px; color: var(--text-3); }
+    .card-foot .tally strong { font-size: 15px; color: var(--text); }
+    .countdown { margin-left: auto; font-weight: 700; font-size: 12px; color: var(--text-2); }
+    .countdown.urgent { color: var(--marker); }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+    table.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .table th {
+      text-align: left; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
+      color: var(--text-3); background: var(--surface-2); padding: 11px 14px; white-space: nowrap; border-bottom: 1px solid var(--border);
+    }
+    .table td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .table tr:last-child td { border-bottom: 0; }
+    .table .actions { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
+    .table .select { height: 32px; font-size: 13px; min-width: 140px; }
+    .members { display: grid; gap: 2px; font-size: 13px; }
+    .members span { color: var(--text-3); }
+
+    /* Empty & loading */
+    .empty { text-align: center; padding: 56px 20px; color: var(--text-3); border: 1px dashed var(--border-strong); border-radius: var(--radius); background: var(--surface); }
+    .empty svg { width: 40px; height: 40px; margin: 0 auto 12px; opacity: .6; }
+    .empty h3 { color: var(--text); font-size: 16px; margin-bottom: 4px; }
+    .skeleton { background: linear-gradient(90deg, var(--surface-2), var(--surface-3), var(--surface-2)); background-size: 200% 100%; animation: shimmer 1.3s infinite; border-radius: var(--radius); }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+    .spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--surface-3); border-top-color: var(--ink); animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Modal */
+    dialog.modal {
+      width: min(640px, calc(100vw - 24px)); max-height: calc(100vh - 32px); padding: 0;
+      border: 1px solid var(--border); border-radius: 18px; background: var(--surface); color: var(--text);
+      box-shadow: var(--shadow-lg); overflow: hidden;
+    }
+    dialog.modal.wide { width: min(860px, calc(100vw - 24px)); }
+    dialog.modal.narrow { width: min(440px, calc(100vw - 24px)); }
+    dialog.modal::backdrop { background: rgba(10, 14, 28, .55); backdrop-filter: blur(3px); }
+    .modal-inner { display: flex; flex-direction: column; max-height: calc(100vh - 34px); }
+    .modal-header { display: flex; align-items: flex-start; gap: 12px; padding: 20px 22px 16px; border-bottom: 1px solid var(--border); }
+    .modal-header h2 { font-size: 19px; font-weight: 800; }
+    .modal-header p { color: var(--text-2); font-size: 13px; margin-top: 3px; }
+    .modal-header .btn { margin-left: auto; flex: none; }
+    .modal-body { padding: 20px 22px; overflow-y: auto; }
+    .modal-footer { display: flex; gap: 8px; justify-content: flex-end; padding: 14px 22px; border-top: 1px solid var(--border); background: var(--surface-2); flex-wrap: wrap; }
+    .modal-footer .spacer { margin-right: auto; }
+
+    .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; margin: 4px 0 18px; }
+    @media (max-width: 600px) { .detail-grid { grid-template-columns: 1fr; } }
+    .detail-grid dt { font-size: 12px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; }
+    .detail-grid dd { margin: 2px 0 0; font-weight: 600; }
+    .detail-block { margin-top: 18px; }
+    .detail-block h3 { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+    .note { padding: 12px 14px; border-radius: 10px; background: var(--amber-soft); color: var(--amber); font-size: 13px; font-weight: 600; }
+    .note.info { background: var(--ink-soft); color: var(--ink); }
+    .team-list { display: grid; gap: 8px; }
+    .team-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; }
+    .team-row .grow { flex: 1; min-width: 0; }
+
+    .member-rows { display: grid; gap: 8px; }
+    .member-row { display: grid; grid-template-columns: 1fr 160px 36px; gap: 8px; align-items: center; }
+    @media (max-width: 600px) { .member-row { grid-template-columns: 1fr 1fr 36px; } }
+
+    /* Toasts */
+    .toasts { position: fixed; z-index: 100; right: 20px; bottom: 20px; display: grid; gap: 8px; max-width: min(380px, calc(100vw - 40px)); }
+    @media (max-width: 860px) { .toasts { bottom: 90px; right: 16px; left: 16px; max-width: none; } }
+    .toast {
+      padding: 12px 16px; border-radius: 11px; background: var(--text); color: var(--bg);
+      box-shadow: var(--shadow-lg); font-size: 14px; font-weight: 600; animation: rise .2s ease-out;
+    }
+    .toast.error { background: var(--marker); color: #fff; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+
+    /* Full-screen states (sign-in, setup) */
+    .center-screen { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+    .auth-card { width: min(460px, 100%); padding: 36px 32px; text-align: center; }
+    .auth-card .brand-mark { display: inline-grid; min-width: 56px; height: 56px; padding: 0 14px; border-radius: 14px; font-size: 18px; margin: 0 auto 18px; }
+    .auth-card h1 { font-size: 22px; font-weight: 800; }
+    .auth-card p { color: var(--text-2); margin-top: 8px; }
+    .auth-card .btn { width: 100%; margin-top: 24px; }
+    .auth-card .note { margin-top: 18px; text-align: left; }
+    .auth-foot { margin-top: 18px; font-size: 12px; color: var(--text-3); }
+    .setup-card { width: min(640px, 100%); padding: 32px; }
+    .setup-card ol { padding-left: 20px; color: var(--text-2); display: grid; gap: 8px; }
+    .setup-card code { background: var(--surface-2); padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+
+    /* Admin */
+    .admin-tabs { margin-bottom: 18px; }
+    .admin-section + .admin-section { margin-top: 28px; }
+    .admin-section h2 { font-size: 17px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .inline-form { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 14px; }
+    .inline-form .field { flex: 1 1 220px; }
+
+    /* Board (TV) mode */
+    .board { min-height: 100vh; display: flex; flex-direction: column; background: var(--surface); }
+    .board-head { display: flex; align-items: center; gap: 16px; padding: 18px 28px; border-bottom: 3px solid var(--marker); flex-wrap: wrap; }
+    .board-head h1 { font-size: clamp(20px, 2.4vw, 34px); font-weight: 800; color: var(--marker); }
+    .board-head .clock { margin-left: auto; font-size: clamp(16px, 1.6vw, 24px); font-weight: 800; color: var(--ink); }
+    .board-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .board-controls .select { width: auto; }
+    .board-scroll { flex: 1; overflow: hidden; position: relative; }
+    .board-table { width: 100%; border-collapse: collapse; font-size: clamp(14px, 1.25vw, 21px); }
+    .board-table th {
+      position: sticky; top: 0; background: var(--surface); color: var(--marker); text-align: left;
+      font-weight: 800; padding: 14px 16px; border-bottom: 2px solid var(--ink); white-space: nowrap; z-index: 1;
+    }
+    .board-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); color: var(--ink); font-weight: 600; }
+    .board-table td.big { font-weight: 800; font-size: 1.1em; }
+    .board-table tr.done td { opacity: .5; }
+    .board-table .num { text-align: center; }
+    .board:fullscreen .board-controls { display: none; }
+    @media (max-width: 860px) { .board-scroll { overflow: auto; } .board-head { padding: 14px 16px; } }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <div style="padding:40px;text-align:center;font-family:sans-serif">This portal needs JavaScript enabled.</div>
+  </noscript>
+
+  <div id="app">
+    <div class="center-screen"><div class="spinner" role="status" aria-label="Loading"></div></div>
+  </div>
+
+  <dialog id="modal" class="modal" aria-modal="true">
+    <div id="modal-content"></div>
+  </dialog>
+
+  <dialog id="confirm" class="modal narrow" aria-modal="true">
+    <div class="modal-inner">
+      <div class="modal-header"><div><h2 id="confirm-title">Are you sure?</h2><p id="confirm-text"></p></div></div>
+      <div class="modal-footer">
+        <button class="btn" data-confirm="no">Cancel</button>
+        <button class="btn btn-primary" data-confirm="yes" id="confirm-yes">Confirm</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script type="module">
+    /* =====================================================================
+       1. IMPORTS
+       ===================================================================== */
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+    import {
+      getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+    } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+    import {
+      getFirestore, doc, collection, query, where, onSnapshot,
+      addDoc, setDoc, updateDoc, deleteDoc, writeBatch, serverTimestamp,
+    } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+
+    /* =====================================================================
+       2. CONSTANTS  (application vocabulary — all college data lives in Firestore)
+       ===================================================================== */
+    const CONFIG_URL = 'config/app.config.json';
+    const SHEETJS_URL = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs';
+    const THEME_KEY = 'hp-theme';
+
+    const COL = {
+      settings: 'settings', roles: 'roles', users: 'users', events: 'events',
+      teams: 'teams', suggestions: 'suggestions', status: 'status',
+    };
+    const SETTINGS_DOC = 'public';
+
+    const ROLES = { admin: 'Admin', coordinator: 'Coordinator', student: 'Student' };
+
+    const MODES = { offline: 'In person', online: 'Online', hybrid: 'Hybrid' };
+
+    // Where an event came from. Unknown keys (new importer sources) are shown as-is.
+    const SOURCES = {
+      manual: 'Added by staff', suggestion: 'Student suggestion',
+      unstop: 'Unstop', devfolio: 'Devfolio', devpost: 'Devpost', hack2skill: 'Hack2Skill',
+    };
+
+    const VISIBILITY = { published: 'Published', pending: 'Awaiting approval', hidden: 'Hidden' };
+
+    const REGIONS = [
+      { key: 'home',    rank: 1, label: (s) => s.homeRegionLabel || 'Home city' },
+      { key: 'state',   rank: 2, label: (s) => `Rest of ${s.homeState || 'state'}` },
+      { key: 'other',   rank: 3, label: () => 'Other States' },
+      { key: 'virtual', rank: 4, label: () => 'Virtual' },
+    ];
+
+    const STATUS = {
+      closing:   { rank: 0, label: 'Closing soon' },
+      open:      { rank: 1, label: 'Open' },
+      ongoing:   { rank: 2, label: 'Happening now' },
+      closed:    { rank: 3, label: 'Registration closed' },
+      completed: { rank: 4, label: 'Completed' },
+    };
+
+    const STATUS_FILTERS = {
+      all: 'All statuses', active: 'Not completed', closing: 'Closing soon', open: 'Open',
+      ongoing: 'Happening now', closed: 'Registration closed', completed: 'Completed',
+    };
+
+    const TEAM_STATUS = { pending: 'Pending', verified: 'Verified', rejected: 'Rejected' };
+    const REVIEW_STATUS = { ...TEAM_STATUS, approved: 'Approved' };
+    const TEAM_RESULTS = {
+      '': 'No result yet', participated: 'Participated', shortlisted: 'Shortlisted',
+      finalist: 'Finalist', runner_up: 'Runner-up', winner: 'Winner',
+    };
+
+    // Event form schema — drives the form, parsing and validation from one place.
+    const EVENT_FIELDS = [
+      { section: 'Basics' },
+      { key: 'name', label: 'Event name', type: 'text', required: true, span: 2, max: 150 },
+      { key: 'organizer', label: 'Organizer', type: 'text', hint: 'College or company hosting the event' },
+      { key: 'mode', label: 'Mode', type: 'select', options: MODES, required: true },
+      { key: 'city', label: 'City', type: 'text', list: 'city-options' },
+      { key: 'state', label: 'State', type: 'text', list: 'state-options' },
+      { key: 'venue', label: 'Venue / campus', type: 'text', span: 2 },
+      { section: 'Dates' },
+      { key: 'registrationDeadline', label: 'Registration deadline', type: 'date' },
+      { key: 'shortlistDate', label: 'Shortlist announcement', type: 'date' },
+      { key: 'startDate', label: 'Event start', type: 'date', required: true },
+      { key: 'endDate', label: 'Event end', type: 'date', hint: 'Leave empty for a one-day event' },
+      { section: 'Details' },
+      { key: 'registrationUrl', label: 'Registration link', type: 'url', span: 2 },
+      { key: 'domains', label: 'Themes / domains', type: 'list', span: 2, hint: 'Comma separated, e.g. AI, IoT, Web' },
+      { key: 'teamSizeMin', label: 'Min team size', type: 'number', min: 1 },
+      { key: 'teamSizeMax', label: 'Max team size', type: 'number', min: 1 },
+      { key: 'prize', label: 'Prizes', type: 'text', span: 2 },
+      { key: 'description', label: 'Description', type: 'textarea', span: 2 },
+      { section: 'Participation recorded outside the portal' },
+      { key: 'offlineCounts.teams', label: 'Teams', type: 'number', min: 0, hint: 'Added to verified portal teams' },
+      { key: 'offlineCounts.students', label: 'Students', type: 'number', min: 0 },
+      { section: 'Display' },
+      { key: 'pinned', label: 'Pin to top of the list', type: 'checkbox' },
+      { key: 'needsReview', label: 'Needs review (details uncertain)', type: 'checkbox' },
+      { key: 'reviewNote', label: 'Review note', type: 'text', span: 2 },
+    ];
+
+    const SUGGEST_FIELDS = ['name', 'organizer', 'mode', 'city', 'state', 'registrationDeadline', 'startDate', 'endDate', 'registrationUrl'];
+
+    const SETTINGS_FIELDS = [
+      { section: 'College' },
+      { key: 'collegeName', label: 'College name', type: 'text', required: true, span: 2 },
+      { key: 'collegeShortName', label: 'Short name', type: 'text', required: true },
+      { key: 'portalTitle', label: 'Portal title', type: 'text', required: true },
+      { key: 'logoUrl', label: 'Logo URL', type: 'url', span: 2, hint: 'Optional. Square image works best.' },
+      { key: 'allowedDomain', label: 'Allowed email domain', type: 'text', readonly: true, span: 2, hint: 'Changed only through the seed script, to avoid locking everyone out.' },
+      { section: 'Priority regions' },
+      { key: 'homeRegionLabel', label: 'Top priority label', type: 'text', required: true },
+      { key: 'homeState', label: 'Home state', type: 'text', required: true },
+      { key: 'homeCities', label: 'Cities counted as top priority', type: 'list', textarea: true, span: 2, hint: 'Comma or new-line separated' },
+      { section: 'Students & teams' },
+      { key: 'departments', label: 'Departments', type: 'list', textarea: true, span: 2 },
+      { key: 'yearsOfStudy', label: 'Years of study', type: 'numlist', hint: 'e.g. 1, 2, 3, 4' },
+      { key: 'defaultMaxTeamSize', label: 'Default max team size', type: 'number', min: 1, required: true },
+      { key: 'closingSoonDays', label: '"Closing soon" window (days)', type: 'number', min: 0, required: true },
+      { key: 'academicYearStartMonth', label: 'Academic year starts in month (1–12)', type: 'number', min: 1, max: 12, required: true },
+      { section: 'Automatic import from hackathon platforms' },
+      { key: 'autoPublishImports', label: 'Publish imported events immediately (otherwise they wait in Approvals)', type: 'checkbox', span: 2 },
+      { key: 'importSources.unstop', label: 'Import from Unstop', type: 'checkbox' },
+      { key: 'importSources.devfolio', label: 'Import from Devfolio', type: 'checkbox' },
+      { key: 'importSources.hack2skill', label: 'Import from Hack2Skill (in-person events need a city set)', type: 'checkbox' },
+      { key: 'importSources.devpost', label: 'Import from Devpost (mostly international, online)', type: 'checkbox' },
+      { key: 'importCountry', label: 'Country for in-person events', type: 'text', hint: 'In-person events elsewhere are skipped. Online events are always kept.' },
+      { key: 'timeZone', label: 'Time zone', type: 'text', required: true, hint: 'e.g. Asia/Kolkata' },
+      { key: 'importStaleHours', label: 'Warn if no import for (hours)', type: 'number', min: 1, required: true, hint: 'The importer runs twice a day' },
+    ];
+
+    const ICONS = {
+      search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+      pin: '<path d="M12 17v5M9 3h6l-1 6 4 4H6l4-4-1-6z"/>',
+      place: '<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+      calendar: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 3v3M16 3v3"/>',
+      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+      users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/>',
+      plus: '<path d="M12 5v14M5 12h14"/>',
+      close: '<path d="M6 6l12 12M18 6 6 18"/>',
+      link: '<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>',
+      download: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+      tv: '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8"/>',
+      grid: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>',
+      team: '<circle cx="12" cy="7.5" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/>',
+      bulb: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+      shield: '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6z"/>',
+      edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/>',
+      trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+      expand: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
+      back: '<path d="m15 18-6-6 6-6"/>',
+      moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+      logout: '<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h11"/>',
+      user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+      inbox: '<path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6z"/>',
+    };
+
+    /* =====================================================================
+       3. UTILITIES
+       ===================================================================== */
+    const $ = (sel, root = document) => root.querySelector(sel);
+    const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+
+    const icon = (name, extra = '') =>
+      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${ICONS[name] || ''}</svg>`;
+
+    const safeUrl = (url) => (/^https?:\/\//i.test(String(url || '').trim()) ? String(url).trim() : '');
+
+    const norm = (text) => String(text || '').trim().toLowerCase();
+
+    const splitList = (text) => String(text || '').split(/[,\n]/).map((s) => s.trim()).filter(Boolean);
+
+    const unique = (items) => [...new Set(items.filter(Boolean))];
+
+    const getPath = (obj, path) => path.split('.').reduce((acc, key) => (acc == null ? acc : acc[key]), obj);
+
+    function setPath(obj, path, value) {
+      const keys = path.split('.');
+      let target = obj;
+      keys.slice(0, -1).forEach((key) => { target[key] = target[key] ?? {}; target = target[key]; });
+      target[keys.at(-1)] = value;
+    }
+
+    const debounce = (fn, ms) => {
+      let timer;
+      return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
+    };
+
+    const initials = (name) => String(name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+
+    // ---- Dates (stored as YYYY-MM-DD strings, compared in local time) ----
+    function todayStr() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function parseDate(str) {
+      if (!str) return null;
+      const [y, m, d] = str.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function daysBetween(fromStr, toStr) {
+      return Math.round((parseDate(toStr) - parseDate(fromStr)) / 86400000);
+    }
+
+    const fmtShort = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short' });
+    const fmtLong = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+    function formatDate(str) {
+      return str ? fmtLong.format(parseDate(str)) : '—';
+    }
+
+    function formatRange(start, end) {
+      if (!start) return '—';
+      if (!end || end === start) return formatDate(start);
+      const a = parseDate(start);
+      const b = parseDate(end);
+      if (a.getFullYear() === b.getFullYear()) {
+        if (a.getMonth() === b.getMonth()) return `${a.getDate()}–${fmtLong.format(b)}`;
+        return `${fmtShort.format(a)} – ${fmtLong.format(b)}`;
+      }
+      return `${fmtLong.format(a)} – ${fmtLong.format(b)}`;
+    }
+
+    function academicYearOf(dateStr) {
+      if (!dateStr) return '';
+      const startMonth = Number(state.settings?.academicYearStartMonth) || 1;
+      const [year, month] = dateStr.split('-').map(Number);
+      const startYear = month >= startMonth ? year : year - 1;
+      return `${startYear}-${String((startYear + 1) % 100).padStart(2, '0')}`;
+    }
+
+    function plural(n, word) {
+      return `${n} ${word}${n === 1 ? '' : 's'}`;
+    }
+
+    /* =====================================================================
+       4. STATE
+       ===================================================================== */
+    const state = {
+      config: null,
+      settings: null,
+      settingsMissing: false,
+      fatalError: '',
+      authReady: false,
+      user: null,
+      authError: '',
+      profile: undefined,        // undefined = loading, null = not created yet
+      role: 'student',
+      events: [], teams: [], mySuggestions: [], suggestions: [], roles: [],
+      importStatus: undefined,   // undefined = loading, null = importer never ran
+      loaded: { events: false, teams: false },
+      route: 'events',
+      filters: { region: 'all', search: '', status: 'all', mode: 'all', year: null },   // year: null = not chosen yet, '' = all years
+      adminTab: 'approvals',
+      adminTeamFilter: { status: 'pending', eventId: '' },
+      adminEventFilter: { visibility: 'published', reviewOnly: false, search: '' },
+      board: { year: '', showCompleted: true },
+    };
+
+    const isStaff = () => state.role === 'admin' || state.role === 'coordinator';
+    const isAdmin = () => state.role === 'admin';
+
+    /* =====================================================================
+       5. FIREBASE SERVICES
+       ===================================================================== */
+    let app, auth, db;
+    const subscriptions = new Map();
+
+    async function loadConfig() {
+      let response;
+      try {
+        response = await fetch(CONFIG_URL, { cache: 'no-store' });
+      } catch {
+        throw new Error(`Could not load ${CONFIG_URL}. Open the portal through a web server, not by double-clicking the file.`);
+      }
+      if (!response.ok) throw new Error(`${CONFIG_URL} was not found (HTTP ${response.status}).`);
+      const config = await response.json();
+      const fb = config.firebase || {};
+      const required = ['apiKey', 'authDomain', 'projectId', 'appId'];
+      const missing = required.filter((key) => !fb[key] || String(fb[key]).startsWith('YOUR_') || String(fb[key]).includes('YOUR_PROJECT_ID'));
+      if (missing.length) throw new Error(`${CONFIG_URL} still has placeholder values for: ${missing.join(', ')}.`);
+      return config;
+    }
+
+    function subscribe(key, ref, onData, onError = null) {
+      unsubscribe(key);
+      const stop = onSnapshot(ref, onData, (error) => {
+        console.error(`[${key}]`, error);
+        if (onError) return onError(error);
+        if (error.code === 'permission-denied') {
+          toast(`No permission to read ${key}. Check that the Firestore rules are deployed.`, 'error');
+        } else {
+          toast(`Could not load ${key}: ${error.message}`, 'error');
+        }
+      });
+      subscriptions.set(key, stop);
+    }
+
+    function unsubscribe(key) {
+      subscriptions.get(key)?.();
+      subscriptions.delete(key);
+    }
+
+    function unsubscribeAll(except = []) {
+      [...subscriptions.keys()].filter((key) => !except.includes(key)).forEach(unsubscribe);
+    }
+
+    const docsOf = (snapshot) => snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+    function startMemberSubscriptions() {
+      const email = state.user.email.toLowerCase();
+      const uid = state.user.uid;
+
+      subscribe('role', doc(db, COL.roles, email), (snap) => {
+        state.role = snap.exists() ? snap.data().role : 'student';
+        syncEventsSubscription();
+        syncStaffSubscriptions();
+        render();
+      });
+
+      subscribe('profile', doc(db, COL.users, uid), (snap) => {
+        state.profile = snap.exists() ? { id: snap.id, ...snap.data() } : null;
+        render();
+      });
+
+      subscribe('teams', collection(db, COL.teams), (snap) => {
+        state.teams = docsOf(snap);
+        state.loaded.teams = true;
+        render();
+      });
+
+      subscribe('my suggestions', query(collection(db, COL.suggestions), where('submittedBy', '==', uid)), (snap) => {
+        state.mySuggestions = docsOf(snap);
+        render();
+      });
+    }
+
+    // Staff see every event (including pending and hidden imports); everyone else only published ones.
+    let eventsScope = null;
+
+    function syncEventsSubscription() {
+      const scope = isStaff() ? 'all' : 'published';
+      if (scope === eventsScope) return;
+      eventsScope = scope;
+      const ref = scope === 'all'
+        ? collection(db, COL.events)
+        : query(collection(db, COL.events), where('visibility', '==', 'published'));
+      subscribe('events', ref, (snap) => {
+        state.events = docsOf(snap);
+        state.loaded.events = true;
+        render();
+      });
+    }
+
+    function syncStaffSubscriptions() {
+      if (isStaff()) {
+        if (!subscriptions.has('suggestions')) {
+          subscribe('suggestions', query(collection(db, COL.suggestions), where('status', '==', 'pending')), (snap) => {
+            state.suggestions = docsOf(snap);
+            render();
+          });
+        }
+        if (!subscriptions.has('import status')) {
+          subscribe('import status', doc(db, COL.status, 'import'), (snap) => {
+            state.importStatus = snap.exists() ? snap.data() : null;
+            render();
+          });
+        }
+      } else {
+        ['suggestions', 'import status'].forEach(unsubscribe);
+        state.suggestions = [];
+        state.importStatus = undefined;
+      }
+
+      if (isAdmin()) {
+        if (!subscriptions.has('roles')) {
+          subscribe('roles', collection(db, COL.roles), (snap) => {
+            state.roles = docsOf(snap);
+            render();
+          });
+        }
+      } else {
+        unsubscribe('roles');
+        state.roles = [];
+      }
+    }
+
+    function resetSession() {
+      unsubscribeAll(['settings']);
+      Object.assign(state, {
+        user: null, profile: undefined, role: 'student',
+        events: [], teams: [], mySuggestions: [], suggestions: [], roles: [],
+        importStatus: undefined,
+        loaded: { events: false, teams: false },
+      });
+      eventsScope = null;
+    }
+
+    async function signIn() {
+      state.authError = '';
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ hd: state.settings.allowedDomain, prompt: 'select_account' });
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (error) {
+        const messages = {
+          'auth/popup-blocked': 'The sign-in popup was blocked. Allow popups for this site and try again.',
+          'auth/popup-closed-by-user': '',
+          'auth/cancelled-popup-request': '',
+          'auth/unauthorized-domain': 'This website address is not authorised in Firebase. Add it under Authentication → Settings → Authorized domains.',
+          'auth/operation-not-allowed': 'Google sign-in is not enabled in Firebase Authentication.',
+        };
+        state.authError = error.code in messages ? messages[error.code] : error.message;
+        render();
+      }
+    }
+
+    function stamp(extra = {}) {
+      return { updatedAt: serverTimestamp(), updatedBy: state.user.email, ...extra };
+    }
+
+    function created(extra = {}) {
+      return { createdAt: serverTimestamp(), createdBy: state.user.email, ...stamp(), ...extra };
+    }
+
+    async function runAction(fn, successMessage) {
+      try {
+        await fn();
+        if (successMessage) toast(successMessage);
+        return true;
+      } catch (error) {
+        console.error(error);
+        toast(error.code === 'permission-denied'
+          ? 'You do not have permission to do that.'
+          : (error.message || 'Something went wrong.'), 'error');
+        return false;
+      }
+    }
+
+    /* =====================================================================
+       6. DOMAIN LOGIC
+       ===================================================================== */
+    function regionOf(event) {
+      if (event.mode === 'online') return 'virtual';
+      const s = state.settings;
+      const homeCities = (s.homeCities || []).map(norm);
+      if (event.city && homeCities.includes(norm(event.city))) return 'home';
+      if (event.state && norm(event.state) === norm(s.homeState)) return 'state';
+      return 'other';
+    }
+
+    function regionLabel(key) {
+      return REGIONS.find((r) => r.key === key)?.label(state.settings) ?? '';
+    }
+
+    function statusOf(event, today) {
+      const end = event.endDate || event.startDate;
+      if (end && today > end) return 'completed';
+      if (event.startDate && today >= event.startDate) return 'ongoing';
+      if (event.registrationDeadline) {
+        if (today > event.registrationDeadline) return 'closed';
+        if (daysBetween(today, event.registrationDeadline) <= Number(state.settings.closingSoonDays ?? 3)) return 'closing';
+      }
+      return 'open';
+    }
+
+    function teamStats() {
+      const stats = new Map();
+      for (const team of state.teams) {
+        const entry = stats.get(team.eventId) ?? { verifiedTeams: 0, verifiedStudents: 0, pendingTeams: 0, teams: [] };
+        const size = (team.members || []).length;
+        if (team.status === 'verified') { entry.verifiedTeams += 1; entry.verifiedStudents += size; }
+        if (team.status === 'pending') entry.pendingTeams += 1;
+        entry.teams.push(team);
+        stats.set(team.eventId, entry);
+      }
+      return stats;
+    }
+
+    const isPublished = (event) => (event.visibility || 'published') === 'published';
+    const isImported = (event) => Boolean(event.sourceId);
+    const sourceLabel = (event) => SOURCES[event.source] || event.source || '';
+
+    function enrichEvents({ includeUnpublished = false } = {}) {
+      const today = todayStr();
+      const stats = teamStats();
+      return state.events.filter((e) => includeUnpublished || isPublished(e)).map((event) => {
+        const region = regionOf(event);
+        const s = stats.get(event.id) ?? { verifiedTeams: 0, verifiedStudents: 0, pendingTeams: 0, teams: [] };
+        return {
+          ...event,
+          _region: region,
+          _rank: REGIONS.find((r) => r.key === region).rank,
+          _status: statusOf(event, today),
+          _year: academicYearOf(event.startDate),
+          _teams: s.verifiedTeams + Number(event.offlineCounts?.teams || 0),
+          _students: s.verifiedStudents + Number(event.offlineCounts?.students || 0),
+          _pending: s.pendingTeams,
+          _teamList: s.teams,
+        };
+      });
+    }
+
+    function compareEvents(a, b) {
+      if (!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
+      const sa = STATUS[a._status].rank;
+      const sb = STATUS[b._status].rank;
+      if (sa !== sb) return sa - sb;
+      if (a._rank !== b._rank) return a._rank - b._rank;
+      if (a._status === 'completed') return (b.startDate || '').localeCompare(a.startDate || '');
+      const keyA = a.registrationDeadline || a.startDate || '9999';
+      const keyB = b.registrationDeadline || b.startDate || '9999';
+      return keyA.localeCompare(keyB);
+    }
+
+    function availableYears(events) {
+      return unique(events.map((e) => e._year)).sort().reverse();
+    }
+
+    function defaultYear(events) {
+      const current = academicYearOf(todayStr());
+      const years = availableYears(events);
+      return years.includes(current) || !years.length ? current : years[0];
+    }
+
+    function matchesStatus(event, filter) {
+      if (filter === 'all') return true;
+      if (filter === 'active') return event._status !== 'completed';
+      return event._status === filter;
+    }
+
+    function filterEvents(events, { ignoreRegion = false } = {}) {
+      const f = state.filters;
+      const term = norm(f.search);
+      return events.filter((e) => {
+        if (f.year && e._year !== f.year) return false;
+        if (!matchesStatus(e, f.status)) return false;
+        if (f.mode !== 'all' && e.mode !== f.mode) return false;
+        if (!ignoreRegion && f.region !== 'all' && e._region !== f.region) return false;
+        if (term) {
+          const haystack = [e.name, e.organizer, e.city, e.state, e.venue, sourceLabel(e), ...(e.domains || [])].map(norm).join(' ');
+          if (!haystack.includes(term)) return false;
+        }
+        return true;
+      });
+    }
+
+    function countdownOf(event) {
+      const today = todayStr();
+      switch (event._status) {
+        case 'closing':
+        case 'open': {
+          if (event.registrationDeadline) {
+            const days = daysBetween(today, event.registrationDeadline);
+            return { text: days === 0 ? 'Closes today' : `Closes in ${plural(days, 'day')}`, urgent: event._status === 'closing' };
+          }
+          const days = daysBetween(today, event.startDate);
+          return { text: `Starts in ${plural(days, 'day')}`, urgent: false };
+        }
+        case 'closed': {
+          const days = daysBetween(today, event.startDate);
+          return { text: `Starts in ${plural(days, 'day')}`, urgent: false };
+        }
+        case 'ongoing': return { text: 'Happening now', urgent: false };
+        default: return { text: '', urgent: false };
+      }
+    }
+
+    function placeOf(event) {
+      if (event.mode === 'online') return 'Online';
+      const parts = unique([event.city, event.state]);
+      const place = parts.join(', ') || 'Location not set';
+      return event.mode === 'hybrid' ? `${place} · Hybrid` : place;
+    }
+
+    function myTeams() {
+      const roll = norm(state.profile?.rollNo);
+      return state.teams.filter((t) => t.leaderUid === state.user.uid || (roll && (t.members || []).some((m) => norm(m.rollNo) === roll)));
+    }
+
+    /* =====================================================================
+       7. UI PRIMITIVES
+       ===================================================================== */
+    function toast(message, type = 'info') {
+      const el = document.createElement('div');
+      el.className = `toast ${type === 'error' ? 'error' : ''}`;
+      el.textContent = message;
+      $('#toasts').append(el);
+      setTimeout(() => el.remove(), type === 'error' ? 6000 : 3200);
+    }
+
+    const modal = {
+      el: () => $('#modal'),
+      locked: false,
+      open(html, { size = '', locked = false } = {}) {
+        const el = this.el();
+        this.locked = locked;
+        el.className = `modal ${size}`;
+        $('#modal-content').innerHTML = html;
+        if (!el.open) el.showModal();
+        const first = $('input:not([type=hidden]):not([readonly]), select, textarea', el);
+        first?.focus();
+      },
+      close(force = false) {
+        if (this.locked && !force) return;
+        this.locked = false;
+        const el = this.el();
+        if (el.open) el.close();
+      },
+    };
+
+    function confirmDialog({ title = 'Are you sure?', text = '', confirmLabel = 'Confirm', danger = false } = {}) {
+      const el = $('#confirm');
+      $('#confirm-title').textContent = title;
+      $('#confirm-text').textContent = text;
+      const yes = $('#confirm-yes');
+      yes.textContent = confirmLabel;
+      yes.className = `btn ${danger ? 'btn-danger' : 'btn-primary'}`;
+      el.showModal();
+      return new Promise((resolve) => {
+        const listeners = new AbortController();
+        const finish = (answer) => { listeners.abort(); if (el.open) el.close(); resolve(answer); };
+        el.addEventListener('click', (e) => {
+          const answer = e.target.closest('[data-confirm]')?.dataset.confirm;
+          if (answer) finish(answer === 'yes');
+        }, { signal: listeners.signal });
+        el.addEventListener('cancel', () => finish(false), { signal: listeners.signal });
+      });
+    }
+
+    function modalShell({ title, subtitle = '', body, footer = '', closable = true }) {
+      return `
+        <div class="modal-inner">
+          <div class="modal-header">
+            <div><h2>${esc(title)}</h2>${subtitle ? `<p>${subtitle}</p>` : ''}</div>
+            ${closable ? `<button class="btn btn-ghost icon-btn" data-action="close-modal" aria-label="Close">${icon('close')}</button>` : ''}
+          </div>
+          <div class="modal-body">${body}</div>
+          ${footer ? `<div class="modal-footer">${footer}</div>` : ''}
+        </div>`;
+    }
+
+    function statusBadge(status) {
+      return `<span class="badge b-${status}">${esc(STATUS[status].label)}</span>`;
+    }
+
+    function teamBadge(status) {
+      return `<span class="badge b-${status}">${esc(REVIEW_STATUS[status] || status)}</span>`;
+    }
+
+    function emptyState(title, text, iconName = 'inbox', action = '') {
+      return `<div class="empty">${icon(iconName)}<h3>${esc(title)}</h3><p>${esc(text)}</p>${action ? `<div style="margin-top:16px">${action}</div>` : ''}</div>`;
+    }
+
+    function selectOptions(options, selected) {
+      const entries = Array.isArray(options) ? options.map((o) => [o, o]) : Object.entries(options);
+      return entries.map(([value, label]) => `<option value="${esc(value)}" ${String(value) === String(selected ?? '') ? 'selected' : ''}>${esc(label)}</option>`).join('');
+    }
+
+    function renderField(field, data) {
+      if (field.section) return `<div class="form-section">${esc(field.section)}</div>`;
+      const value = getPath(data, field.key);
+      const id = `f-${field.key.replace(/\./g, '-')}`;
+      const span = field.span === 2 ? 'span-2' : '';
+      const req = field.required ? ' <span class="req">*</span>' : '';
+      const attrs = [
+        `id="${id}"`, `name="${field.key}"`,
+        field.required ? 'required' : '',
+        field.readonly ? 'readonly' : '',
+        field.max && field.type === 'text' ? `maxlength="${field.max}"` : '',
+        field.min != null ? `min="${field.min}"` : '',
+        field.max != null && field.type === 'number' ? `max="${field.max}"` : '',
+        field.list ? `list="${field.list}"` : '',
+      ].filter(Boolean).join(' ');
+
+      let control;
+      switch (field.type) {
+        case 'checkbox':
+          return `<div class="field ${span}"><label class="check"><input type="checkbox" ${attrs} ${value ? 'checked' : ''}> ${esc(field.label)}</label></div>`;
+        case 'select':
+          control = `<select class="select" ${attrs}>${selectOptions(field.options, value ?? Object.keys(field.options)[0])}</select>`;
+          break;
+        case 'textarea':
+          control = `<textarea class="textarea" ${attrs}>${esc(value)}</textarea>`;
+          break;
+        case 'list':
+        case 'numlist': {
+          const text = (value || []).join(field.textarea ? '\n' : ', ');
+          control = field.textarea
+            ? `<textarea class="textarea" ${attrs}>${esc(text)}</textarea>`
+            : `<input class="input" type="text" ${attrs} value="${esc(text)}">`;
+          break;
+        }
+        default:
+          control = `<input class="input" type="${field.type}" ${attrs} value="${esc(value ?? '')}" ${field.type === 'url' ? 'placeholder="https://"' : ''}>`;
+      }
+      return `<div class="field ${span}"><label for="${id}">${esc(field.label)}${req}</label>${control}${field.hint ? `<span class="hint">${esc(field.hint)}</span>` : ''}</div>`;
+    }
+
+    function readFields(form, fields) {
+      const data = {};
+      for (const field of fields) {
+        if (field.section || field.readonly) continue;
+        const el = form.elements[field.key];
+        if (!el) continue;
+        let value;
+        switch (field.type) {
+          case 'checkbox': value = el.checked; break;
+          case 'number': value = el.value === '' ? null : Number(el.value); break;
+          case 'list': value = unique(splitList(el.value)); break;
+          case 'numlist': value = unique(splitList(el.value)).map(Number).filter((n) => !Number.isNaN(n)); break;
+          case 'url': value = el.value.trim(); break;
+          default: value = el.value.trim();
+        }
+        setPath(data, field.key, value);
+      }
+      return data;
+    }
+
+    function dataLists() {
+      const cities = unique([...(state.settings.homeCities || []), ...state.events.map((e) => e.city)]).sort();
+      const states = unique([state.settings.homeState, ...state.events.map((e) => e.state)]).sort();
+      return `
+        <datalist id="city-options">${cities.map((c) => `<option value="${esc(c)}">`).join('')}</datalist>
+        <datalist id="state-options">${states.map((s) => `<option value="${esc(s)}">`).join('')}</datalist>`;
+    }
+
+    /* =====================================================================
+       8. SCREENS OUTSIDE THE APP (setup, sign-in, access)
+       ===================================================================== */
+    function brandMark() {
+      const s = state.settings;
+      const logo = safeUrl(s?.logoUrl);
+      return `<span class="brand-mark">${logo ? `<img src="${esc(logo)}" alt="">` : esc(s?.collegeShortName ? s.collegeShortName.slice(0, 8) : initials(s?.collegeName || 'Hackathon Portal'))}</span>`;
+    }
+
+    function renderSetupScreen(message) {
+      return `
+        <div class="center-screen">
+          <div class="card setup-card">
+            <h1 style="font-size:22px;font-weight:800">Finish setting up the portal</h1>
+            <p class="note" style="margin:14px 0 20px">${esc(message)}</p>
+            <ol>
+              <li>Open <strong>Firebase Console → Project settings → Your apps</strong> and copy the web app config.</li>
+              <li>Paste the values into <code>config/app.config.json</code> (see <code>config/app.config.example.json</code>).</li>
+              <li>Serve the folder with a local web server, e.g. <code>npx serve .</code>, and reload this page.</li>
+            </ol>
+          </div>
+        </div>`;
+    }
+
+    function renderNotInitialised() {
+      return `
+        <div class="center-screen">
+          <div class="card setup-card">
+            <h1 style="font-size:22px;font-weight:800">Database not initialised</h1>
+            <p class="note" style="margin:14px 0 20px">Firebase is connected, but the portal settings document <code>settings/public</code> does not exist yet.</p>
+            <ol>
+              <li>Deploy the security rules: <code>npx firebase-tools deploy --only firestore --project YOUR_PROJECT_ID</code></li>
+              <li>Put your service account key at <code>scripts/service-account.json</code>.</li>
+              <li>Run <code>npm install</code>, <code>npm run seed</code> and <code>npm run import</code> inside the <code>scripts</code> folder.</li>
+              <li>Reload this page.</li>
+            </ol>
+          </div>
+        </div>`;
+    }
+
+    function renderFatal() {
+      return `
+        <div class="center-screen">
+          <div class="card setup-card">
+            <h1 style="font-size:22px;font-weight:800">Could not reach the database</h1>
+            <p class="note" style="margin:14px 0 20px">${esc(state.fatalError)}</p>
+            <button class="btn" onclick="location.reload()">Try again</button>
+          </div>
+        </div>`;
+    }
+
+    function renderSignIn() {
+      const s = state.settings;
+      return `
+        <div class="center-screen">
+          <div class="card auth-card">
+            ${brandMark()}
+            <h1>${esc(s.portalTitle)}</h1>
+            <p>${esc(s.collegeName)}</p>
+            <button class="btn btn-primary btn-lg" data-action="sign-in">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21.35 11.1H12v2.9h5.35c-.25 1.4-1.65 4.1-5.35 4.1a5.9 5.9 0 0 1 0-11.8c1.85 0 3.1.8 3.8 1.45l2.6-2.5C16.75 3.7 14.6 2.8 12 2.8a9.2 9.2 0 1 0 0 18.4c5.3 0 8.8-3.7 8.8-8.95 0-.6-.05-1.05-.15-1.5z"/></svg>
+              Sign in with Google
+            </button>
+            ${state.authError ? `<p class="note">${esc(state.authError)}</p>` : ''}
+            <p class="auth-foot">Use your <strong>@${esc(s.allowedDomain)}</strong> account.</p>
+          </div>
+        </div>`;
+    }
+
+    /* =====================================================================
+       9. APP SHELL
+       ===================================================================== */
+    function navItems() {
+      const items = [
+        { route: 'events', label: 'Events', icon: 'grid' },
+        { route: 'teams', label: 'My Teams', icon: 'team' },
+        { route: 'suggest', label: 'Suggest', icon: 'bulb' },
+        { route: 'board', label: 'Board', icon: 'tv' },
+      ];
+      if (isStaff()) items.push({ route: 'admin', label: 'Admin', icon: 'shield' });
+      return items;
+    }
+
+    function renderShell(content) {
+      const s = state.settings;
+      const user = state.user;
+      const photo = safeUrl(user.photoURL);
+      const nav = navItems();
+      const pendingCount = isStaff() ? pendingApprovals() + state.teams.filter((t) => t.status === 'pending').length : 0;
+      const navLink = (item, mobile) => `
+        <a href="#/${item.route}" class="${state.route === item.route ? 'active' : ''}">
+          ${mobile ? icon(item.icon) : ''}${esc(item.label)}${!mobile && item.route === 'admin' && pendingCount ? ` <span class="badge b-closing plain" style="height:18px;padding:0 6px">${pendingCount}</span>` : ''}
+        </a>`;
+
+      return `
+        <header class="topbar">
+          <div class="container topbar-inner">
+            <a class="brand" href="#/events">
+              ${brandMark()}
+              <span class="brand-text">
+                <span class="brand-title">${esc(s.portalTitle)}</span>
+                <span class="brand-sub">${esc(s.collegeName)}</span>
+              </span>
+            </a>
+            <nav class="nav" aria-label="Main">${nav.map((i) => navLink(i, false)).join('')}</nav>
+            <div class="user-menu">
+              <button class="avatar-btn" data-action="toggle-menu" aria-label="Account menu" aria-haspopup="true">
+                ${photo ? `<img src="${esc(photo)}" alt="" referrerpolicy="no-referrer">` : esc(initials(user.displayName))}
+              </button>
+              <div class="menu" id="user-menu">
+                <div class="menu-head">
+                  <strong>${esc(state.profile?.displayName || user.displayName || '')}</strong>
+                  <span>${esc(user.email)}</span>
+                  <div style="margin-top:6px"><span class="chip">${esc(ROLES[state.role])}</span></div>
+                </div>
+                <button data-action="edit-profile">${icon('user', 'width="16" height="16"')} Edit profile</button>
+                <button data-action="toggle-theme">${icon('moon', 'width="16" height="16"')} Switch theme</button>
+                <button data-action="sign-out">${icon('logout', 'width="16" height="16"')} Sign out</button>
+              </div>
+            </div>
+          </div>
+        </header>
+        <main><div class="container" id="view">${content}</div></main>
+        <nav class="mobile-nav" aria-label="Main">${nav.map((i) => navLink(i, true)).join('')}</nav>`;
+    }
+
+    function pendingImports() {
+      return state.events.filter((e) => e.visibility === 'pending');
+    }
+
+    function pendingApprovals() {
+      return state.suggestions.length + pendingImports().length;
+    }
+
+    /* =====================================================================
+       10. VIEW: EVENTS
+       ===================================================================== */
+    function eventCard(e) {
+      const cd = countdownOf(e);
+      return `
+        <article class="event-card ${e._status === 'completed' ? 'is-completed' : ''} ${e.pinned ? 'is-pinned' : ''}"
+                 data-action="open-event" data-id="${esc(e.id)}" tabindex="0" role="button" aria-label="${esc(e.name)}">
+          <div class="card-top">
+            ${statusBadge(e._status)}
+            <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
+            ${isImported(e) ? `<span class="chip">via ${esc(sourceLabel(e))}</span>` : ''}
+            ${e.needsReview && isStaff() ? '<span class="chip chip-review">Needs review</span>' : ''}
+            ${e.pinned ? `<span class="pin" title="Pinned">${icon('pin')}</span>` : ''}
+          </div>
+          <div>
+            <h3 class="event-name">${esc(e.name)}</h3>
+            ${e.organizer ? `<p class="event-org">${esc(e.organizer)}</p>` : ''}
+          </div>
+          <div class="meta">
+            <div>${icon('place')}<span>${esc(placeOf(e))}</span></div>
+            <div>${icon('calendar')}<span>${esc(formatRange(e.startDate, e.endDate))}</span></div>
+            ${e.registrationDeadline ? `<div>${icon('clock')}<span>Deadline ${esc(formatDate(e.registrationDeadline))}</span></div>` : ''}
+          </div>
+          <div class="card-foot">
+            <span class="tally"><strong class="num">${e._teams}</strong> teams</span>
+            <span class="tally"><strong class="num">${e._students}</strong> students</span>
+            ${cd.text ? `<span class="countdown ${cd.urgent ? 'urgent' : ''}">${esc(cd.text)}</span>` : ''}
+          </div>
+        </article>`;
+    }
+
+    function renderEventsView() {
+      if (!state.loaded.events) {
+        return `
+          <div class="page-head"><div><h1>Events</h1></div></div>
+          <div class="stats">${'<div class="skeleton" style="height:96px"></div>'.repeat(4)}</div>
+          <div class="event-grid">${'<div class="skeleton" style="height:220px"></div>'.repeat(6)}</div>`;
+      }
+
+      const all = enrichEvents();
+      if (state.filters.year === null) state.filters.year = defaultYear(all);
+      const years = availableYears(all);
+      if (state.filters.year && !years.includes(state.filters.year)) years.unshift(state.filters.year);
+
+      return `
+        <div class="page-head">
+          <div>
+            <h1>Events</h1>
+            <p>${esc(regionLabel('home'))} events come first, followed by the rest of ${esc(state.settings.homeState)}, other states and virtual events.</p>
+          </div>
+          <div class="page-actions">
+            ${isStaff() ? `<button class="btn" data-action="export-events">${icon('download')} Export</button>` : ''}
+            ${isStaff()
+              ? `<button class="btn btn-primary" data-action="new-event">${icon('plus')} Add event</button>`
+              : `<a class="btn btn-primary" href="#/suggest">${icon('bulb')} Suggest an event</a>`}
+          </div>
+        </div>
+        <div id="events-stats"></div>
+        <div class="tabs" id="region-tabs" role="tablist"></div>
+        <div class="filters">
+          <label class="search">
+            <span class="sr-only">Search events</span>
+            ${icon('search')}
+            <input class="input" type="search" placeholder="Search by event, organizer, city, theme…" data-filter="search" value="${esc(state.filters.search)}">
+          </label>
+          <select class="select" data-filter="status" aria-label="Status">${selectOptions(STATUS_FILTERS, state.filters.status)}</select>
+          <select class="select" data-filter="mode" aria-label="Mode">${selectOptions({ all: 'All modes', ...MODES }, state.filters.mode)}</select>
+          <select class="select" data-filter="year" aria-label="Academic year">${selectOptions({ ...Object.fromEntries(years.map((y) => [y, `AY ${y}`])), '': 'All years' }, state.filters.year)}</select>
+        </div>
+        <div id="event-results"></div>`;
+    }
+
+    function updateEventsView() {
+      if (!$('#event-results')) return;
+      const all = enrichEvents();
+      const f = state.filters;
+
+      // Stats for the selected year
+      const yearEvents = all.filter((e) => !f.year || e._year === f.year);
+      const active = yearEvents.filter((e) => ['open', 'closing'].includes(e._status)).length;
+      const closing = yearEvents.filter((e) => e._status === 'closing').length;
+      const teams = yearEvents.reduce((sum, e) => sum + e._teams, 0);
+      const students = yearEvents.reduce((sum, e) => sum + e._students, 0);
+      $('#events-stats').innerHTML = `
+        <div class="stats">
+          <div class="card stat"><div class="stat-label">Events</div><div class="stat-value num">${yearEvents.length}</div><div class="stat-note">${f.year ? `AY ${esc(f.year)}` : 'All years'}</div></div>
+          <div class="card stat"><div class="stat-label">Open for registration</div><div class="stat-value num">${active}</div><div class="stat-note">${closing ? `<span style="color:var(--marker);font-weight:700">${closing} closing soon</span>` : 'None closing soon'}</div></div>
+          <div class="card stat"><div class="stat-label">Teams registered</div><div class="stat-value num">${teams}</div><div class="stat-note">Verified + recorded</div></div>
+          <div class="card stat"><div class="stat-label">Students participating</div><div class="stat-value num">${students}</div><div class="stat-note">Across all events</div></div>
+        </div>`;
+
+      // Region tabs with counts that respect the other filters
+      const base = filterEvents(all, { ignoreRegion: true });
+      const tabs = [{ key: 'all', label: 'All' }, ...REGIONS.map((r) => ({ key: r.key, label: r.label(state.settings) }))];
+      $('#region-tabs').innerHTML = tabs.map((t) => {
+        const count = t.key === 'all' ? base.length : base.filter((e) => e._region === t.key).length;
+        return `<button class="tab ${f.region === t.key ? 'active' : ''}" role="tab" aria-selected="${f.region === t.key}" data-action="set-region" data-region="${t.key}">${esc(t.label)} <span class="count num">${count}</span></button>`;
+      }).join('');
+
+      // Results
+      const list = filterEvents(all).sort(compareEvents);
+      const results = $('#event-results');
+      if (!list.length) {
+        results.innerHTML = emptyState('No events match', 'Try another region, status or academic year.', 'search');
+        return;
+      }
+
+      if (f.region !== 'all') {
+        results.innerHTML = `<div class="event-grid">${list.map(eventCard).join('')}</div>`;
+        return;
+      }
+
+      const pinned = list.filter((e) => e.pinned);
+      const sections = [
+        ...(pinned.length ? [{ title: 'Pinned', items: pinned }] : []),
+        ...REGIONS.map((r) => ({ title: r.label(state.settings), items: list.filter((e) => !e.pinned && e._region === r.key) })),
+      ].filter((section) => section.items.length);
+
+      results.innerHTML = sections.map((section) => `
+        <h2 class="section-title">${esc(section.title)} <span class="count num">${section.items.length}</span></h2>
+        <div class="event-grid">${section.items.map(eventCard).join('')}</div>`).join('');
+    }
+
+    function openEventDetail(id) {
+      const e = enrichEvents({ includeUnpublished: true }).find((ev) => ev.id === id);
+      if (!e) return toast('This event no longer exists.', 'error');
+      const url = safeUrl(e.registrationUrl);
+      const canRegister = e._status !== 'completed';
+      const teams = e._teamList.filter((t) => t.status !== 'rejected' || isStaff());
+      const teamSize = e.teamSizeMin || e.teamSizeMax
+        ? [e.teamSizeMin, e.teamSizeMax].filter(Boolean).join(' – ') + ' members'
+        : '';
+
+      const body = `
+        <div class="card-top" style="margin-bottom:14px">
+          ${statusBadge(e._status)}
+          <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
+          <span class="chip">${esc(MODES[e.mode] || e.mode)}</span>
+          <span class="chip">AY ${esc(e._year)}</span>
+          ${isStaff() && !isPublished(e) ? `<span class="chip chip-review">${esc(VISIBILITY[e.visibility] || e.visibility)}</span>` : ''}
+        </div>
+        ${e.needsReview && isStaff() ? `<p class="note" style="margin-bottom:14px">Needs review${e.reviewNote ? `: ${esc(e.reviewNote)}` : ''}</p>` : ''}
+        <dl class="detail-grid">
+          <div><dt>Organizer</dt><dd>${esc(e.organizer || '—')}</dd></div>
+          <div><dt>Place</dt><dd>${esc(placeOf(e))}${e.venue ? `<br><span class="muted">${esc(e.venue)}</span>` : ''}</dd></div>
+          <div><dt>Event dates</dt><dd>${esc(formatRange(e.startDate, e.endDate))}</dd></div>
+          <div><dt>Registration deadline</dt><dd>${esc(formatDate(e.registrationDeadline))}</dd></div>
+          ${e.shortlistDate ? `<div><dt>Shortlist announcement</dt><dd>${esc(formatDate(e.shortlistDate))}</dd></div>` : ''}
+          ${teamSize ? `<div><dt>Team size</dt><dd>${esc(teamSize)}</dd></div>` : ''}
+          ${e.prize ? `<div><dt>Prizes</dt><dd>${esc(e.prize)}</dd></div>` : ''}
+          ${e.source ? `<div><dt>Source</dt><dd>${esc(sourceLabel(e))}</dd></div>` : ''}
+          <div><dt>Participation</dt><dd class="num">${plural(e._teams, 'team')} · ${plural(e._students, 'student')}${e._pending ? ` <span class="muted">(${e._pending} pending)</span>` : ''}</dd></div>
+        </dl>
+        ${(e.domains || []).length ? `<div class="card-top" style="margin-bottom:14px">${e.domains.map((d) => `<span class="chip">${esc(d)}</span>`).join('')}</div>` : ''}
+        ${e.description ? `<div class="detail-block"><h3>About</h3><p style="white-space:pre-line;color:var(--text-2)">${esc(e.description)}</p></div>` : ''}
+        <div class="detail-block">
+          <h3>Teams from our college</h3>
+          ${teams.length ? `<div class="team-list">${teams.map((t) => `
+            <div class="team-row">
+              <div class="grow"><strong>${esc(t.teamName)}</strong> <span class="muted">· ${plural((t.members || []).length, 'member')}${t.mentor ? ` · Mentor: ${esc(t.mentor)}` : ''}</span></div>
+              ${t.result ? `<span class="chip">${esc(TEAM_RESULTS[t.result] || t.result)}</span>` : ''}
+              ${teamBadge(t.status)}
+            </div>`).join('')}</div>`
+            : `<p class="muted">No teams registered through the portal yet.${Number(e.offlineCounts?.teams) ? ` ${plural(Number(e.offlineCounts.teams), 'team')} recorded by the coordinators.` : ''}</p>`}
+        </div>`;
+
+      const footer = `
+        ${isStaff() ? `
+          ${removeButton(e)}
+          <button class="btn btn-sm spacer" data-action="edit-event" data-id="${esc(e.id)}">${icon('edit')} Edit</button>` : '<span class="spacer"></span>'}
+        ${url ? `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${icon('link')} Registration page</a>` : ''}
+        ${canRegister ? `<button class="btn btn-primary" data-action="register-team" data-id="${esc(e.id)}">${icon('plus')} Register our team</button>` : ''}`;
+
+      modal.open(modalShell({ title: e.name, subtitle: esc(e.organizer || ''), body, footer }), { size: 'wide' });
+    }
+
+    /* =====================================================================
+       11. EVENT FORM (create / edit / approve)
+       ===================================================================== */
+    function openEventForm({ event = null, prefill = null, origin = null, publishOnSave = false } = {}) {
+      const data = event || prefill || { mode: 'offline', state: state.settings.homeState, offlineCounts: { teams: 0, students: 0 } };
+      const title = event ? 'Edit event' : origin ? 'Review and publish event' : 'Add event';
+      const body = `
+        <form id="event-form" data-form="event" data-id="${esc(event?.id || '')}" data-publish="${publishOnSave ? '1' : ''}" data-origin="${esc(origin ? `${origin.type}:${origin.id}` : '')}" novalidate>
+          <div class="form-grid">${EVENT_FIELDS.map((f) => renderField(f, data)).join('')}</div>
+          ${dataLists()}
+          <p class="form-error" id="event-form-error"></p>
+        </form>`;
+      const footer = `
+        <button class="btn" data-action="close-modal">Cancel</button>
+        <button class="btn btn-primary" type="submit" form="event-form">${event && !publishOnSave ? 'Save changes' : 'Publish event'}</button>`;
+      modal.open(modalShell({ title, body, footer }), { size: 'wide' });
+    }
+
+    function validateEvent(data) {
+      if (!data.name) return 'Event name is required.';
+      if (!data.startDate) return 'Event start date is required.';
+      if (data.endDate && data.endDate < data.startDate) return 'Event end date cannot be before the start date.';
+      if (data.registrationUrl && !safeUrl(data.registrationUrl)) return 'Registration link must start with http:// or https://';
+      if (data.teamSizeMin && data.teamSizeMax && data.teamSizeMin > data.teamSizeMax) return 'Min team size is larger than max team size.';
+      return '';
+    }
+
+    async function submitEventForm(form) {
+      const data = readFields(form, EVENT_FIELDS);
+      data.endDate = data.endDate || data.startDate;
+      data.offlineCounts = { teams: data.offlineCounts?.teams ?? 0, students: data.offlineCounts?.students ?? 0 };
+      const error = validateEvent(data);
+      $('#event-form-error').textContent = error;
+      if (error) {
+        $('#event-form-error').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        return;
+      }
+
+      const id = form.dataset.id;
+      const [originType, originId] = (form.dataset.origin || '').split(':');
+
+      const ok = await runAction(async () => {
+        if (id) {
+          // manualOverride stops the daily importer from overwriting staff corrections.
+          const publish = form.dataset.publish === '1' ? { visibility: 'published', needsReview: false, reviewNote: '' } : {};
+          await updateDoc(doc(db, COL.events, id), stamp({ ...data, manualOverride: true, ...publish }));
+          return;
+        }
+        const batch = writeBatch(db);
+        const ref = doc(collection(db, COL.events));
+        batch.set(ref, created({ ...data, source: originType || 'manual', visibility: 'published', manualOverride: true }));
+        if (originType === 'suggestion') {
+          batch.update(doc(db, COL.suggestions, originId), stamp({ status: 'approved', eventId: ref.id }));
+        }
+        await batch.commit();
+      }, id && form.dataset.publish !== '1' ? 'Event updated.' : 'Event published.');
+      if (ok) modal.close();
+    }
+
+    async function deleteEvent(id) {
+      const event = state.events.find((e) => e.id === id);
+      const teamCount = state.teams.filter((t) => t.eventId === id).length;
+      const confirmed = await confirmDialog({
+        title: 'Delete this event?',
+        text: `"${event?.name}" will be removed${teamCount ? ` along with ${plural(teamCount, 'team registration')}` : ''}. This cannot be undone.`,
+        confirmLabel: 'Delete event',
+        danger: true,
+      });
+      if (!confirmed) return;
+      const ok = await runAction(async () => {
+        const batch = writeBatch(db);
+        state.teams.filter((t) => t.eventId === id).forEach((t) => batch.delete(doc(db, COL.teams, t.id)));
+        batch.delete(doc(db, COL.events, id));
+        await batch.commit();
+      }, 'Event deleted.');
+      if (ok) modal.close();
+    }
+
+    function removeButton(e) {
+      // Imported events would come back on the next import if deleted, so they are hidden instead.
+      if (isImported(e)) {
+        return e.visibility === 'hidden'
+          ? `<button class="btn btn-sm" data-action="set-visibility" data-visibility="published" data-id="${esc(e.id)}">Unhide</button>`
+          : `<button class="btn btn-sm btn-danger" data-action="set-visibility" data-visibility="hidden" data-id="${esc(e.id)}">Hide</button>`;
+      }
+      return `<button class="btn btn-sm btn-danger icon-btn" data-action="delete-event" data-id="${esc(e.id)}" aria-label="Delete" title="Delete">${icon('trash')}</button>`;
+    }
+
+    async function setVisibility(ids, visibility) {
+      const messages = { published: 'Published.', hidden: 'Hidden from students.', pending: 'Moved to approvals.' };
+      const ok = await runAction(async () => {
+        for (let i = 0; i < ids.length; i += 400) {
+          const batch = writeBatch(db);
+          ids.slice(i, i + 400).forEach((id) => batch.update(doc(db, COL.events, id), stamp({ visibility })));
+          await batch.commit();
+        }
+      }, ids.length > 1 ? `${ids.length} events ${messages[visibility].toLowerCase()}` : messages[visibility]);
+      if (ok && ids.length === 1) modal.close();
+    }
+
+    async function publishAllPending() {
+      const ids = pendingImports().filter((e) => !e.needsReview).map((e) => e.id);
+      if (!ids.length) return;
+      const confirmed = await confirmDialog({
+        title: `Publish ${ids.length} imported events?`,
+        text: 'Students will see them immediately. Events that need review (e.g. missing location) are left for you to edit first.',
+        confirmLabel: 'Publish all',
+      });
+      if (confirmed) await setVisibility(ids, 'published');
+    }
+
+    async function togglePin(id) {
+      const event = state.events.find((e) => e.id === id);
+      if (!event) return;
+      await runAction(() => updateDoc(doc(db, COL.events, id), stamp({ pinned: !event.pinned })), event.pinned ? 'Unpinned.' : 'Pinned to top.');
+    }
+
+    /* =====================================================================
+       12. TEAMS
+       ===================================================================== */
+    function memberRow(member = {}, locked = false) {
+      return `
+        <div class="member-row">
+          <input class="input" name="member-name" placeholder="Full name" value="${esc(member.name || '')}" ${locked ? 'readonly' : ''} required>
+          <input class="input" name="member-roll" placeholder="Roll number" value="${esc(member.rollNo || '')}" ${locked ? 'readonly' : ''} required style="text-transform:uppercase">
+          ${locked
+            ? `<span class="chip" title="Team leader" style="justify-content:center">Lead</span>`
+            : `<button type="button" class="btn btn-ghost icon-btn" data-action="remove-member" aria-label="Remove member">${icon('close')}</button>`}
+        </div>`;
+    }
+
+    function maxTeamSizeFor(event) {
+      return Number(event?.teamSizeMax) || Number(state.settings.defaultMaxTeamSize) || 6;
+    }
+
+    function openTeamForm({ eventId, team = null }) {
+      if (!state.profile?.rollNo) return openProfileForm(true);
+      const event = state.events.find((e) => e.id === eventId);
+      if (!event) return toast('This event no longer exists.', 'error');
+      const leader = { name: state.profile.displayName, rollNo: state.profile.rollNo };
+      const others = team ? (team.members || []).filter((m) => norm(m.rollNo) !== norm(leader.rollNo)) : [];
+      const max = maxTeamSizeFor(event);
+
+      const body = `
+        <form id="team-form" data-form="team" data-event="${esc(eventId)}" data-id="${esc(team?.id || '')}" novalidate>
+          <div class="form-grid">
+            <div class="field"><label for="t-name">Team name <span class="req">*</span></label><input class="input" id="t-name" name="teamName" maxlength="80" required value="${esc(team?.teamName || '')}"></div>
+            <div class="field"><label for="t-mentor">Faculty mentor</label><input class="input" id="t-mentor" name="mentor" value="${esc(team?.mentor || '')}"></div>
+            <div class="field span-2">
+              <label>Members <span class="muted" style="font-weight:600">(up to ${max}, including you)</span></label>
+              <div class="member-rows" id="member-rows" data-max="${max}">
+                ${memberRow(leader, true)}
+                ${others.map((m) => memberRow(m)).join('')}
+              </div>
+              <div><button type="button" class="btn btn-sm" data-action="add-member" style="margin-top:8px">${icon('plus')} Add member</button></div>
+            </div>
+          </div>
+          <p class="note info" style="margin-top:16px">A coordinator will verify your team. Only verified teams count on the board.</p>
+          <p class="form-error" id="team-form-error" style="margin-top:10px"></p>
+        </form>`;
+      const footer = `
+        <button class="btn" data-action="close-modal">Cancel</button>
+        <button class="btn btn-primary" type="submit" form="team-form">${team ? 'Save team' : 'Submit registration'}</button>`;
+      modal.open(modalShell({ title: team ? 'Edit team' : 'Register your team', subtitle: esc(event.name), body, footer }));
+    }
+
+    function addMemberRow() {
+      const rows = $('#member-rows');
+      if (!rows) return;
+      const max = Number(rows.dataset.max);
+      if (rows.children.length >= max) return toast(`This event allows at most ${max} members.`, 'error');
+      rows.insertAdjacentHTML('beforeend', memberRow());
+      rows.lastElementChild.querySelector('input').focus();
+    }
+
+    async function submitTeamForm(form) {
+      const errorEl = $('#team-form-error');
+      const eventId = form.dataset.event;
+      const teamId = form.dataset.id;
+      const names = $$('[name="member-name"]', form).map((i) => i.value.trim());
+      const rolls = $$('[name="member-roll"]', form).map((i) => i.value.trim().toUpperCase());
+      const members = names.map((name, i) => ({ name, rollNo: rolls[i] })).filter((m) => m.name || m.rollNo);
+      const teamName = form.elements.teamName.value.trim();
+
+      const fail = (msg) => { errorEl.textContent = msg; };
+      if (!teamName) return fail('Team name is required.');
+      if (members.some((m) => !m.name || !m.rollNo)) return fail('Every member needs a name and roll number.');
+      const rollSet = new Set(members.map((m) => m.rollNo));
+      if (rollSet.size !== members.length) return fail('The same roll number appears twice.');
+
+      const clash = state.teams.find((t) => t.eventId === eventId && t.id !== teamId && t.status !== 'rejected'
+        && (t.members || []).some((m) => rollSet.has(String(m.rollNo).toUpperCase())));
+      if (clash) {
+        const who = (clash.members || []).find((m) => rollSet.has(String(m.rollNo).toUpperCase()));
+        return fail(`${who.rollNo} is already in team "${clash.teamName}" for this event.`);
+      }
+      errorEl.textContent = '';
+
+      const event = state.events.find((e) => e.id === eventId);
+      const payload = { teamName, mentor: form.elements.mentor.value.trim(), members };
+      const ok = await runAction(async () => {
+        if (teamId) {
+          await updateDoc(doc(db, COL.teams, teamId), stamp(payload));
+        } else {
+          await addDoc(collection(db, COL.teams), created({
+            ...payload,
+            eventId,
+            eventName: event?.name || '',
+            leaderUid: state.user.uid,
+            leaderEmail: state.user.email,
+            leaderName: state.profile.displayName,
+            status: 'pending',
+            result: '',
+          }));
+        }
+      }, teamId ? 'Team updated.' : 'Team submitted for verification.');
+      if (ok) modal.close();
+    }
+
+    async function deleteTeam(id) {
+      const team = state.teams.find((t) => t.id === id);
+      const confirmed = await confirmDialog({ title: 'Delete team registration?', text: `"${team?.teamName}" will be removed.`, confirmLabel: 'Delete', danger: true });
+      if (!confirmed) return;
+      await runAction(() => deleteDoc(doc(db, COL.teams, id)), 'Team removed.');
+    }
+
+    async function setTeamStatus(id, status) {
+      await runAction(() => updateDoc(doc(db, COL.teams, id), stamp({ status, reviewedBy: state.user.email })), `Team ${TEAM_STATUS[status].toLowerCase()}.`);
+    }
+
+    async function setTeamResult(id, result) {
+      await runAction(() => updateDoc(doc(db, COL.teams, id), stamp({ result })), 'Result saved.');
+    }
+
+    function renderTeamsView() {
+      const events = new Map(enrichEvents().map((e) => [e.id, e]));
+      const teams = myTeams().sort((a, b) => (events.get(b.eventId)?.startDate || '').localeCompare(events.get(a.eventId)?.startDate || ''));
+      const head = `
+        <div class="page-head">
+          <div><h1>My Teams</h1><p>Teams you lead or are a member of.</p></div>
+          <a class="btn btn-primary" href="#/events">${icon('grid')} Browse events</a>
+        </div>`;
+      if (!state.loaded.teams) return `${head}<div class="skeleton" style="height:200px"></div>`;
+      if (!teams.length) return head + emptyState('No teams yet', 'Open an event and choose "Register our team" to get started.', 'team');
+
+      return `${head}
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Team</th><th>Event</th><th>Members</th><th>Status</th><th>Result</th><th></th></tr></thead>
+            <tbody>
+              ${teams.map((t) => {
+                const e = events.get(t.eventId);
+                const mine = t.leaderUid === state.user.uid && t.status === 'pending';
+                return `
+                  <tr>
+                    <td><strong>${esc(t.teamName)}</strong>${t.mentor ? `<div class="muted" style="font-size:13px">Mentor: ${esc(t.mentor)}</div>` : ''}</td>
+                    <td>${e ? `<a href="#/events" data-action="open-event" data-id="${esc(e.id)}">${esc(e.name)}</a><div class="muted" style="font-size:13px">${esc(formatRange(e.startDate, e.endDate))}</div>` : esc(t.eventName || 'Deleted event')}</td>
+                    <td><div class="members">${(t.members || []).map((m) => `<div>${esc(m.name)} <span>${esc(m.rollNo)}</span></div>`).join('')}</div></td>
+                    <td>${teamBadge(t.status)}</td>
+                    <td>${esc(TEAM_RESULTS[t.result || ''])}</td>
+                    <td><div class="actions">${mine ? `
+                      <button class="btn btn-sm" data-action="edit-team" data-id="${esc(t.id)}">Edit</button>
+                      <button class="btn btn-sm btn-danger" data-action="delete-team" data-id="${esc(t.id)}">Withdraw</button>` : ''}</div></td>
+                  </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    /* =====================================================================
+       13. VIEW: SUGGEST AN EVENT
+       ===================================================================== */
+    function renderSuggestView() {
+      const fields = EVENT_FIELDS.filter((f) => SUGGEST_FIELDS.includes(f.key));
+      return `
+        <div class="page-head">
+          <div><h1>Suggest an event</h1><p>Seen a hackathon on Unstop, LinkedIn or a poster? Share it and a coordinator will review it.</p></div>
+        </div>
+        <div class="card card-pad" style="margin-bottom:28px">
+          <form id="suggest-form" data-form="suggest" novalidate>
+            <div class="form-grid">
+              ${fields.map((f) => renderField(f, { mode: 'offline', state: state.settings.homeState })).join('')}
+              <div class="field span-2"><label for="s-notes">Anything else?</label><textarea class="textarea" id="s-notes" name="notes" placeholder="Prizes, eligibility, where you saw it…"></textarea></div>
+            </div>
+            ${dataLists()}
+            <p class="form-error" id="suggest-form-error" style="margin:12px 0"></p>
+            <button class="btn btn-primary" type="submit">${icon('bulb')} Submit suggestion</button>
+          </form>
+        </div>
+        <div class="admin-section">
+          <h2>Your suggestions</h2>
+          <div id="my-suggestions"></div>
+        </div>`;
+    }
+
+    function updateSuggestView() {
+      const target = $('#my-suggestions');
+      if (!target) return;
+      const mine = [...state.mySuggestions].sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+      target.innerHTML = mine.length ? `
+            <div class="table-wrap"><table class="table">
+              <thead><tr><th>Event</th><th>Dates</th><th>Status</th></tr></thead>
+              <tbody>${mine.map((s) => `
+                <tr><td><strong>${esc(s.name)}</strong><div class="muted" style="font-size:13px">${esc(s.organizer || '')}</div></td>
+                <td>${esc(formatRange(s.startDate, s.endDate))}</td>
+                <td>${teamBadge(s.status)}</td></tr>`).join('')}
+              </tbody></table></div>`
+        : emptyState('Nothing suggested yet', 'Your submitted events will appear here with their review status.', 'bulb');
+    }
+
+    async function submitSuggestForm(form) {
+      const fields = EVENT_FIELDS.filter((f) => SUGGEST_FIELDS.includes(f.key));
+      const data = readFields(form, fields);
+      data.endDate = data.endDate || data.startDate;
+      const error = validateEvent(data);
+      $('#suggest-form-error').textContent = error;
+      if (error) return;
+      const ok = await runAction(() => addDoc(collection(db, COL.suggestions), created({
+        ...data,
+        notes: form.elements.notes.value.trim(),
+        submittedBy: state.user.uid,
+        submittedByEmail: state.user.email,
+        submittedByName: state.profile?.displayName || state.user.displayName || '',
+        status: 'pending',
+      })), 'Thanks! Your suggestion was sent for review.');
+      if (ok) form.reset();
+    }
+
+    /* =====================================================================
+       14. VIEW: BOARD (TV mode)
+       ===================================================================== */
+    let boardTimers = [];
+
+    function stopBoardTimers() {
+      boardTimers.forEach((t) => clearInterval(t));
+      boardTimers = [];
+    }
+
+    function renderBoardView() {
+      const s = state.settings;
+      if (!state.loaded.events) return '<div class="center-screen"><div class="spinner" role="status" aria-label="Loading"></div></div>';
+      const all = enrichEvents();
+      if (!state.board.year) state.board.year = defaultYear(all);
+      const years = availableYears(all);
+      if (!years.includes(state.board.year)) years.unshift(state.board.year);
+      return `
+        <div class="board" id="board">
+          <div class="board-head">
+            <h1>Details of Hackathon / Project Competitions ${esc(state.board.year)}</h1>
+            <div class="board-controls">
+              <select class="select" data-board="year" aria-label="Academic year">${selectOptions(years, state.board.year)}</select>
+              <label class="check"><input type="checkbox" data-board="showCompleted" ${state.board.showCompleted ? 'checked' : ''}> Show completed</label>
+              <button class="btn btn-sm" data-action="board-fullscreen">${icon('expand')} Full screen</button>
+              <a class="btn btn-sm" href="#/events">${icon('back')} Exit</a>
+            </div>
+            <span class="clock num" id="board-clock"></span>
+          </div>
+          <div class="board-scroll" id="board-scroll"><div id="board-body"></div></div>
+          <div style="padding:10px 28px;font-size:13px;color:var(--text-3);border-top:1px solid var(--border)">${esc(s.collegeName)} · updates live</div>
+        </div>`;
+    }
+
+    function updateBoardView() {
+      const body = $('#board-body');
+      if (!body) return;
+      const rows = enrichEvents()
+        .filter((e) => e._year === state.board.year && (state.board.showCompleted || e._status !== 'completed'))
+        .sort((a, b) => (a._rank - b._rank) || (a.startDate || '').localeCompare(b.startDate || ''));
+      if (!rows.length) {
+        body.innerHTML = `<div style="padding:40px">${emptyState('No events for this year', 'Events added in the portal appear here automatically.')}</div>`;
+        return;
+      }
+      body.innerHTML = `
+        <table class="board-table">
+          <thead><tr><th>S/No</th><th>Event Name</th><th>Organization</th><th>Event Place</th><th>Deadline</th><th>Event Date</th><th class="num">Teams</th><th class="num">Students</th></tr></thead>
+          <tbody>${rows.map((e, i) => `
+            <tr class="${e._status === 'completed' ? 'done' : ''}">
+              <td class="num">${i + 1}</td>
+              <td class="big">${esc(e.name)}</td>
+              <td>${esc(e.organizer || '—')}</td>
+              <td>${esc(placeOf(e))}</td>
+              <td>${e.registrationDeadline ? esc(formatDate(e.registrationDeadline)) : '—'}${e._status === 'closing' ? ' <span class="badge b-closing plain">Soon</span>' : ''}</td>
+              <td>${esc(formatRange(e.startDate, e.endDate))}</td>
+              <td class="num big">${String(e._teams).padStart(2, '0')}</td>
+              <td class="num big">${String(e._students).padStart(2, '0')}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    function startBoardTimers() {
+      stopBoardTimers();
+      const clock = () => {
+        const el = $('#board-clock');
+        if (el) el.textContent = new Intl.DateTimeFormat('en-IN', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date());
+      };
+      clock();
+      boardTimers.push(setInterval(clock, 15000));
+
+      // Slow auto-scroll for long lists on a TV; pauses at the ends and on hover.
+      let pauseUntil = Date.now() + 4000;
+      let hovering = false;
+      const scroller = $('#board-scroll');
+      scroller?.addEventListener('mouseenter', () => { hovering = true; });
+      scroller?.addEventListener('mouseleave', () => { hovering = false; });
+      boardTimers.push(setInterval(() => {
+        const el = $('#board-scroll');
+        if (!el || hovering || Date.now() < pauseUntil || window.matchMedia('(max-width: 860px)').matches) return;
+        if (el.scrollHeight <= el.clientHeight) return;
+        if (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) {
+          pauseUntil = Date.now() + 5000;
+          setTimeout(() => { el.scrollTop = 0; pauseUntil = Date.now() + 4000; }, 4500);
+          return;
+        }
+        el.scrollTop += 1;
+      }, 40));
+    }
+
+    /* =====================================================================
+       15. VIEW: ADMIN
+       ===================================================================== */
+    function adminTabs() {
+      const tabs = [
+        { key: 'approvals', label: 'Approvals', count: pendingApprovals() },
+        { key: 'teams', label: 'Teams', count: state.teams.filter((t) => t.status === 'pending').length },
+        { key: 'events', label: 'Events', count: state.events.filter((e) => e.needsReview).length },
+      ];
+      if (isAdmin()) tabs.push({ key: 'roles', label: 'Roles' }, { key: 'settings', label: 'Settings' });
+      return tabs;
+    }
+
+    function renderAdminView() {
+      if (!isStaff()) return emptyState('Staff only', 'You need a coordinator or admin role to open this page.', 'shield');
+      const tabs = adminTabs();
+      if (!tabs.some((t) => t.key === state.adminTab)) state.adminTab = 'approvals';
+      const panels = {
+        approvals: renderAdminApprovals, teams: renderAdminTeams, events: renderAdminEvents,
+        roles: renderAdminRoles, settings: renderAdminSettings,
+      };
+      return `
+        <div class="page-head">
+          <div><h1>Admin</h1><p>Signed in as ${esc(ROLES[state.role])}.</p></div>
+          <button class="btn btn-primary" data-action="new-event">${icon('plus')} Add event</button>
+        </div>
+        <div class="tabs admin-tabs" role="tablist">
+          ${tabs.map((t) => `<button class="tab ${state.adminTab === t.key ? 'active' : ''}" data-action="admin-tab" data-tab="${t.key}">${esc(t.label)}${t.count ? ` <span class="count num">${t.count}</span>` : ''}</button>`).join('')}
+        </div>
+        ${panels[state.adminTab]()}`;
+    }
+
+    function timeAgo(date) {
+      const minutes = Math.round((Date.now() - date.getTime()) / 60000);
+      if (minutes < 1) return 'just now';
+      if (minutes < 60) return `${plural(minutes, 'minute')} ago`;
+      const hours = Math.round(minutes / 60);
+      if (hours < 48) return `${plural(hours, 'hour')} ago`;
+      return `${plural(Math.round(hours / 24), 'day')} ago`;
+    }
+
+    function renderImportStatus() {
+      const status = state.importStatus;
+      if (status === undefined) return '';
+      if (status === null) {
+        return `<p class="note" style="margin-bottom:18px">The automatic importer has not run yet. Run <strong>npm run import</strong> or start the "Import hackathons" GitHub Action.</p>`;
+      }
+      const finished = status.finishedAt?.toDate?.();
+      const staleHours = Number(state.settings.importStaleHours) || 26;
+      const stale = !finished || (Date.now() - finished.getTime()) / 3600000 > staleHours;
+      const failing = (status.sources || []).filter((s) => !s.ok);
+      const tone = failing.length || stale ? '' : 'info';
+      const runLink = safeUrl(status.runUrl) ? ` · <a href="${esc(safeUrl(status.runUrl))}" target="_blank" rel="noopener noreferrer">View run</a>` : '';
+      const sources = (status.sources || []).map((s) => `
+        <span class="chip" title="${esc(s.error || `${s.fetched} fetched, ${s.kept} kept`)}" style="${s.ok ? '' : 'background:var(--marker-soft);color:var(--marker)'}">
+          ${s.ok ? '✓' : '✕'} ${esc(s.label)} ${s.ok ? `<span class="num">${s.kept}</span>` : 'failed'}
+        </span>`).join('');
+      return `
+        <div class="note ${tone}" style="margin-bottom:18px;display:grid;gap:8px">
+          <div><strong>Last import ${finished ? esc(timeAgo(finished)) : 'time unknown'}</strong>${runLink}
+            ${stale ? ` — <strong>no import in over ${staleHours} hours.</strong> Check the GitHub Action (GitHub pauses scheduled workflows after 60 days without repository activity).` : ''}
+            ${failing.length ? ` — ${esc(failing.map((s) => `${s.label}: ${s.error}`).join('; '))}` : ''}</div>
+          <div class="card-top">${sources}</div>
+        </div>`;
+    }
+
+    function renderAdminApprovals() {
+      const suggestions = [...state.suggestions].sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+      const imports = enrichEvents({ includeUnpublished: true })
+        .filter((e) => e.visibility === 'pending')
+        .sort((a, b) => (a._rank - b._rank) || (a.registrationDeadline || a.startDate || '9999').localeCompare(b.registrationDeadline || b.startDate || '9999'));
+
+      const suggestionTable = suggestions.length ? `
+        <div class="table-wrap"><table class="table">
+          <thead><tr><th>Event</th><th>Place</th><th>Dates</th><th>Suggested by</th><th></th></tr></thead>
+          <tbody>${suggestions.map((s) => `
+            <tr>
+              <td><strong>${esc(s.name)}</strong><div class="muted" style="font-size:13px">${esc(s.organizer || '')}</div>
+                ${safeUrl(s.registrationUrl) ? `<a href="${esc(safeUrl(s.registrationUrl))}" target="_blank" rel="noopener noreferrer" style="font-size:13px">Open link</a>` : ''}
+                ${s.notes ? `<div class="muted" style="font-size:13px;margin-top:4px">${esc(s.notes)}</div>` : ''}</td>
+              <td>${esc(placeOf(s))}</td>
+              <td>${esc(formatRange(s.startDate, s.endDate))}${s.registrationDeadline ? `<div class="muted" style="font-size:13px">Deadline ${esc(formatDate(s.registrationDeadline))}</div>` : ''}</td>
+              <td>${esc(s.submittedByName || '')}<div class="muted" style="font-size:13px">${esc(s.submittedByEmail || '')}</div></td>
+              <td><div class="actions">
+                <button class="btn btn-sm btn-danger" data-action="reject-suggestion" data-id="${esc(s.id)}">Reject</button>
+                <button class="btn btn-sm btn-primary" data-action="approve-suggestion" data-id="${esc(s.id)}">Review</button>
+              </div></td>
+            </tr>`).join('')}
+          </tbody></table></div>`
+        : emptyState('No pending suggestions', 'Student suggestions will appear here.', 'bulb');
+
+      const importTable = imports.length ? `
+        <div class="table-wrap"><table class="table">
+          <thead><tr><th>Event</th><th>Source</th><th>Region</th><th>Dates</th><th></th></tr></thead>
+          <tbody>${imports.map((e) => `
+            <tr>
+              <td><strong>${esc(e.name)}</strong><div class="muted" style="font-size:13px">${esc(e.organizer || '')}</div>
+                ${safeUrl(e.registrationUrl) ? `<a href="${esc(safeUrl(e.registrationUrl))}" target="_blank" rel="noopener noreferrer" style="font-size:13px">Open link</a>` : ''}
+                ${e.needsReview && e.reviewNote ? `<div style="font-size:12px;color:var(--amber);margin-top:4px">${esc(e.reviewNote)}</div>` : ''}</td>
+              <td>${esc(sourceLabel(e))}</td>
+              <td>${esc(regionLabel(e._region))}<div class="muted" style="font-size:13px">${esc(placeOf(e))}</div></td>
+              <td>${esc(formatRange(e.startDate, e.endDate))}${e.registrationDeadline ? `<div class="muted" style="font-size:13px">Deadline ${esc(formatDate(e.registrationDeadline))}</div>` : ''}</td>
+              <td><div class="actions">
+                <button class="btn btn-sm btn-danger" data-action="set-visibility" data-visibility="hidden" data-id="${esc(e.id)}">Hide</button>
+                ${e.needsReview
+                  ? `<button class="btn btn-sm btn-primary" data-action="review-import" data-id="${esc(e.id)}">Edit &amp; publish</button>`
+                  : `<button class="btn btn-sm btn-primary" data-action="set-visibility" data-visibility="published" data-id="${esc(e.id)}">Publish</button>`}
+              </div></td>
+            </tr>`).join('')}
+          </tbody></table></div>`
+        : emptyState('No imported events waiting', state.settings.autoPublishImports
+            ? 'Imported events are published automatically. Turn this off in Settings to review them here first.'
+            : 'Events found on hackathon platforms will appear here after the next import.', 'search');
+
+      return `
+        ${renderImportStatus()}
+        <div class="admin-section"><h2>Student suggestions <span class="badge b-info plain">${suggestions.length}</span></h2>${suggestionTable}</div>
+        <div class="admin-section">
+          <h2>Imported from platforms <span class="badge b-info plain">${imports.length}</span>
+            ${imports.some((e) => !e.needsReview) ? `<button class="btn btn-sm btn-primary" data-action="publish-all" style="margin-left:auto">Publish all ready</button>` : ''}</h2>
+          ${importTable}
+        </div>`;
+    }
+
+    function renderAdminTeams() {
+      const f = state.adminTeamFilter;
+      const events = new Map(state.events.map((e) => [e.id, e]));
+      const teams = state.teams
+        .filter((t) => (f.status === 'all' || t.status === f.status) && (!f.eventId || t.eventId === f.eventId))
+        .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+      const eventOptions = { '': 'All events', ...Object.fromEntries([...state.events].sort((a, b) => a.name.localeCompare(b.name)).map((e) => [e.id, e.name])) };
+
+      return `
+        <div class="filters" style="margin-top:0">
+          <select class="select" data-team-filter="status" aria-label="Team status">${selectOptions({ pending: 'Pending', verified: 'Verified', rejected: 'Rejected', all: 'All statuses' }, f.status)}</select>
+          <select class="select" data-team-filter="eventId" aria-label="Event" style="flex-basis:280px">${selectOptions(eventOptions, f.eventId)}</select>
+        </div>
+        ${teams.length ? `
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Team</th><th>Event</th><th>Members</th><th>Status</th><th>Result</th><th></th></tr></thead>
+            <tbody>${teams.map((t) => `
+              <tr>
+                <td><strong>${esc(t.teamName)}</strong><div class="muted" style="font-size:13px">Lead: ${esc(t.leaderName || t.leaderEmail)}</div>${t.mentor ? `<div class="muted" style="font-size:13px">Mentor: ${esc(t.mentor)}</div>` : ''}</td>
+                <td>${esc(events.get(t.eventId)?.name || t.eventName || 'Deleted event')}</td>
+                <td><div class="members">${(t.members || []).map((m) => `<div>${esc(m.name)} <span>${esc(m.rollNo)}</span></div>`).join('')}</div></td>
+                <td>${teamBadge(t.status)}</td>
+                <td><select class="select" data-team-result="${esc(t.id)}" aria-label="Result">${selectOptions(TEAM_RESULTS, t.result || '')}</select></td>
+                <td><div class="actions">
+                  ${t.status !== 'verified' ? `<button class="btn btn-sm btn-primary" data-action="verify-team" data-id="${esc(t.id)}">Verify</button>` : ''}
+                  ${t.status !== 'rejected' ? `<button class="btn btn-sm" data-action="reject-team" data-id="${esc(t.id)}">Reject</button>` : ''}
+                  <button class="btn btn-sm btn-danger icon-btn" data-action="delete-team" data-id="${esc(t.id)}" aria-label="Delete">${icon('trash')}</button>
+                </div></td>
+              </tr>`).join('')}
+            </tbody></table></div>`
+          : emptyState('No teams here', 'Change the filters to see other registrations.', 'team')}`;
+    }
+
+    function renderAdminEvents() {
+      const f = state.adminEventFilter;
+      const term = norm(f.search);
+      const events = enrichEvents({ includeUnpublished: true })
+        .filter((e) => f.visibility === 'all' || (e.visibility || 'published') === f.visibility)
+        .filter((e) => !f.reviewOnly || e.needsReview)
+        .filter((e) => !term || [e.name, e.organizer, e.city, sourceLabel(e)].map(norm).join(' ').includes(term))
+        .sort((a, b) => (b.startDate || '').localeCompare(a.startDate || ''));
+      return `
+        <div class="filters" style="margin-top:0">
+          <label class="search"><span class="sr-only">Search</span>${icon('search')}<input class="input" type="search" placeholder="Search events…" data-admin-event="search" value="${esc(f.search)}"></label>
+          <select class="select" data-admin-event="visibility" aria-label="Visibility">${selectOptions({ ...VISIBILITY, all: 'All events' }, f.visibility)}</select>
+          <label class="check"><input type="checkbox" data-admin-event="reviewOnly" ${f.reviewOnly ? 'checked' : ''}> Needs review only</label>
+          <button class="btn btn-sm" data-action="export-events" style="margin-left:auto">${icon('download')} Export</button>
+        </div>
+        <p class="muted" style="font-size:13px;margin:-12px 0 12px">${plural(events.length, 'event')}</p>
+        ${events.length ? `
+          <div class="table-wrap"><table class="table">
+            <thead><tr><th>Event</th><th>Source</th><th>Region</th><th>Dates</th><th>Status</th><th>Teams / Students</th><th></th></tr></thead>
+            <tbody>${events.map((e) => `
+              <tr>
+                <td><strong>${esc(e.name)}</strong>${e.pinned ? ' <span class="chip chip-home">Pinned</span>' : ''}${e.needsReview ? ' <span class="chip chip-review">Review</span>' : ''}${!isPublished(e) ? ` <span class="chip chip-review">${esc(VISIBILITY[e.visibility] || e.visibility)}</span>` : ''}
+                  <div class="muted" style="font-size:13px">${esc(e.organizer || '')}</div>
+                  ${e.needsReview && e.reviewNote ? `<div style="font-size:12px;color:var(--amber)">${esc(e.reviewNote)}</div>` : ''}</td>
+                <td>${esc(sourceLabel(e))}</td>
+                <td>${esc(regionLabel(e._region))}</td>
+                <td>${esc(formatRange(e.startDate, e.endDate))}</td>
+                <td>${statusBadge(e._status)}</td>
+                <td class="num">${e._teams} / ${e._students}${e._pending ? ` <span class="muted">(+${e._pending} pending)</span>` : ''}</td>
+                <td><div class="actions">
+                  <button class="btn btn-sm" data-action="toggle-pin" data-id="${esc(e.id)}">${e.pinned ? 'Unpin' : 'Pin'}</button>
+                  <button class="btn btn-sm" data-action="edit-event" data-id="${esc(e.id)}">Edit</button>
+                  ${removeButton(e)}
+                </div></td>
+              </tr>`).join('')}
+            </tbody></table></div>`
+          : emptyState('No events', 'Add an event or change the filters.', 'grid')}`;
+    }
+
+    function renderAdminRoles() {
+      const roles = [...state.roles].sort((a, b) => a.id.localeCompare(b.id));
+      return `
+        <div class="card card-pad" style="margin-bottom:18px">
+          <form class="inline-form" data-form="role" novalidate>
+            <div class="field"><label for="r-email">College email</label><input class="input" id="r-email" name="email" type="email" required placeholder="name@${esc(state.settings.allowedDomain)}"></div>
+            <div class="field" style="flex:0 1 200px"><label for="r-role">Role</label><select class="select" id="r-role" name="role">${selectOptions({ coordinator: ROLES.coordinator, admin: ROLES.admin }, 'coordinator')}</select></div>
+            <button class="btn btn-primary" type="submit" style="height:40px">${icon('plus')} Grant role</button>
+          </form>
+          <p class="muted" style="font-size:13px">Everyone else with a @${esc(state.settings.allowedDomain)} account is a student. Roles apply immediately, even before the person first signs in.</p>
+        </div>
+        <div class="table-wrap"><table class="table">
+          <thead><tr><th>Email</th><th>Role</th><th></th></tr></thead>
+          <tbody>${roles.map((r) => `
+            <tr>
+              <td>${esc(r.id)}${r.id === state.user.email.toLowerCase() ? ' <span class="muted">(you)</span>' : ''}</td>
+              <td><span class="chip ${r.role === 'admin' ? 'chip-home' : ''}">${esc(ROLES[r.role] || r.role)}</span></td>
+              <td><div class="actions">${r.id !== state.user.email.toLowerCase() ? `<button class="btn btn-sm btn-danger" data-action="remove-role" data-id="${esc(r.id)}">Remove</button>` : ''}</div></td>
+            </tr>`).join('')}
+          </tbody></table></div>`;
+    }
+
+    function renderAdminSettings() {
+      return `
+        <div class="card card-pad">
+          <form id="settings-form" data-form="settings" novalidate>
+            <div class="form-grid">${SETTINGS_FIELDS.map((f) => renderField(f, state.settings)).join('')}</div>
+            <p class="form-error" id="settings-form-error" style="margin:12px 0"></p>
+            <button class="btn btn-primary" type="submit">Save settings</button>
+          </form>
+        </div>`;
+    }
+
+    async function submitRoleForm(form) {
+      const email = form.elements.email.value.trim().toLowerCase();
+      const role = form.elements.role.value;
+      if (!email.endsWith(`@${state.settings.allowedDomain}`)) return toast(`Use a @${state.settings.allowedDomain} email address.`, 'error');
+      const ok = await runAction(() => setDoc(doc(db, COL.roles, email), created({ email, role })), `${email} is now ${ROLES[role].toLowerCase()}.`);
+      if (ok) form.reset();
+    }
+
+    async function removeRole(email) {
+      const confirmed = await confirmDialog({ title: 'Remove role?', text: `${email} will become a student.`, confirmLabel: 'Remove', danger: true });
+      if (!confirmed) return;
+      await runAction(() => deleteDoc(doc(db, COL.roles, email)), 'Role removed.');
+    }
+
+    async function submitSettingsForm(form) {
+      const data = readFields(form, SETTINGS_FIELDS);
+      const errorEl = $('#settings-form-error');
+      const missing = SETTINGS_FIELDS.filter((f) => f.required && !f.readonly && (data[f.key] === '' || data[f.key] == null));
+      if (missing.length) { errorEl.textContent = `Required: ${missing.map((f) => f.label).join(', ')}`; return; }
+      if (data.logoUrl && !safeUrl(data.logoUrl)) { errorEl.textContent = 'Logo URL must start with http:// or https://'; return; }
+      if (data.academicYearStartMonth < 1 || data.academicYearStartMonth > 12) { errorEl.textContent = 'Academic year start month must be 1–12.'; return; }
+      errorEl.textContent = '';
+      await runAction(() => updateDoc(doc(db, COL.settings, SETTINGS_DOC), stamp(data)), 'Settings saved.');
+    }
+
+    function reviewSuggestion(id) {
+      const item = state.suggestions.find((s) => s.id === id);
+      if (!item) return;
+      const prefill = {
+        ...Object.fromEntries(SUGGEST_FIELDS.map((key) => [key, item[key] ?? ''])),
+        mode: MODES[item.mode] ? item.mode : 'offline',
+        description: item.notes || '',
+        offlineCounts: { teams: 0, students: 0 },
+      };
+      openEventForm({ prefill, origin: { type: 'suggestion', id } });
+    }
+
+    async function rejectSuggestion(id) {
+      await runAction(() => updateDoc(doc(db, COL.suggestions, id), stamp({ status: 'rejected' })), 'Suggestion rejected.');
+    }
+
+    /* =====================================================================
+       16. PROFILE
+       ===================================================================== */
+    function openProfileForm(required = false) {
+      const s = state.settings;
+      const p = state.profile || {};
+      const body = `
+        <form id="profile-form" data-form="profile" novalidate>
+          ${required ? `<p class="note info" style="margin-bottom:16px">Tell us a little about you before registering teams.</p>` : ''}
+          <div class="form-grid">
+            <div class="field span-2"><label for="p-name">Full name <span class="req">*</span></label><input class="input" id="p-name" name="displayName" required value="${esc(p.displayName || state.user.displayName || '')}"></div>
+            <div class="field"><label for="p-roll">Roll number <span class="req">*</span></label><input class="input" id="p-roll" name="rollNo" required style="text-transform:uppercase" value="${esc(p.rollNo || '')}"></div>
+            <div class="field"><label for="p-dept">Department <span class="req">*</span></label><select class="select" id="p-dept" name="department" required><option value="">Select…</option>${selectOptions(s.departments || [], p.department)}</select></div>
+            <div class="field"><label for="p-year">Year of study <span class="req">*</span></label><select class="select" id="p-year" name="year" required><option value="">Select…</option>${selectOptions(Object.fromEntries((s.yearsOfStudy || []).map((y) => [y, `Year ${y}`])), p.year)}</select></div>
+            <div class="field"><label>College email</label><input class="input" readonly value="${esc(state.user.email)}"></div>
+          </div>
+          <p class="form-error" id="profile-form-error" style="margin-top:12px"></p>
+        </form>`;
+      const footer = `
+        ${required ? `<button class="btn spacer" data-action="sign-out">Sign out</button>` : `<button class="btn" data-action="close-modal">Cancel</button>`}
+        <button class="btn btn-primary" type="submit" form="profile-form">Save profile</button>`;
+      modal.open(modalShell({ title: required ? 'Complete your profile' : 'Your profile', body, footer, closable: !required }), { locked: required });
+    }
+
+    async function submitProfileForm(form) {
+      const data = {
+        displayName: form.elements.displayName.value.trim(),
+        rollNo: form.elements.rollNo.value.trim().toUpperCase(),
+        department: form.elements.department.value,
+        year: Number(form.elements.year.value) || null,
+      };
+      const errorEl = $('#profile-form-error');
+      if (!data.displayName || !data.rollNo || !data.department || !data.year) {
+        errorEl.textContent = 'Please fill in every required field.';
+        return;
+      }
+      errorEl.textContent = '';
+      const isNew = !state.profile;
+      const payload = isNew
+        ? { ...data, email: state.user.email.toLowerCase(), photoURL: state.user.photoURL || '', createdAt: serverTimestamp(), updatedAt: serverTimestamp() }
+        : { ...data, updatedAt: serverTimestamp() };
+      const ok = await runAction(() => (isNew
+        ? setDoc(doc(db, COL.users, state.user.uid), payload)
+        : updateDoc(doc(db, COL.users, state.user.uid), payload)), 'Profile saved.');
+      if (ok) modal.close(true);
+    }
+
+    /* =====================================================================
+       17. EXPORT
+       ===================================================================== */
+    async function exportEvents() {
+      const events = (state.route === 'events' ? filterEvents(enrichEvents()) : enrichEvents()).sort(compareEvents);
+      if (!events.length) return toast('Nothing to export.', 'error');
+      try {
+        const XLSX = await import(SHEETJS_URL);
+        const rows = events.map((e, i) => ({
+          'S/No': i + 1,
+          'Event Name': e.name,
+          Organization: e.organizer || '',
+          Mode: MODES[e.mode] || e.mode,
+          City: e.city || '',
+          State: e.state || '',
+          Region: regionLabel(e._region),
+          'Registration Deadline': e.registrationDeadline || '',
+          'Start Date': e.startDate || '',
+          'End Date': e.endDate || '',
+          Status: STATUS[e._status].label,
+          'Teams Registered': e._teams,
+          'Number of Students': e._students,
+          'Academic Year': e._year,
+          'Registration Link': e.registrationUrl || '',
+          Source: sourceLabel(e),
+        }));
+        const sheet = XLSX.utils.json_to_sheet(rows);
+        const book = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(book, sheet, 'Events');
+        const label = state.route === 'events' && state.filters.year ? state.filters.year : 'all';
+        XLSX.writeFile(book, `${(state.settings.collegeShortName || 'college').toLowerCase()}-hackathons-${label}.xlsx`);
+      } catch (error) {
+        console.error(error);
+        toast('Export failed. Check your internet connection.', 'error');
+      }
+    }
+
+    /* =====================================================================
+       18. ROUTER & RENDER
+       ===================================================================== */
+    const VIEWS = {
+      events: { render: renderEventsView, update: updateEventsView },
+      teams: { render: renderTeamsView },
+      suggest: { render: renderSuggestView, update: updateSuggestView },
+      board: { render: renderBoardView, update: updateBoardView, fullscreen: true },
+      admin: { render: renderAdminView, keepOnUpdate: () => state.adminTab === 'settings' },   // don't wipe a half-edited settings form
+    };
+
+    let mountedKey = '';
+
+    function readRoute() {
+      const route = location.hash.replace(/^#\/?/, '').split('/')[0] || 'events';
+      state.route = VIEWS[route] ? route : 'events';
+    }
+
+    function render() {
+      const root = $('#app');
+      let screen = '';
+      if (state.fatalError) screen = 'fatal';
+      else if (!state.config) screen = 'setup';
+      else if (state.settingsMissing) screen = 'uninitialised';
+      else if (!state.settings || !state.authReady) screen = 'loading';
+      else if (!state.user) screen = 'signin';
+
+      if (screen) {
+        stopBoardTimers();
+        mountedKey = screen;
+        document.title = state.settings?.portalTitle || 'Hackathon Portal';
+        if (screen === 'fatal') root.innerHTML = renderFatal();
+        if (screen === 'setup') root.innerHTML = renderSetupScreen(state.setupMessage);
+        if (screen === 'uninitialised') root.innerHTML = renderNotInitialised();
+        if (screen === 'loading') root.innerHTML = '<div class="center-screen"><div class="spinner" role="status" aria-label="Loading"></div></div>';
+        if (screen === 'signin') root.innerHTML = renderSignIn();
+        return;
+      }
+
+      const view = VIEWS[state.route];
+      const key = `app:${state.route}:${state.route === 'admin' ? state.adminTab : ''}:${state.role}:${state.loaded.events}`;
+      const keep = typeof view.keepOnUpdate === 'function' ? view.keepOnUpdate() : view.keepOnUpdate;
+      document.title = `${state.settings.portalTitle} · ${state.settings.collegeShortName || state.settings.collegeName}`;
+
+      if (key !== mountedKey || (!keep && !view.update)) {
+        const scrollY = key === mountedKey ? window.scrollY : 0;
+        const active = document.activeElement;
+        const focusSelector = active?.dataset?.filter ? `[data-filter="${active.dataset.filter}"]`
+          : active?.dataset?.adminEvent ? `[data-admin-event="${active.dataset.adminEvent}"]` : '';
+        const selection = focusSelector && active.type === 'search' ? [active.selectionStart, active.selectionEnd] : null;
+
+        if (state.route === 'board') {
+          root.innerHTML = view.render();
+        } else {
+          stopBoardTimers();
+          root.innerHTML = renderShell(view.render());
+        }
+        if (key !== mountedKey && state.route === 'board') startBoardTimers();
+        mountedKey = key;
+        window.scrollTo(0, scrollY);
+
+        if (focusSelector) {
+          const el = $(focusSelector);
+          el?.focus();
+          if (selection && el?.setSelectionRange) el.setSelectionRange(...selection);
+        }
+      }
+      view.update?.();
+
+      if (state.profile === null && !$('#profile-form')) openProfileForm(true);
+    }
+
+    /* =====================================================================
+       19. EVENT HANDLERS
+       ===================================================================== */
+    const actions = {
+      'sign-in': () => signIn(),
+      'sign-out': async () => { modal.close(true); await signOut(auth); },
+      'toggle-theme': () => toggleTheme(),
+      'toggle-menu': () => $('#user-menu')?.classList.toggle('open'),
+      'edit-profile': () => openProfileForm(false),
+      'close-modal': () => modal.close(),
+      'open-event': (el, e) => { e.preventDefault(); openEventDetail(el.dataset.id); },
+      'new-event': () => openEventForm(),
+      'edit-event': (el) => openEventForm({ event: state.events.find((e) => e.id === el.dataset.id) }),
+      'delete-event': (el) => deleteEvent(el.dataset.id),
+      'toggle-pin': (el) => togglePin(el.dataset.id),
+      'register-team': (el) => openTeamForm({ eventId: el.dataset.id }),
+      'edit-team': (el) => {
+        const team = state.teams.find((t) => t.id === el.dataset.id);
+        if (team) openTeamForm({ eventId: team.eventId, team });
+      },
+      'delete-team': (el) => deleteTeam(el.dataset.id),
+      'verify-team': (el) => setTeamStatus(el.dataset.id, 'verified'),
+      'reject-team': (el) => setTeamStatus(el.dataset.id, 'rejected'),
+      'add-member': () => addMemberRow(),
+      'remove-member': (el) => el.closest('.member-row')?.remove(),
+      'set-region': (el) => { state.filters.region = el.dataset.region; updateEventsView(); },
+      'admin-tab': (el) => { state.adminTab = el.dataset.tab; render(); },
+      'approve-suggestion': (el) => reviewSuggestion(el.dataset.id),
+      'reject-suggestion': (el) => rejectSuggestion(el.dataset.id),
+      'set-visibility': (el) => setVisibility([el.dataset.id], el.dataset.visibility),
+      'publish-all': () => publishAllPending(),
+      'review-import': (el) => openEventForm({ event: state.events.find((e) => e.id === el.dataset.id), publishOnSave: true }),
+      'remove-role': (el) => removeRole(el.dataset.id),
+      'export-events': () => exportEvents(),
+      'board-fullscreen': () => $('#board')?.requestFullscreen?.(),
+    };
+
+    const forms = {
+      event: submitEventForm,
+      team: submitTeamForm,
+      suggest: submitSuggestForm,
+      profile: submitProfileForm,
+      role: submitRoleForm,
+      settings: submitSettingsForm,
+    };
+
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('[data-action]');
+      if (!e.target.closest('.user-menu')) $('#user-menu')?.classList.remove('open');
+      if (!target) return;
+      const handler = actions[target.dataset.action];
+      if (handler) {
+        if (target.tagName === 'A' && target.dataset.action !== 'open-event') e.preventDefault();
+        handler(target, e);
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[role="button"][data-action]')) {
+        e.preventDefault();
+        e.target.click();
+      }
+    });
+
+    document.addEventListener('submit', async (e) => {
+      const form = e.target.closest('[data-form]');
+      if (!form) return;
+      e.preventDefault();
+      const submitter = e.submitter || $(`[form="${form.id}"][type="submit"]`);
+      if (submitter) submitter.disabled = true;
+      try {
+        await forms[form.dataset.form]?.(form);
+      } finally {
+        if (submitter) submitter.disabled = false;
+      }
+    });
+
+    const onSearch = debounce(() => updateEventsView(), 150);
+    const onAdminSearch = debounce(() => render(), 250);
+
+    document.addEventListener('input', (e) => {
+      if (e.target.dataset.filter === 'search') {
+        state.filters.search = e.target.value;
+        onSearch();
+      } else if (e.target.dataset.adminEvent === 'search') {
+        state.adminEventFilter.search = e.target.value;
+        onAdminSearch();
+      }
+    });
+
+    document.addEventListener('change', (e) => {
+      const el = e.target;
+      if (el.dataset.filter && el.dataset.filter !== 'search') {
+        state.filters[el.dataset.filter] = el.value;
+        updateEventsView();
+      } else if (el.dataset.board) {
+        state.board[el.dataset.board] = el.type === 'checkbox' ? el.checked : el.value;
+        const title = $('.board-head h1');
+        if (title) title.textContent = `Details of Hackathon / Project Competitions ${state.board.year}`;
+        updateBoardView();
+      } else if (el.dataset.teamFilter) {
+        state.adminTeamFilter[el.dataset.teamFilter] = el.value;
+        render();
+      } else if (el.dataset.teamResult) {
+        setTeamResult(el.dataset.teamResult, el.value);
+      } else if (el.dataset.adminEvent && el.dataset.adminEvent !== 'search') {
+        state.adminEventFilter[el.dataset.adminEvent] = el.type === 'checkbox' ? el.checked : el.value;
+        render();
+      }
+    });
+
+    $('#modal').addEventListener('cancel', (e) => { if (modal.locked) e.preventDefault(); });
+    $('#modal').addEventListener('click', (e) => { if (e.target === $('#modal')) modal.close(); });
+
+    window.addEventListener('hashchange', () => {
+      readRoute();
+      modal.close();
+      render();
+    });
+
+    /* =====================================================================
+       20. THEME
+       ===================================================================== */
+    function storage(fn) {
+      try { return fn(window.localStorage); } catch { return null; }
+    }
+
+    function applyTheme(theme) {
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      else delete document.documentElement.dataset.theme;
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.dataset.theme
+        || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      storage((s) => s.setItem(THEME_KEY, next));
+    }
+
+    /* =====================================================================
+       21. BOOT
+       ===================================================================== */
+    async function boot() {
+      applyTheme(storage((s) => s.getItem(THEME_KEY)));
+      readRoute();
+
+      try {
+        state.config = await loadConfig();
+      } catch (error) {
+        state.setupMessage = error.message;
+        render();
+        return;
+      }
+
+      app = initializeApp(state.config.firebase);
+      auth = getAuth(app);
+      db = getFirestore(app);
+
+      subscribe('settings', doc(db, COL.settings, SETTINGS_DOC), (snap) => {
+        state.settingsMissing = !snap.exists();
+        state.settings = snap.exists() ? snap.data() : null;
+        mountedKey = '';
+        render();
+      }, (error) => {
+        state.fatalError = error.code === 'permission-denied'
+          ? 'The portal settings could not be read. Deploy the Firestore security rules (see README) and reload.'
+          : `Could not load portal settings: ${error.message}`;
+        render();
+      });
+
+      onAuthStateChanged(auth, async (user) => {
+        resetSession();
+        state.authReady = true;
+
+        if (user) {
+          if (!state.settings) {
+            // Wait for settings to arrive before validating the domain.
+            await new Promise((resolve) => {
+              const check = setInterval(() => { if (state.settings || state.settingsMissing || state.fatalError) { clearInterval(check); resolve(); } }, 50);
+            });
+          }
+          const domain = state.settings?.allowedDomain;
+          const email = (user.email || '').toLowerCase();
+          if (!domain || !email.endsWith(`@${domain}`) || !user.emailVerified) {
+            state.authError = `Only @${domain} Google accounts can use this portal. You signed in as ${email || 'an unknown account'}.`;
+            await signOut(auth);
+            return;
+          }
+          state.authError = '';
+          state.user = user;
+          startMemberSubscriptions();
+        }
+        mountedKey = '';
+        render();
+      });
+
+      render();
+    }
+
+    boot().catch((error) => {
+      console.error(error);
+      state.fatalError = error.message;
+      render();
+    });
+  </script>
+</body>
+</html>

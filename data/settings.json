@@ -1,0 +1,53 @@
+{
+  "collegeName": "CMR College of Engineering & Technology",
+  "collegeShortName": "CMRCET",
+  "portalTitle": "Hackathon & Project Competitions",
+  "logoUrl": "",
+  "allowedDomain": "cmrcet.ac.in",
+  "homeRegionLabel": "Hyderabad",
+  "homeState": "Telangana",
+  "homeCities": [
+    "Hyderabad",
+    "Secunderabad",
+    "Madhapur",
+    "Gachibowli",
+    "Hitech City",
+    "Kondapur",
+    "Kukatpally",
+    "Bachupally",
+    "Medchal",
+    "Kompally",
+    "Dundigal",
+    "Maisammaguda",
+    "Ghatkesar",
+    "Uppal",
+    "LB Nagar",
+    "Ibrahimpatnam",
+    "Shamshabad"
+  ],
+  "departments": [
+    "CSE",
+    "CSE (AI & ML)",
+    "CSE (Data Science)",
+    "CSE (Cyber Security)",
+    "IT",
+    "ECE",
+    "EEE",
+    "MECH",
+    "CIVIL"
+  ],
+  "yearsOfStudy": [1, 2, 3, 4],
+  "defaultMaxTeamSize": 6,
+  "closingSoonDays": 3,
+  "academicYearStartMonth": 6,
+  "timeZone": "Asia/Kolkata",
+  "importCountry": "India",
+  "autoPublishImports": true,
+  "importStaleHours": 26,
+  "importSources": {
+    "unstop": true,
+    "devfolio": true,
+    "devpost": true,
+    "hack2skill": true
+  }
+}

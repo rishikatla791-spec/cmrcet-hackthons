@@ -1,0 +1,19 @@
+# Secrets — never commit
+scripts/service-account.json
+*.service-account.json
+.env
+.env.*
+
+# Dependencies
+node_modules/
+
+# Firebase CLI
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

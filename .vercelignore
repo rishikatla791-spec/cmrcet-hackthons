@@ -1,0 +1,7 @@
+# Only index.html and config/ are served. Everything below stays out of the deployment.
+scripts/
+data/
+firebase/
+firebase.json
+.github/
+README.md

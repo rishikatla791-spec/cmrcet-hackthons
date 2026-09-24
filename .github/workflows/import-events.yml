@@ -1,0 +1,33 @@
+name: Import hackathons
+
+on:
+  schedule:
+    - cron: '30 0,12 * * *'     # twice a day: 06:00 and 18:00 IST
+  workflow_dispatch:             # "Run workflow" button in the Actions tab
+
+concurrency:
+  group: import-events
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: scripts
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: scripts/package-lock.json
+
+      - run: npm ci
+
+      - name: Import events into Firestore
+        run: npm run import
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}

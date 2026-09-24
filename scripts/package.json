@@ -1,0 +1,18 @@
+{
+  "name": "cmrcet-hackathons-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Database setup and the daily hackathon importer",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "seed": "node seed.mjs",
+    "seed:overwrite": "node seed.mjs --overwrite",
+    "import": "node import-events.mjs",
+    "import:preview": "node import-events.mjs --dry-run"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.0"
+  }
+}
