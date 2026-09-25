@@ -537,6 +537,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Modal */
+    dialog.modal:not([open]) { display: none !important; }
     dialog.modal {
       width: min(640px, calc(100vw - 24px)); max-height: calc(100vh - 32px); padding: 0;
       border: 1px solid var(--border); border-radius: 18px; background: var(--surface); color: var(--text);
@@ -562,7 +563,10 @@
 
     /* Mobile Bottom Sheet Modal */
     @media (max-width: 640px) {
-      dialog.modal {
+      dialog.modal:not([open]) {
+        display: none !important;
+      }
+      dialog.modal[open] {
         position: fixed;
         inset-block-start: auto;
         inset-block-end: 0;
@@ -579,8 +583,6 @@
         box-shadow: 0 -12px 40px rgba(15, 23, 42, 0.2);
         display: flex;
         flex-direction: column;
-      }
-      dialog.modal[open] {
         animation: sheetSlideUp 0.32s cubic-bezier(0.16, 1, 0.3, 1);
       }
       @keyframes sheetSlideUp {
