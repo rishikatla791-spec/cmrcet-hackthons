@@ -33,7 +33,7 @@ import hack2skill from './sources/hack2skill.mjs';
 const SOURCES = [unstop, devfolio, hack2skill, devpost];   // earlier sources win cross-platform duplicates
 const IMPORTED_FIELDS = [
   'name', 'organizer', 'mode', 'city', 'state', 'venue', 'registrationDeadline', 'startDate', 'endDate',
-  'registrationUrl', 'domains', 'teamSizeMin', 'teamSizeMax', 'prize', 'description',
+  'registrationUrl', 'domains', 'teamSizeMin', 'teamSizeMax', 'prize', 'description', 'imageUrl',
 ];
 const BATCH_LIMIT = 400;
 const MIN_USABLE_RATIO = 0.5;   // below this, the platform's response format has probably changed

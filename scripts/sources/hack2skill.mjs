@@ -60,6 +60,7 @@ export default {
         teamSizeMax: null,
         prize: '',
         description: '',
+        imageUrl: clean(h.thumbnail || '', 500),
         needsReview: notes.length > 0,
         reviewNote: notes.join(' '),
       };

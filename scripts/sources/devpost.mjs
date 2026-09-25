@@ -58,6 +58,8 @@ export default {
     return items.map((h) => {
       const { startDate, endDate } = parsePeriod(h.submission_period_dates);
       const place = parseLocation(h.displayed_location?.location);
+      const rawThumb = h.thumbnail_url || '';
+      const imageUrl = rawThumb ? (rawThumb.startsWith('//') ? `https:${rawThumb}` : rawThumb) : '';
       return {
         sourceId: String(h.id),
         name: clean(h.title, 150),
@@ -73,6 +75,7 @@ export default {
         teamSizeMax: null,
         prize: clean(stripHtml(h.prize_amount), 60),
         description: '',
+        imageUrl: clean(imageUrl, 500),
       };
     });
   },

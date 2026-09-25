@@ -290,10 +290,47 @@
       position: relative; display: flex; flex-direction: column; gap: 12px; padding: 18px;
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; text-align: left;
+      overflow: hidden;
     }
     .event-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); transform: translateY(-1px); }
     .event-card.is-completed { opacity: .72; }
     .event-card.is-pinned { border-color: color-mix(in srgb, var(--ink) 45%, var(--border)); }
+    .event-banner {
+      margin: -18px -18px 2px -18px;
+      height: 140px;
+      background: var(--surface-2);
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .event-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .25s ease;
+    }
+    .event-card:hover .event-banner img { transform: scale(1.03); }
+    .event-detail-banner {
+      margin: -20px -22px 18px -22px;
+      max-height: 240px;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .event-detail-banner img {
+      width: 100%;
+      height: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      display: block;
+    }
     .card-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .pin { margin-left: auto; color: var(--ink); display: inline-flex; }
     .pin svg { width: 16px; height: 16px; }
@@ -525,6 +562,7 @@
       { key: 'startDate', label: 'Event start', type: 'date', required: true },
       { key: 'endDate', label: 'Event end', type: 'date', hint: 'Leave empty for a one-day event' },
       { section: 'Details' },
+      { key: 'imageUrl', label: 'Poster / Banner image URL', type: 'url', span: 2, hint: 'Optional. Direct image link (JPG, PNG, WebP) for the event poster or banner' },
       { key: 'registrationUrl', label: 'Registration link', type: 'url', span: 2 },
       { key: 'domains', label: 'Themes / domains', type: 'list', span: 2, hint: 'Comma separated, e.g. AI, IoT, Web' },
       { key: 'teamSizeMin', label: 'Min team size', type: 'number', min: 1 },
@@ -540,7 +578,7 @@
       { key: 'reviewNote', label: 'Review note', type: 'text', span: 2 },
     ];
 
-    const SUGGEST_FIELDS = ['name', 'organizer', 'mode', 'city', 'state', 'registrationDeadline', 'startDate', 'endDate', 'registrationUrl'];
+    const SUGGEST_FIELDS = ['name', 'organizer', 'mode', 'city', 'state', 'registrationDeadline', 'startDate', 'endDate', 'registrationUrl', 'imageUrl'];
 
     const SETTINGS_FIELDS = [
       { section: 'College' },
@@ -1460,6 +1498,10 @@
       return `
         <article class="event-card ${e._status === 'completed' ? 'is-completed' : ''} ${e.pinned ? 'is-pinned' : ''}"
                  data-action="open-event" data-id="${esc(e.id)}" tabindex="0" role="button" aria-label="${esc(e.name)}">
+          ${e.imageUrl ? `
+            <div class="event-banner">
+              <img src="${esc(e.imageUrl)}" alt="${esc(e.name)}" loading="lazy" onerror="this.closest('.event-banner').style.display='none'">
+            </div>` : ''}
           <div class="card-top">
             ${statusBadge(e._status)}
             <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
@@ -1590,6 +1632,10 @@
         : '';
 
       const body = `
+        ${e.imageUrl ? `
+          <div class="event-detail-banner">
+            <img src="${esc(e.imageUrl)}" alt="${esc(e.name)}" onerror="this.closest('.event-detail-banner').style.display='none'">
+          </div>` : ''}
         <div class="card-top" style="margin-bottom:14px">
           ${statusBadge(e._status)}
           <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
@@ -1658,6 +1704,7 @@
       if (!data.startDate) return 'Event start date is required.';
       if (data.endDate && data.endDate < data.startDate) return 'Event end date cannot be before the start date.';
       if (data.registrationUrl && !safeUrl(data.registrationUrl)) return 'Registration link must start with http:// or https://';
+      if (data.imageUrl && !safeUrl(data.imageUrl)) return 'Image URL must start with http:// or https://';
       if (data.teamSizeMin && data.teamSizeMax && data.teamSizeMin > data.teamSizeMax) return 'Min team size is larger than max team size.';
       return '';
     }
@@ -2068,7 +2115,12 @@
           <tbody>${rows.map((e, i) => `
             <tr class="${e._status === 'completed' ? 'done' : ''}">
               <td class="num">${i + 1}</td>
-              <td class="big">${esc(e.name)}</td>
+              <td class="big">
+                <div style="display:flex;align-items:center;gap:10px">
+                  ${e.imageUrl ? `<img src="${esc(e.imageUrl)}" alt="" style="width:26px;height:26px;border-radius:5px;object-fit:cover;flex:none;border:1px solid var(--border)" onerror="this.remove()">` : ''}
+                  <span>${esc(e.name)}</span>
+                </div>
+              </td>
               <td>${esc(e.organizer || '—')}</td>
               <td>${esc(placeOf(e))}</td>
               <td>${e.prize ? esc(e.prize) : '—'}</td>

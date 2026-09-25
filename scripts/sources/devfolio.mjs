@@ -38,6 +38,7 @@ export default {
       teamSizeMax: Number(h.team_size) || null,
       prize: '',
       description: clean(h.tagline, 400),
+      imageUrl: clean(h.cover_img || h.logo || '', 500),
     }));
   },
 };

@@ -12,16 +12,19 @@ function formatPrize(prizes) {
 }
 
 /** The last round's start is the actual event (finale) date; earlier rounds are usually online screening. */
-async function fetchEventStart(id, timeZone) {
+async function fetchEventDetails(id, timeZone) {
   try {
     const data = await fetchJson(`${DETAIL_URL}/${id}`, { retries: 1 });
-    const rounds = (data?.data?.competition?.rounds || [])
+    const c = data?.data?.competition;
+    const rounds = (c?.rounds || [])
       .slice()
       .sort((a, b) => (a.round_order ?? 0) - (b.round_order ?? 0));
     const last = rounds.at(-1)?.details?.[0];
-    return toDateString(last?.start_date, timeZone);
+    const startDate = toDateString(last?.start_date, timeZone);
+    const imageUrl = c?.banner_mobile?.image_url || c?.banner?.image_url || c?.all_banner?.[0]?.image_url || c?.logoUrl2 || '';
+    return { startDate, imageUrl };
   } catch {
-    return '';
+    return { startDate: '', imageUrl: '' };
   }
 }
 
@@ -45,8 +48,10 @@ export default {
       const address = parseMaybeJson(item.address_with_country_logo, {}) || {};
       const organisation = parseMaybeJson(item.organisation, {}) || {};
       const requirements = parseMaybeJson(item.regnRequirements, {}) || {};
+      const details = await fetchEventDetails(item.id, timeZone);
       const endDate = toDateString(item.end_date, timeZone);
-      const startDate = (await fetchEventStart(item.id, timeZone)) || endDate;
+      const startDate = details.startDate || endDate;
+      const imageUrl = details.imageUrl || item.logoUrl2 || '';
 
       return {
         sourceId: String(item.id),
@@ -66,6 +71,7 @@ export default {
         teamSizeMax: Number(requirements.max_team_size) || null,
         prize: formatPrize(parseMaybeJson(item.prizes, [])),
         description: clean(stripHtml(item.details), 400),
+        imageUrl: clean(imageUrl, 500),
       };
     });
   },
