@@ -736,8 +736,8 @@
       board: { year: '', showCompleted: true, sortBy: 'default' },
     };
 
-    const isStaff = () => state.role === 'admin' || state.role === 'coordinator';
-    const isAdmin = () => state.role === 'admin';
+    const isStaff = () => state.role === 'admin' || state.role === 'coordinator' || Boolean(state.profile?.isAdmin);
+    const isAdmin = () => state.role === 'admin' || Boolean(state.profile?.isAdmin);
 
     /* =====================================================================
        5. FIREBASE SERVICES
@@ -803,7 +803,8 @@
       const uid = state.user.uid;
 
       subscribe('role', doc(db, COL.roles, email), (snap) => {
-        state.role = snap.exists() ? snap.data().role : 'student';
+        const roleFromCol = snap.exists() ? snap.data().role : null;
+        state.role = roleFromCol || (state.profile?.isAdmin ? 'admin' : 'student');
         syncEventsSubscription();
         syncStaffSubscriptions();
         render();
@@ -811,6 +812,11 @@
 
       subscribe('profile', doc(db, COL.users, uid), (snap) => {
         state.profile = snap.exists() ? { id: snap.id, ...snap.data() } : null;
+        if (state.profile?.isAdmin && state.role !== 'admin') {
+          state.role = 'admin';
+        }
+        syncEventsSubscription();
+        syncStaffSubscriptions();
         render();
       });
 
@@ -2455,6 +2461,7 @@
       const payload = isNew
         ? { ...data, email: state.user.email.toLowerCase(), photoURL: state.user.photoURL || '', createdAt: serverTimestamp(), updatedAt: serverTimestamp() }
         : { ...data, updatedAt: serverTimestamp() };
+      if (state.profile?.isAdmin) payload.isAdmin = true;
       const ok = await runAction(() => (isNew
         ? setDoc(doc(db, COL.users, state.user.uid), payload)
         : updateDoc(doc(db, COL.users, state.user.uid), payload)), 'Profile saved.');

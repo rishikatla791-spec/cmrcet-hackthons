@@ -30,17 +30,22 @@ service cloud.firestore {
             || userEmail() in settingsDoc().get('allowedEmails', []));
     }
 
+    function isUserDocAdmin() {
+      let userPath = /databases/$(database)/documents/users/$(request.auth.uid);
+      return exists(userPath) && get(userPath).data.get('isAdmin', false) == true;
+    }
+
     function roleOf() {
       let rolePath = /databases/$(database)/documents/roles/$(userEmail());
       return exists(rolePath) ? get(rolePath).data.role : 'student';
     }
 
     function isStaff() {
-      return isMember() && roleOf() in ['admin', 'coordinator'];
+      return isMember() && (roleOf() in ['admin', 'coordinator'] || isUserDocAdmin());
     }
 
     function isAdmin() {
-      return isMember() && roleOf() == 'admin';
+      return isMember() && (roleOf() == 'admin' || isUserDocAdmin());
     }
 
     function unchanged(field) {
@@ -84,8 +89,10 @@ service cloud.firestore {
       allow read: if isMember() && (uid == request.auth.uid || isStaff());
       allow create: if isMember()
         && uid == request.auth.uid
-        && request.resource.data.email == userEmail();
-      allow update: if isMember() && uid == request.auth.uid && unchanged('email');
+        && request.resource.data.email == userEmail()
+        && (!('isAdmin' in request.resource.data) || request.resource.data.isAdmin == false || isAdmin());
+      allow update: if isMember() && uid == request.auth.uid && unchanged('email')
+        && (unchanged('isAdmin') || isAdmin());
       allow delete: if isAdmin();
     }
 
