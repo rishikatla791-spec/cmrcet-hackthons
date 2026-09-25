@@ -4,6 +4,9 @@
   "portalTitle": "Hackathon & Project Competitions",
   "logoUrl": "",
   "allowedDomain": "cmrcet.ac.in",
+  "allowedEmails": [
+    "rishikatla791@gmail.com"
+  ],
   "homeRegionLabel": "Hyderabad",
   "homeState": "Telangana",
   "homeCities": [

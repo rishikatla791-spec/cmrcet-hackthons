@@ -1,10 +1,10 @@
 {
   "firebase": {
-    "apiKey": "YOUR_API_KEY",
-    "authDomain": "YOUR_PROJECT_ID.firebaseapp.com",
-    "projectId": "YOUR_PROJECT_ID",
-    "storageBucket": "YOUR_PROJECT_ID.firebasestorage.app",
-    "messagingSenderId": "YOUR_SENDER_ID",
-    "appId": "YOUR_APP_ID"
+    "apiKey": "AIzaSyBsvxvxsWJFjDLiWHbJ6EWhtmseRf3Atyc",
+    "authDomain": "book-a6189.firebaseapp.com",
+    "projectId": "book-a6189",
+    "storageBucket": "book-a6189.firebasestorage.app",
+    "messagingSenderId": "722598618017",
+    "appId": "1:722598618017:web:97ae47417110d9494e61e0"
   }
 }

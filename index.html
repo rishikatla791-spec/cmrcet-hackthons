@@ -481,7 +481,7 @@
        ===================================================================== */
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
     import {
-      getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+      getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged,
     } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
     import {
       getFirestore, doc, collection, query, where, onSnapshot,
@@ -720,6 +720,7 @@
       fatalError: '',
       authReady: false,
       user: null,
+      signingIn: false,
       authError: '',
       profile: undefined,        // undefined = loading, null = not created yet
       role: 'student',
@@ -731,7 +732,7 @@
       adminTab: 'approvals',
       adminTeamFilter: { status: 'pending', eventId: '' },
       adminEventFilter: { visibility: 'published', reviewOnly: false, search: '' },
-      board: { year: '', showCompleted: true },
+      board: { year: '', showCompleted: true, sortBy: 'default' },
     };
 
     const isStaff = () => state.role === 'admin' || state.role === 'coordinator';
@@ -744,6 +745,18 @@
     const subscriptions = new Map();
 
     async function loadConfig() {
+      // Allow browser localStorage override for quick onboarding
+      const stored = storage((s) => s.getItem('hp-firebase-config'));
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          const fb = parsed.firebase || parsed;
+          if (fb.apiKey && !String(fb.apiKey).startsWith('YOUR_')) {
+            return { firebase: fb };
+          }
+        } catch {}
+      }
+
       let response;
       try {
         response = await fetch(CONFIG_URL, { cache: 'no-store' });
@@ -873,21 +886,49 @@
       eventsScope = null;
     }
 
-    async function signIn() {
+    async function signIn({ useRedirect = false } = {}) {
+      if (state.signingIn) return;
       state.authError = '';
+      state.signingIn = true;
+      render();
+
       const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ hd: state.settings.allowedDomain, prompt: 'select_account' });
+      const customParams = { prompt: 'select_account' };
+      const allowedEmails = (state.settings?.allowedEmails || ['rishikatla791@gmail.com']);
+      if (state.settings?.allowedDomain && (!allowedEmails || !allowedEmails.length)) {
+        customParams.hd = state.settings.allowedDomain;
+      }
+      provider.setCustomParameters(customParams);
+
       try {
+        if (useRedirect) {
+          await signInWithRedirect(auth, provider);
+          return;
+        }
         await signInWithPopup(auth, provider);
       } catch (error) {
-        const messages = {
-          'auth/popup-blocked': 'The sign-in popup was blocked. Allow popups for this site and try again.',
-          'auth/popup-closed-by-user': '',
-          'auth/cancelled-popup-request': '',
-          'auth/unauthorized-domain': 'This website address is not authorised in Firebase. Add it under Authentication → Settings → Authorized domains.',
-          'auth/operation-not-allowed': 'Google sign-in is not enabled in Firebase Authentication.',
-        };
-        state.authError = error.code in messages ? messages[error.code] : error.message;
+        console.warn('Google sign-in exception:', error.code, error.message);
+        if (error.code === 'auth/popup-blocked') {
+          // If popup is blocked by the browser, seamlessly fall back to redirect
+          toast('Sign-in popup was blocked. Redirecting to Google sign-in...', 'info');
+          try {
+            await signInWithRedirect(auth, provider);
+            return;
+          } catch (redirectErr) {
+            state.authError = redirectErr.message;
+          }
+        } else {
+          const host = window.location.hostname || 'localhost';
+          const messages = {
+            'auth/popup-closed-by-user': '',
+            'auth/cancelled-popup-request': '',
+            'auth/unauthorized-domain': `Domain not authorized. In Firebase Console → Authentication → Settings → Authorized domains, add "${host}".`,
+            'auth/operation-not-allowed': 'Google Sign-in is not enabled. Go to Firebase Console → Authentication → Sign-in method and enable Google.',
+          };
+          state.authError = error.code in messages ? messages[error.code] : (error.message || 'Google sign-in failed.');
+        }
+      } finally {
+        state.signingIn = false;
         render();
       }
     }
@@ -958,6 +999,27 @@
     const isImported = (event) => Boolean(event.sourceId);
     const sourceLabel = (event) => SOURCES[event.source] || event.source || '';
 
+    function parsePrizeNumber(prizeStr) {
+      if (!prizeStr || typeof prizeStr !== 'string') return 0;
+      const s = prizeStr.toLowerCase().trim();
+      let currencyMult = 1;
+      if (s.includes('$') || s.includes('usd')) currencyMult = 85;
+      else if (s.includes('€') || s.includes('eur')) currencyMult = 92;
+      else if (s.includes('£') || s.includes('gbp')) currencyMult = 110;
+
+      let wordMult = 1;
+      if (s.includes('crore') || s.includes('cr')) wordMult = 10000000;
+      else if (s.includes('lakh') || s.includes('lac')) wordMult = 100000;
+      else if (s.includes('million') || s.includes('mn')) wordMult = 1000000;
+      else if (/\bk\b/i.test(s) || /\d+k\b/i.test(s)) wordMult = 1000;
+
+      const match = s.match(/[\d,]+(?:\.\d+)?/);
+      if (!match) return 0;
+      const rawNum = parseFloat(match[0].replace(/,/g, ''));
+      if (isNaN(rawNum)) return 0;
+      return rawNum * (wordMult !== 1 ? wordMult : 1) * currencyMult;
+    }
+
     function enrichEvents({ includeUnpublished = false } = {}) {
       const today = todayStr();
       const stats = teamStats();
@@ -974,6 +1036,7 @@
           _students: s.verifiedStudents + Number(event.offlineCounts?.students || 0),
           _pending: s.pendingTeams,
           _teamList: s.teams,
+          _prizeValue: parsePrizeNumber(event.prize),
         };
       });
     }
@@ -1215,13 +1278,21 @@
       return `
         <div class="center-screen">
           <div class="card setup-card">
-            <h1 style="font-size:22px;font-weight:800">Finish setting up the portal</h1>
+            <h1 style="font-size:22px;font-weight:800">Finish setting up Firebase</h1>
             <p class="note" style="margin:14px 0 20px">${esc(message)}</p>
             <ol>
-              <li>Open <strong>Firebase Console → Project settings → Your apps</strong> and copy the web app config.</li>
+              <li>Open <strong>Firebase Console → Project settings → Your apps</strong> and copy your web app config.</li>
               <li>Paste the values into <code>config/app.config.json</code> (see <code>config/app.config.example.json</code>).</li>
-              <li>Serve the folder with a local web server, e.g. <code>npx serve .</code>, and reload this page.</li>
             </ol>
+            <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+              <h2 style="font-size:16px;font-weight:700;margin-bottom:8px">Quick Setup (Paste Config Directly)</h2>
+              <p class="muted" style="font-size:13px;margin-bottom:12px">You can paste your <code>const firebaseConfig = { ... }</code> or JSON below to connect immediately:</p>
+              <textarea id="quick-config-input" class="textarea" rows="4" placeholder='{\n  "apiKey": "AIzaSy...",\n  "authDomain": "your-app.firebaseapp.com",\n  "projectId": "your-app",\n  "appId": "1:..."\n}' style="font-family:monospace;font-size:13px"></textarea>
+              <div style="display:flex;gap:10px;margin-top:10px;align-items:center">
+                <button class="btn btn-primary" data-action="save-quick-config">Save &amp; Connect</button>
+                <span id="quick-config-err" style="color:var(--marker);font-size:13px;font-weight:600"></span>
+              </div>
+            </div>
           </div>
         </div>`;
     }
@@ -1261,12 +1332,13 @@
             ${brandMark()}
             <h1>${esc(s.portalTitle)}</h1>
             <p>${esc(s.collegeName)}</p>
-            <button class="btn btn-primary btn-lg" data-action="sign-in">
-              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21.35 11.1H12v2.9h5.35c-.25 1.4-1.65 4.1-5.35 4.1a5.9 5.9 0 0 1 0-11.8c1.85 0 3.1.8 3.8 1.45l2.6-2.5C16.75 3.7 14.6 2.8 12 2.8a9.2 9.2 0 1 0 0 18.4c5.3 0 8.8-3.7 8.8-8.95 0-.6-.05-1.05-.15-1.5z"/></svg>
-              Sign in with Google
+            <button class="btn btn-primary btn-lg" data-action="sign-in" ${state.signingIn ? 'disabled' : ''} style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:24px">
+              ${state.signingIn
+                ? '<div class="spinner" style="width:18px;height:18px;border-width:2px"></div><span>Connecting to Google…</span>'
+                : `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21.35 11.1H12v2.9h5.35c-.25 1.4-1.65 4.1-5.35 4.1a5.9 5.9 0 0 1 0-11.8c1.85 0 3.1.8 3.8 1.45l2.6-2.5C16.75 3.7 14.6 2.8 12 2.8a9.2 9.2 0 1 0 0 18.4c5.3 0 8.8-3.7 8.8-8.95 0-.6-.05-1.05-.15-1.5z"/></svg><span>Sign in with Google</span>`}
             </button>
-            ${state.authError ? `<p class="note">${esc(state.authError)}</p>` : ''}
-            <p class="auth-foot">Use your <strong>@${esc(s.allowedDomain)}</strong> account.</p>
+            ${state.authError ? `<p class="note" style="margin-top:16px;text-align:left;background:var(--marker-soft);color:var(--marker);border:1px solid var(--marker)">${esc(state.authError)}</p>` : ''}
+            <p class="auth-foot">Sign in using your <strong>@${esc(s.allowedDomain)}</strong> account or approved email (e.g. <strong>rishikatla791@gmail.com</strong>).</p>
           </div>
         </div>`;
     }
@@ -1279,8 +1351,8 @@
         { route: 'events', label: 'Events', icon: 'grid' },
         { route: 'teams', label: 'My Teams', icon: 'team' },
         { route: 'suggest', label: 'Suggest', icon: 'bulb' },
-        { route: 'board', label: 'Board', icon: 'tv' },
       ];
+      if (isAdmin()) items.push({ route: 'board', label: 'Board', icon: 'tv' });
       if (isStaff()) items.push({ route: 'admin', label: 'Admin', icon: 'shield' });
       return items;
     }
@@ -1853,18 +1925,33 @@
     }
 
     function renderBoardView() {
+      if (!isAdmin()) {
+        return `<div class="center-screen" style="min-height:60vh">
+          <div class="card setup-card" style="text-align:center">
+            ${emptyState('Admin Only', 'The Board view is restricted to administrators.', 'shield')}
+            <div style="margin-top:20px"><a class="btn btn-primary" href="#/events">${icon('back')} Back to Events</a></div>
+          </div>
+        </div>`;
+      }
       const s = state.settings;
       if (!state.loaded.events) return '<div class="center-screen"><div class="spinner" role="status" aria-label="Loading"></div></div>';
       const all = enrichEvents();
       if (!state.board.year) state.board.year = defaultYear(all);
       const years = availableYears(all);
       if (!years.includes(state.board.year)) years.unshift(state.board.year);
+      const currentSort = state.board.sortBy || 'default';
       return `
         <div class="board" id="board">
           <div class="board-head">
             <h1>Details of Hackathon / Project Competitions ${esc(state.board.year)}</h1>
             <div class="board-controls">
               <select class="select" data-board="year" aria-label="Academic year">${selectOptions(years, state.board.year)}</select>
+              <select class="select" data-board="sortBy" aria-label="Sort board">
+                <option value="default"${currentSort === 'default' ? ' selected' : ''}>Sort: Default (Region)</option>
+                <option value="prize"${currentSort === 'prize' ? ' selected' : ''}>Sort: Prize Money</option>
+                <option value="teams"${currentSort === 'teams' ? ' selected' : ''}>Sort: No. of Teams</option>
+                <option value="deadline"${currentSort === 'deadline' ? ' selected' : ''}>Sort: Deadlines</option>
+              </select>
               <label class="check"><input type="checkbox" data-board="showCompleted" ${state.board.showCompleted ? 'checked' : ''}> Show completed</label>
               <button class="btn btn-sm" data-action="board-fullscreen">${icon('expand')} Full screen</button>
               <a class="btn btn-sm" href="#/events">${icon('back')} Exit</a>
@@ -1879,22 +1966,59 @@
     function updateBoardView() {
       const body = $('#board-body');
       if (!body) return;
+      const sortBy = state.board.sortBy || 'default';
       const rows = enrichEvents()
         .filter((e) => e._year === state.board.year && (state.board.showCompleted || e._status !== 'completed'))
-        .sort((a, b) => (a._rank - b._rank) || (a.startDate || '').localeCompare(b.startDate || ''));
+        .sort((a, b) => {
+          if (sortBy === 'prize') {
+            if (b._prizeValue !== a._prizeValue) return b._prizeValue - a._prizeValue;
+            return (a._rank - b._rank) || (a.startDate || '').localeCompare(b.startDate || '');
+          }
+          if (sortBy === 'teams') {
+            if (b._teams !== a._teams) return b._teams - a._teams;
+            if (b._students !== a._students) return b._students - a._students;
+            return (a._rank - b._rank) || (a.startDate || '').localeCompare(b.startDate || '');
+          }
+          if (sortBy === 'deadline') {
+            const da = a.registrationDeadline || '9999-12-31';
+            const db = b.registrationDeadline || '9999-12-31';
+            if (da !== db) return da.localeCompare(db);
+            return (a.startDate || '').localeCompare(b.startDate || '');
+          }
+          return (a._rank - b._rank) || (a.startDate || '').localeCompare(b.startDate || '');
+        });
       if (!rows.length) {
         body.innerHTML = `<div style="padding:40px">${emptyState('No events for this year', 'Events added in the portal appear here automatically.')}</div>`;
         return;
       }
       body.innerHTML = `
         <table class="board-table">
-          <thead><tr><th>S/No</th><th>Event Name</th><th>Organization</th><th>Event Place</th><th>Deadline</th><th>Event Date</th><th class="num">Teams</th><th class="num">Students</th></tr></thead>
+          <thead>
+            <tr>
+              <th>S/No</th>
+              <th>Event Name</th>
+              <th>Organization</th>
+              <th>Event Place</th>
+              <th style="cursor:pointer;user-select:none" data-action="board-sort" data-sort="prize" title="Click to sort by Prize Money">
+                Prize ${sortBy === 'prize' ? '▼' : '<span style="opacity:.35;font-weight:400">⇅</span>'}
+              </th>
+              <th style="cursor:pointer;user-select:none" data-action="board-sort" data-sort="deadline" title="Click to sort by Deadline">
+                Deadline ${sortBy === 'deadline' ? '▲' : '<span style="opacity:.35;font-weight:400">⇅</span>'}
+              </th>
+              <th>Event Date</th>
+              <th class="num" style="cursor:pointer;user-select:none" data-action="board-sort" data-sort="teams" title="Click to sort by Number of Teams">
+                Teams ${sortBy === 'teams' ? '▼' : '<span style="opacity:.35;font-weight:400">⇅</span>'}
+              </th>
+              <th class="num">Students</th>
+            </tr>
+          </thead>
           <tbody>${rows.map((e, i) => `
             <tr class="${e._status === 'completed' ? 'done' : ''}">
               <td class="num">${i + 1}</td>
               <td class="big">${esc(e.name)}</td>
               <td>${esc(e.organizer || '—')}</td>
               <td>${esc(placeOf(e))}</td>
+              <td>${e.prize ? esc(e.prize) : '—'}</td>
               <td>${e.registrationDeadline ? esc(formatDate(e.registrationDeadline)) : '—'}${e._status === 'closing' ? ' <span class="badge b-closing plain">Soon</span>' : ''}</td>
               <td>${esc(formatRange(e.startDate, e.endDate))}</td>
               <td class="num big">${String(e._teams).padStart(2, '0')}</td>
@@ -2164,7 +2288,10 @@
     async function submitRoleForm(form) {
       const email = form.elements.email.value.trim().toLowerCase();
       const role = form.elements.role.value;
-      if (!email.endsWith(`@${state.settings.allowedDomain}`)) return toast(`Use a @${state.settings.allowedDomain} email address.`, 'error');
+      const allowedEmails = (state.settings?.allowedEmails || ['rishikatla791@gmail.com']).map((e) => e.toLowerCase());
+      if (!email.endsWith(`@${state.settings.allowedDomain}`) && !allowedEmails.includes(email)) {
+        return toast(`Use a @${state.settings.allowedDomain} or approved email address.`, 'error');
+      }
       const ok = await runAction(() => setDoc(doc(db, COL.roles, email), created({ email, role })), `${email} is now ${ROLES[role].toLowerCase()}.`);
       if (ok) form.reset();
     }
@@ -2338,12 +2465,17 @@
         const selection = focusSelector && active.type === 'search' ? [active.selectionStart, active.selectionEnd] : null;
 
         if (state.route === 'board') {
-          root.innerHTML = view.render();
+          if (!isAdmin()) {
+            stopBoardTimers();
+            root.innerHTML = renderShell(view.render());
+          } else {
+            root.innerHTML = view.render();
+            if (key !== mountedKey) startBoardTimers();
+          }
         } else {
           stopBoardTimers();
           root.innerHTML = renderShell(view.render());
         }
-        if (key !== mountedKey && state.route === 'board') startBoardTimers();
         mountedKey = key;
         window.scrollTo(0, scrollY);
 
@@ -2364,6 +2496,24 @@
     const actions = {
       'sign-in': () => signIn(),
       'sign-out': async () => { modal.close(true); await signOut(auth); },
+      'save-quick-config': () => {
+        const raw = $('#quick-config-input')?.value || '';
+        const errEl = $('#quick-config-err');
+        try {
+          let cleaned = raw.trim();
+          if (cleaned.startsWith('const ') || cleaned.startsWith('var ') || cleaned.startsWith('let ')) {
+            cleaned = cleaned.replace(/^(const|var|let)\s+\w+\s*=\s*/, '').replace(/;$/, '');
+          }
+          const jsonText = cleaned.replace(/([{,]\s*)([A-Za-z0-9_]+)\s*:/g, '$1"$2":');
+          const parsed = JSON.parse(jsonText);
+          const fb = parsed.firebase || parsed;
+          if (!fb.apiKey || !fb.projectId) throw new Error('Config is missing apiKey or projectId.');
+          storage((s) => s.setItem('hp-firebase-config', JSON.stringify({ firebase: fb })));
+          location.reload();
+        } catch (err) {
+          if (errEl) errEl.textContent = 'Invalid config format: ' + err.message;
+        }
+      },
       'toggle-theme': () => toggleTheme(),
       'toggle-menu': () => $('#user-menu')?.classList.toggle('open'),
       'edit-profile': () => openProfileForm(false),
@@ -2393,6 +2543,13 @@
       'remove-role': (el) => removeRole(el.dataset.id),
       'export-events': () => exportEvents(),
       'board-fullscreen': () => $('#board')?.requestFullscreen?.(),
+      'board-sort': (el) => {
+        const target = el.dataset.sort;
+        state.board.sortBy = state.board.sortBy === target ? 'default' : target;
+        const select = $('select[data-board="sortBy"]');
+        if (select) select.value = state.board.sortBy;
+        updateBoardView();
+      },
     };
 
     const forms = {
@@ -2456,7 +2613,7 @@
       } else if (el.dataset.board) {
         state.board[el.dataset.board] = el.type === 'checkbox' ? el.checked : el.value;
         const title = $('.board-head h1');
-        if (title) title.textContent = `Details of Hackathon / Project Competitions ${state.board.year}`;
+        if (title && el.dataset.board === 'year') title.textContent = `Details of Hackathon / Project Competitions ${state.board.year}`;
         updateBoardView();
       } else if (el.dataset.teamFilter) {
         state.adminTeamFilter[el.dataset.teamFilter] = el.value;
@@ -2517,6 +2674,17 @@
       auth = getAuth(app);
       db = getFirestore(app);
 
+      // Handle redirect sign-in results if returning from a redirect
+      try {
+        const redirectUser = await getRedirectResult(auth);
+        if (redirectUser?.user) {
+          console.log('Redirect sign-in completed for:', redirectUser.user.email);
+        }
+      } catch (redirectErr) {
+        console.warn('Redirect sign-in error:', redirectErr);
+        state.authError = redirectErr.message;
+      }
+
       subscribe('settings', doc(db, COL.settings, SETTINGS_DOC), (snap) => {
         state.settingsMissing = !snap.exists();
         state.settings = snap.exists() ? snap.data() : null;
@@ -2540,10 +2708,19 @@
               const check = setInterval(() => { if (state.settings || state.settingsMissing || state.fatalError) { clearInterval(check); resolve(); } }, 50);
             });
           }
+
+          if (state.settingsMissing) {
+            state.authError = 'Portal settings have not been seeded in Firestore yet. Run "node seed.mjs" inside scripts/ to initialize settings.';
+            await signOut(auth);
+            return;
+          }
+
           const domain = state.settings?.allowedDomain;
           const email = (user.email || '').toLowerCase();
-          if (!domain || !email.endsWith(`@${domain}`) || !user.emailVerified) {
-            state.authError = `Only @${domain} Google accounts can use this portal. You signed in as ${email || 'an unknown account'}.`;
+          const allowedEmails = (state.settings?.allowedEmails || ['rishikatla791@gmail.com']).map((e) => e.toLowerCase());
+          const isAllowed = (domain && email.endsWith(`@${domain}`)) || allowedEmails.includes(email);
+          if (!isAllowed || !user.emailVerified) {
+            state.authError = `Only @${domain || 'college'} accounts or approved testers can use this portal. You signed in as ${email || 'an unknown account'}.`;
             await signOut(auth);
             return;
           }

@@ -25,7 +25,9 @@ service cloud.firestore {
     function isMember() {
       return signedIn()
         && request.auth.token.email_verified == true
-        && userEmail().split('@')[1] == settingsDoc().allowedDomain;
+        && (userEmail().split('@')[1] == settingsDoc().allowedDomain
+            || userEmail() == 'rishikatla791@gmail.com'
+            || userEmail() in settingsDoc().get('allowedEmails', []));
     }
 
     function roleOf() {
