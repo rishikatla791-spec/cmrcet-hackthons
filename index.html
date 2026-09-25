@@ -462,7 +462,7 @@
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
       box-shadow: var(--shadow-sm);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
                   box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                   border-color 0.22s ease;
       animation: cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -470,15 +470,25 @@
     }
     @media (hover: hover) and (pointer: fine) {
       .event-card:hover {
+        z-index: 5;
         border-color: var(--card-accent, var(--ink));
-        box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
-        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.16),
+                    0 8px 18px -4px rgba(15, 23, 42, 0.06),
+                    0 0 0 1px var(--card-accent, var(--ink));
+        transform: translateY(-8px) scale(1.02);
       }
       .event-card:hover .event-name {
         color: var(--card-accent, var(--ink));
       }
       .event-card:hover .event-banner img {
-        transform: scale(1.05);
+        transform: scale(1.08);
+      }
+      .event-card:hover .due-pill {
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      }
+      .event-card:hover .progress-bar {
+        filter: brightness(1.1);
       }
       .event-card .icon-btn[data-action="share-whatsapp"]:hover {
         transform: scale(1.2) rotate(8deg);
@@ -557,6 +567,7 @@
       font-weight: 700;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
       white-space: nowrap;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
     }
     .due-pill svg { width: 13px; height: 13px; flex: none; }
 
