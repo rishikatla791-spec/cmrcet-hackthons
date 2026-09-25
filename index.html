@@ -9,11 +9,11 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f3a93'/%3E%3Cpath d='M9 11h14M9 16h10M9 21h12' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     /* =====================================================================
-       1. DESIGN TOKENS (Clean White Default Theme)
+       1. DESIGN TOKENS (Elevate Reference Theme)
        ===================================================================== */
     :root {
       --bg: #f8fafc;
@@ -25,9 +25,11 @@
       --text: #0f172a;
       --text-2: #475569;
       --text-3: #64748b;
-      --ink: #1f3a93;          /* whiteboard blue marker */
+      --ink: #1f3a93;
       --ink-soft: #e8edfb;
-      --marker: #d23f35;       /* whiteboard red marker */
+      --accent-lime: #e2f975;
+      --accent-lime-text: #0f172a;
+      --marker: #d23f35;
       --marker-soft: #fdecea;
       --green: #16804a;
       --green-soft: #e3f5eb;
@@ -36,14 +38,49 @@
       --violet: #6b3fc2;
       --violet-soft: #f0e9fd;
       --grey-soft: #f1f5f9;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, .05);
-      --shadow: 0 1px 3px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .06);
-      --shadow-lg: 0 20px 48px rgba(15, 23, 42, .12);
-      --radius: 14px;
-      --radius-sm: 9px;
-      --focus: 0 0 0 3px rgba(31, 58, 147, .28);
-      --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, .04);
+      --shadow: 0 4px 16px -2px rgba(15, 23, 42, .05), 0 2px 6px -1px rgba(15, 23, 42, .03);
+      --shadow-lg: 0 20px 48px -4px rgba(15, 23, 42, .12);
+      --radius: 18px;
+      --radius-sm: 10px;
+      --radius-pill: 999px;
+      --focus: 0 0 0 3px rgba(31, 58, 147, .24);
+      --font: 'Plus Jakarta Sans', 'Manrope', system-ui, -apple-system, sans-serif;
       color-scheme: light;
+    }
+
+    /* Pastel Theme Variations for Event Cards (from Elevate UI reference) */
+    .event-card.theme-peach {
+      --card-bg: #fff8f1;
+      --card-border: #fed7aa;
+      --card-accent: #c2410c;
+      --card-badge-bg: #ffffff;
+      --card-badge-color: #9a3412;
+      --card-progress-fill: #ea580c;
+    }
+    .event-card.theme-lavender {
+      --card-bg: #faf5ff;
+      --card-border: #e9d5ff;
+      --card-accent: #7e22ce;
+      --card-badge-bg: #ffffff;
+      --card-badge-color: #6b21a8;
+      --card-progress-fill: #9333ea;
+    }
+    .event-card.theme-lime {
+      --card-bg: #f7fee7;
+      --card-border: #d9f99d;
+      --card-accent: #4d7c0f;
+      --card-badge-bg: #ffffff;
+      --card-badge-color: #3f6212;
+      --card-progress-fill: #65a30d;
+    }
+    .event-card.theme-sky {
+      --card-bg: #f0f9ff;
+      --card-border: #bae6fd;
+      --card-accent: #0369a1;
+      --card-badge-bg: #ffffff;
+      --card-badge-color: #0369a1;
+      --card-progress-fill: #0284c7;
     }
 
     /* =====================================================================
@@ -96,13 +133,18 @@
     .brand-title { font-weight: 800; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .brand-sub { font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .nav { display: flex; gap: 4px; margin-left: auto; }
+    .nav { display: flex; gap: 6px; margin-left: auto; align-items: center; }
     .nav a {
-      padding: 8px 12px; border-radius: 8px; text-decoration: none;
-      color: var(--text-2); font-weight: 600; font-size: 14px; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px; border-radius: 999px; text-decoration: none;
+      color: var(--text-2); font-weight: 700; font-size: 13.5px; white-space: nowrap;
+      transition: all .16s ease;
     }
     .nav a:hover { background: var(--surface-2); color: var(--text); }
-    .nav a.active { background: var(--ink-soft); color: var(--ink); }
+    .nav a.active {
+      background: var(--accent-lime); color: var(--accent-lime-text);
+      box-shadow: 0 2px 8px rgba(226, 249, 117, 0.45);
+    }
 
     .user-menu { position: relative; }
     .avatar-btn {
@@ -111,9 +153,28 @@
       display: grid; place-items: center; font-weight: 700; font-size: 13px;
     }
     .avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+    .user-pill-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 4px 12px 4px 4px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface); cursor: pointer; color: var(--text);
+      transition: background .15s, border-color .15s, box-shadow .15s;
+    }
+    .user-pill-btn:hover { background: var(--surface-2); border-color: var(--border-strong); }
+    .avatar-circle {
+      width: 30px; height: 30px; border-radius: 50%; background: var(--surface-2);
+      overflow: hidden; display: grid; place-items: center; font-weight: 800; font-size: 12px; color: var(--text);
+      flex: none;
+    }
+    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .user-pill-name { font-weight: 700; font-size: 13.5px; white-space: nowrap; }
+    .chevron-icon { color: var(--text-3); }
+    @media (max-width: 600px) {
+      .user-pill-name, .chevron-icon { display: none; }
+      .user-pill-btn { padding: 3px; }
+    }
     .menu {
       position: absolute; right: 0; top: calc(100% + 8px); min-width: 240px; max-width: calc(100vw - 24px);
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
       box-shadow: var(--shadow-lg); padding: 6px; display: none; z-index: 50;
     }
     .menu.open {
@@ -154,7 +215,12 @@
         touch-action: manipulation;
       }
       .mobile-nav a:active { transform: scale(0.92); }
-      .mobile-nav a.active { color: var(--ink); background: var(--ink-soft); font-weight: 700; }
+      .mobile-nav a.active {
+        color: var(--accent-lime-text);
+        background: var(--accent-lime);
+        font-weight: 800;
+        box-shadow: 0 2px 10px rgba(226, 249, 117, 0.4);
+      }
       .mobile-nav a.active svg { transform: scale(1.12); transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); }
       .mobile-nav svg { width: 20px; height: 20px; transition: transform 0.2s ease; }
       main { padding-bottom: 92px; }
@@ -254,62 +320,101 @@
     .form-section:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
     .form-error { color: var(--marker); font-size: 13px; font-weight: 600; min-height: 1px; }
 
-    /* Tabs & filters */
+    /* Tabs & filters (Elevate Pill Segment Control) */
     .tabs {
-      display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
-      -webkit-overflow-scrolling: touch; padding-bottom: 2px;
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #f1f5f9; padding: 4px;
+      border-radius: 999px; border: 1px solid var(--border);
+      overflow-x: auto; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
     }
     .tabs::-webkit-scrollbar { display: none; }
     .tab {
-      display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px;
-      border-radius: 10px; border: 1px solid var(--border); background: var(--surface);
-      font-weight: 700; font-size: 14px; color: var(--text-2); cursor: pointer; white-space: nowrap;
-      transition: background .15s, border-color .15s, transform .12s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 34px; padding: 0 16px; border-radius: 999px; border: 0;
+      background: transparent; font-weight: 700; font-size: 13.5px; color: var(--text-2);
+      cursor: pointer; white-space: nowrap;
+      transition: all .16s cubic-bezier(0.16, 1, 0.3, 1);
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    .tab:hover { border-color: var(--border-strong); color: var(--text); }
-    .tab:active { transform: scale(0.95); }
-    .tab.active { background: var(--text); border-color: var(--text); color: var(--bg); }
-    .tab .count { font-size: 12px; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); }
-    .tab.active .count { background: color-mix(in srgb, var(--bg) 20%, transparent); color: var(--bg); }
+    .tab:hover { color: var(--text); background: rgba(255, 255, 255, 0.65); }
+    .tab:active { transform: scale(0.96); }
+    .tab.active {
+      background: #0f172a; color: #ffffff;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.16);
+    }
+    .tab .count {
+      font-size: 11px; padding: 1px 7px; border-radius: 999px;
+      background: rgba(0, 0, 0, 0.08); color: var(--text-2);
+    }
+    .tab.active .count {
+      background: rgba(255, 255, 255, 0.22); color: #ffffff;
+    }
     @media (max-width: 640px) {
       .tabs {
-        margin: 0 -16px;
-        padding: 0 16px 6px;
+        display: flex; gap: 4px;
+        background: #f1f5f9; padding: 4px;
+        border-radius: 14px; margin: 0;
         scroll-snap-type: x proximity;
       }
       .tab {
         scroll-snap-align: start;
         flex-shrink: 0;
+        height: 32px; padding: 0 12px; font-size: 12.5px;
       }
     }
 
     .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 24px; align-items: center; }
-    .search { position: relative; flex: 1 1 260px; }
-    .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-3); pointer-events: none; }
-    .search .input { padding-left: 36px; -webkit-tap-highlight-color: transparent; }
-    .filters .select { width: auto; flex: 0 1 180px; -webkit-tap-highlight-color: transparent; }
+    .search { position: relative; flex: 1 1 280px; }
+    .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: var(--text-3); pointer-events: none; }
+    .search .input {
+      width: 100%; height: 42px; padding: 0 48px 0 42px;
+      background: #f1f5f9; border: 1px solid transparent; border-radius: 999px;
+      font-size: 14px; font-weight: 600; color: var(--text);
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .search .input:focus {
+      background: #ffffff; border-color: var(--border-strong);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06); outline: none;
+    }
+    .search-badge {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      display: inline-flex; align-items: center; padding: 2px 7px;
+      border-radius: 6px; background: #e2e8f0; color: var(--text-3);
+      font-size: 11px; font-weight: 700; pointer-events: none;
+    }
+    .filters .select {
+      width: auto; flex: 0 1 180px; height: 42px; border-radius: 999px;
+      background-color: #f1f5f9; border-color: transparent; font-weight: 600;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .filters .select:focus { background-color: #ffffff; border-color: var(--border-strong); }
     @media (max-width: 600px) {
       .filters { margin: 12px 0 18px; gap: 8px; }
       .search { flex: 1 1 100%; }
       .filters .select { flex: 1 1 calc(50% - 4px); font-size: 13px; height: 38px; }
       .page-head { margin-bottom: 16px; gap: 12px; }
-      .page-head h1 { font-size: 22px; }
+      .page-head h1 { font-size: 24px; }
       .page-actions { width: 100%; }
       .page-actions .btn { flex: 1; }
     }
 
-    /* Stats */
+    /* Stats Cards */
     .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 24px; }
     @media (max-width: 860px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 600px) {
       .stats { gap: 10px; margin-bottom: 18px; }
-      .stat { padding: 12px 14px; }
-      .stat-value { font-size: 24px; }
+      .stat { padding: 14px 16px; border-radius: 16px; }
+      .stat-value { font-size: 26px; }
     }
     .stat {
-      padding: 16px 18px;
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
       transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
@@ -320,15 +425,22 @@
         border-color: var(--border-strong);
       }
     }
-    .stat-label { font-size: 12px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; }
-    .stat-value { font-size: 28px; font-weight: 800; margin-top: 4px; letter-spacing: -.02em; }
-    .stat-note { font-size: 12px; color: var(--text-3); }
+    .stat-label { font-size: 11.5px; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
+    .stat-value { font-size: 32px; font-weight: 800; margin-top: 4px; letter-spacing: -.03em; color: var(--text); }
+    .stat-pill {
+      display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;
+      padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
+    }
+    .stat-pill.pill-neutral { background: #f1f5f9; color: #475569; }
+    .stat-pill.pill-green { background: #dcfce7; color: #15803d; }
+    .stat-pill.pill-red { background: #fee2e2; color: #b91c1c; }
+    .stat-pill.pill-purple { background: #f3e8ff; color: #7e22ce; }
 
-    /* Event cards */
-    .section-title { display: flex; align-items: center; gap: 10px; margin: 28px 0 12px; font-size: 17px; font-weight: 800; }
+    /* Event cards (Pastel Elevate Style) */
+    .section-title { display: flex; align-items: center; gap: 10px; margin: 28px 0 14px; font-size: 18px; font-weight: 800; }
     .section-title:first-child { margin-top: 0; }
     .section-title .count { font-size: 13px; color: var(--text-3); font-weight: 700; }
-    .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
     @media (max-width: 640px) { .event-grid { grid-template-columns: 1fr; gap: 14px; } }
     @keyframes cardIn {
       from {
@@ -342,11 +454,14 @@
     }
     .event-card {
       position: relative; display: flex; flex-direction: column; padding: 0;
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--card-bg, #ffffff);
+      border: 1.5px solid var(--card-border, var(--border));
+      border-radius: var(--radius);
       cursor: pointer; text-align: left;
       overflow: hidden; isolation: isolate;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
+      box-shadow: var(--shadow-sm);
       transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                   box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                   border-color 0.22s ease;
@@ -355,19 +470,19 @@
     }
     @media (hover: hover) and (pointer: fine) {
       .event-card:hover {
-        border-color: color-mix(in srgb, var(--ink) 42%, var(--border));
-        box-shadow: 0 14px 34px -6px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+        border-color: var(--card-accent, var(--ink));
+        box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
         transform: translateY(-5px);
       }
       .event-card:hover .event-name {
-        color: var(--ink);
+        color: var(--card-accent, var(--ink));
       }
       .event-card:hover .event-banner img {
-        transform: scale(1.06);
+        transform: scale(1.05);
       }
       .event-card .icon-btn[data-action="share-whatsapp"]:hover {
         transform: scale(1.2) rotate(8deg);
-        background: rgba(37, 211, 102, 0.12);
+        background: rgba(37, 211, 102, 0.14);
       }
     }
     .event-card:active {
@@ -377,14 +492,14 @@
     }
     .event-card.is-completed { opacity: .72; }
     .event-card.is-pinned {
-      border-color: color-mix(in srgb, var(--ink) 45%, var(--border));
-      box-shadow: 0 4px 16px -4px rgba(31, 58, 147, 0.12);
+      border-color: var(--card-accent, var(--ink));
+      box-shadow: 0 4px 18px -4px rgba(31, 58, 147, 0.15);
     }
     .event-card.is-pinned::after {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 3px;
+      height: 3.5px;
       background: linear-gradient(90deg, #1f3a93, #6366f1, #1f3a93);
       background-size: 200% 100%;
       animation: pinnedShimmer 3s ease infinite;
@@ -400,9 +515,9 @@
       background: var(--surface-2);
       position: relative;
       overflow: hidden;
-      border-bottom: 1px solid var(--border);
-      border-top-left-radius: calc(var(--radius) - 1px);
-      border-top-right-radius: calc(var(--radius) - 1px);
+      border-bottom: 1px solid var(--card-border, var(--border));
+      border-top-left-radius: calc(var(--radius) - 1.5px);
+      border-top-right-radius: calc(var(--radius) - 1.5px);
       flex: none;
     }
     .event-banner img {
@@ -410,8 +525,8 @@
       height: 100%;
       object-fit: cover;
       object-position: center top;
-      border-top-left-radius: calc(var(--radius) - 1px);
-      border-top-right-radius: calc(var(--radius) - 1px);
+      border-top-left-radius: calc(var(--radius) - 1.5px);
+      border-top-right-radius: calc(var(--radius) - 1.5px);
       display: block;
       transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -419,18 +534,52 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 16px 18px 18px;
+      padding: 18px 20px 20px;
+      background: var(--card-bg, #ffffff);
       flex: 1;
     }
-    .event-card .event-body:only-child { padding: 18px; }
+    .event-card .event-body:only-child { padding: 22px; }
     .event-name {
       font-size: 17px;
       font-weight: 800;
+      color: var(--text);
+      line-height: 1.35;
       transition: color 0.2s ease;
+    }
+    .due-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px;
+      background: var(--card-badge-bg, #ffffff);
+      color: var(--card-badge-color, var(--text));
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      white-space: nowrap;
+    }
+    .due-pill svg { width: 13px; height: 13px; flex: none; }
+
+    /* Progress bar on cards */
+    .card-progress {
+      display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;
+    }
+    .progress-track {
+      width: 100%; height: 6px;
+      background: rgba(0, 0, 0, 0.07);
+      border-radius: 999px; overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%; border-radius: 999px;
+      background: var(--card-progress-fill, var(--ink));
+      transition: width 0.4s ease;
+    }
+    .progress-labels {
+      display: flex; align-items: center; gap: 8px; font-size: 12px;
     }
     .event-card .icon-btn[data-action="share-whatsapp"] {
       transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
-      border-radius: 8px;
+      border-radius: 10px;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
@@ -443,7 +592,7 @@
         height: 180px;
       }
       .event-body {
-        padding: 15px 16px 16px;
+        padding: 16px 18px 18px;
         gap: 11px;
       }
       .event-name {
@@ -452,7 +601,7 @@
       .event-card .icon-btn[data-action="share-whatsapp"] {
         width: 38px;
         height: 38px;
-        border-radius: 9px;
+        border-radius: 10px;
         background: rgba(37, 211, 102, 0.1);
         color: #128c7e;
         display: inline-flex;
@@ -469,10 +618,10 @@
         padding-top: 10px;
       }
       .card-foot .tally {
-        font-size: 12px;
+        font-size: 11.5px;
       }
       .card-foot .tally strong {
-        font-size: 14px;
+        font-size: 13.5px;
       }
       .card-foot .countdown {
         font-size: 11.5px;
@@ -1750,8 +1899,12 @@
             </a>
             <nav class="nav" aria-label="Main">${nav.map((i) => navLink(i, false)).join('')}</nav>
             <div class="user-menu">
-              <button class="avatar-btn" data-action="toggle-menu" aria-label="Account menu" aria-haspopup="true">
-                ${photo ? `<img src="${esc(photo)}" alt="" referrerpolicy="no-referrer">` : esc(initials(user.displayName))}
+              <button class="user-pill-btn" data-action="toggle-menu" aria-label="Account menu" aria-haspopup="true">
+                <span class="avatar-circle">
+                  ${photo ? `<img src="${esc(photo)}" alt="" referrerpolicy="no-referrer">` : esc(initials(user.displayName))}
+                </span>
+                <span class="user-pill-name">${esc((state.profile?.displayName || user.displayName || 'User').split(' ')[0])}</span>
+                <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
               </button>
               <div class="menu" id="user-menu">
                 <div class="menu-head">
@@ -1783,8 +1936,13 @@
     function eventCard(e, index = 0) {
       const cd = countdownOf(e);
       const delay = Math.min(index, 12) * 35;
+      const themes = ['theme-peach', 'theme-lavender', 'theme-lime', 'theme-sky'];
+      const themeClass = themes[index % themes.length];
+      const dueBadge = e.registrationDeadline ? `<span class="due-pill">${icon('calendar')} Due ${esc(formatDate(e.registrationDeadline))}</span>` : '';
+      const progressPercent = e._status === 'completed' ? 100 : (e._status === 'closing' ? 85 : Math.min(100, Math.max(25, (e._teams || 1) * 18)));
+
       return `
-        <article class="event-card ${e._status === 'completed' ? 'is-completed' : ''} ${e.pinned ? 'is-pinned' : ''}"
+        <article class="event-card ${themeClass} ${e._status === 'completed' ? 'is-completed' : ''} ${e.pinned ? 'is-pinned' : ''}"
                  data-action="open-event" data-id="${esc(e.id)}" tabindex="0" role="button" aria-label="${esc(e.name)}"
                  style="--delay:${delay}ms">
           ${e.imageUrl ? `
@@ -1793,7 +1951,8 @@
             </div>` : ''}
           <div class="event-body">
             <div class="card-top">
-              ${statusBadge(e._status)}
+              ${dueBadge || statusBadge(e._status)}
+              ${dueBadge ? statusBadge(e._status) : ''}
               <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
               ${isImported(e) ? `<span class="chip">via ${esc(sourceLabel(e))}</span>` : ''}
               ${e.needsReview && isStaff() ? '<span class="chip chip-review">Needs review</span>' : ''}
@@ -1806,13 +1965,17 @@
             <div class="meta">
               <div>${icon('place')}<span>${esc(placeOf(e))}</span></div>
               <div>${icon('calendar')}<span>${esc(formatRange(e.startDate, e.endDate))}</span></div>
-              ${e.registrationDeadline ? `<div>${icon('clock')}<span>Deadline ${esc(formatDate(e.registrationDeadline))}</span></div>` : ''}
             </div>
             <div class="card-foot">
-              <span class="tally"><strong class="num">${e._teams}</strong> teams</span>
-              <span class="tally"><strong class="num">${e._students}</strong> students</span>
-              ${cd.text ? `<span class="countdown ${cd.urgent ? 'urgent' : ''}">${esc(cd.text)}</span>` : ''}
-              <button type="button" class="btn btn-ghost icon-btn" data-action="share-whatsapp" data-id="${esc(e.id)}" title="Share event to WhatsApp" aria-label="Share to WhatsApp" style="margin-left:auto;color:#25D366;padding:4px">
+              <div class="card-progress">
+                <div class="progress-track"><div class="progress-bar" style="width:${progressPercent}%"></div></div>
+                <div class="progress-labels">
+                  <span class="tally"><strong class="num">${e._teams}</strong> teams</span>
+                  <span class="tally"><strong class="num">${e._students}</strong> students</span>
+                  ${cd.text ? `<span class="countdown ${cd.urgent ? 'urgent' : ''}" style="margin-left:auto">${esc(cd.text)}</span>` : ''}
+                </div>
+              </div>
+              <button type="button" class="btn btn-ghost icon-btn" data-action="share-whatsapp" data-id="${esc(e.id)}" title="Share event to WhatsApp" aria-label="Share to WhatsApp" style="margin-left:8px;color:#128c7e">
                 ${icon('whatsapp')}
               </button>
             </div>
@@ -1853,6 +2016,7 @@
             <span class="sr-only">Search events</span>
             ${icon('search')}
             <input class="input" type="search" placeholder="Search by event, organizer, city, theme…" data-filter="search" value="${esc(state.filters.search)}">
+            <span class="search-badge">⌘K</span>
           </label>
           <select class="select" data-filter="status" aria-label="Status">${selectOptions(STATUS_FILTERS, state.filters.status)}</select>
           <select class="select" data-filter="mode" aria-label="Mode">${selectOptions({ all: 'All modes', ...MODES }, state.filters.mode)}</select>
@@ -1874,10 +2038,26 @@
       const students = yearEvents.reduce((sum, e) => sum + e._students, 0);
       $('#events-stats').innerHTML = `
         <div class="stats">
-          <div class="card stat"><div class="stat-label">Events</div><div class="stat-value num">${yearEvents.length}</div><div class="stat-note">${f.year ? `AY ${esc(f.year)}` : 'All years'}</div></div>
-          <div class="card stat"><div class="stat-label">Open for registration</div><div class="stat-value num">${active}</div><div class="stat-note">${closing ? `<span style="color:var(--marker);font-weight:700">${closing} closing soon</span>` : 'None closing soon'}</div></div>
-          <div class="card stat"><div class="stat-label">Teams registered</div><div class="stat-value num">${teams}</div><div class="stat-note">Verified + recorded</div></div>
-          <div class="card stat"><div class="stat-label">Students participating</div><div class="stat-value num">${students}</div><div class="stat-note">Across all events</div></div>
+          <div class="card stat">
+            <div class="stat-label">Events</div>
+            <div class="stat-value num">${yearEvents.length}</div>
+            <div><span class="stat-pill pill-neutral">${f.year ? `AY ${esc(f.year)}` : 'All years'}</span></div>
+          </div>
+          <div class="card stat">
+            <div class="stat-label">Open for registration</div>
+            <div class="stat-value num">${active}</div>
+            <div>${closing ? `<span class="stat-pill pill-red">${closing} closing soon</span>` : `<span class="stat-pill pill-green">${active} active</span>`}</div>
+          </div>
+          <div class="card stat">
+            <div class="stat-label">Teams registered</div>
+            <div class="stat-value num">${teams}</div>
+            <div><span class="stat-pill pill-green">Verified + recorded</span></div>
+          </div>
+          <div class="card stat">
+            <div class="stat-label">Students participating</div>
+            <div class="stat-value num">${students}</div>
+            <div><span class="stat-pill pill-purple">Across all events</span></div>
+          </div>
         </div>`;
 
       // Region tabs with counts that respect the other filters
