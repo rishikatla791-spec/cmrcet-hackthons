@@ -262,7 +262,7 @@
       position: relative; display: flex; flex-direction: column; padding: 0;
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; text-align: left;
-      overflow: hidden;
+      overflow: hidden; isolation: isolate;
     }
     .event-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); transform: translateY(-2px); }
     .event-card.is-completed { opacity: .72; }
@@ -274,13 +274,17 @@
       position: relative;
       overflow: hidden;
       border-bottom: 1px solid var(--border);
+      border-top-left-radius: calc(var(--radius) - 1px);
+      border-top-right-radius: calc(var(--radius) - 1px);
       flex: none;
     }
     .event-banner img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
+      object-position: center top;
+      border-top-left-radius: calc(var(--radius) - 1px);
+      border-top-right-radius: calc(var(--radius) - 1px);
       display: block;
       transition: transform .25s ease;
     }
@@ -298,6 +302,8 @@
       height: 220px;
       background: var(--surface-2);
       border-bottom: 1px solid var(--border);
+      border-top-left-radius: 17px;
+      border-top-right-radius: 17px;
       overflow: hidden;
       position: relative;
       flex: none;
@@ -306,7 +312,9 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
+      object-position: center top;
+      border-top-left-radius: 17px;
+      border-top-right-radius: 17px;
       display: block;
     }
     .card-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -886,7 +894,7 @@
 
       const provider = new GoogleAuthProvider();
       const customParams = { prompt: 'select_account' };
-      const allowedEmails = (state.settings?.allowedEmails || ['rishikatla791@gmail.com']);
+      const allowedEmails = (state.settings?.allowedEmails || []);
       if (state.settings?.allowedDomain && (!allowedEmails || !allowedEmails.length)) {
         customParams.hd = state.settings.allowedDomain;
       }
@@ -1398,7 +1406,7 @@
                 : `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21.35 11.1H12v2.9h5.35c-.25 1.4-1.65 4.1-5.35 4.1a5.9 5.9 0 0 1 0-11.8c1.85 0 3.1.8 3.8 1.45l2.6-2.5C16.75 3.7 14.6 2.8 12 2.8a9.2 9.2 0 1 0 0 18.4c5.3 0 8.8-3.7 8.8-8.95 0-.6-.05-1.05-.15-1.5z"/></svg><span>Sign in with Google</span>`}
             </button>
             ${state.authError ? `<p class="note" style="margin-top:16px;text-align:left;background:var(--marker-soft);color:var(--marker);border:1px solid var(--marker)">${esc(state.authError)}</p>` : ''}
-            <p class="auth-foot">Sign in using your <strong>@${esc(s.allowedDomain)}</strong> account or approved email (e.g. <strong>rishikatla791@gmail.com</strong>).</p>
+            <p class="auth-foot">Sign in using your college <strong>@${esc(s.allowedDomain)}</strong> email account.</p>
           </div>
         </div>`;
     }
@@ -2370,7 +2378,7 @@
     async function submitRoleForm(form) {
       const email = form.elements.email.value.trim().toLowerCase();
       const role = form.elements.role.value;
-      const allowedEmails = (state.settings?.allowedEmails || ['rishikatla791@gmail.com']).map((e) => e.toLowerCase());
+      const allowedEmails = (state.settings?.allowedEmails || []).map((e) => e.toLowerCase());
       if (!email.endsWith(`@${state.settings.allowedDomain}`) && !allowedEmails.includes(email)) {
         return toast(`Use a @${state.settings.allowedDomain} or approved email address.`, 'error');
       }
@@ -2800,7 +2808,7 @@
 
           const domain = state.settings?.allowedDomain;
           const email = (user.email || '').toLowerCase();
-          const allowedEmails = (state.settings?.allowedEmails || ['rishikatla791@gmail.com']).map((e) => e.toLowerCase());
+          const allowedEmails = (state.settings?.allowedEmails || []).map((e) => e.toLowerCase());
           const isAllowed = (domain && email.endsWith(`@${domain}`)) || allowedEmails.includes(email);
           if (!isAllowed || !user.emailVerified) {
             state.authError = `Only @${domain || 'college'} accounts or approved testers can use this portal. You signed in as ${email || 'an unknown account'}.`;
