@@ -971,6 +971,19 @@
       return REGIONS.find((r) => r.key === key)?.label(state.settings) ?? '';
     }
 
+    function rollFromEmail(email) {
+      if (!email) return '';
+      const prefix = email.split('@')[0].trim().toUpperCase();
+      if (/^[0-9]{2}[A-Z0-9]{8}$/.test(prefix)) return prefix;
+      return '';
+    }
+
+    function cleanDisplayName(raw) {
+      if (!raw) return '';
+      const m = raw.match(/^[0-9]{2}[A-Za-z0-9]{8}\s*[-–]\s*(.+?)(?:\s+(?:B\.?Tech|M\.?Tech|MBA)[^)]*(?:\([^)]*\))?|\s*\([^)]*\))?$/i);
+      return (m && m[1]) ? m[1].trim() : raw;
+    }
+
     function statusOf(event, today) {
       const end = event.endDate || event.startDate;
       if (end && today > end) return 'completed';
@@ -1114,7 +1127,7 @@
     }
 
     function myTeams() {
-      const roll = norm(state.profile?.rollNo);
+      const roll = norm(state.profile?.rollNo || rollFromEmail(state.user?.email));
       return state.teams.filter((t) => t.leaderUid === state.user.uid || (roll && (t.members || []).some((m) => norm(m.rollNo) === roll)));
     }
 
@@ -1721,10 +1734,13 @@
     }
 
     function openTeamForm({ eventId, team = null }) {
-      if (!state.profile?.rollNo) return openProfileForm(true);
+      const emailRoll = rollFromEmail(state.user?.email);
+      const userRoll = emailRoll || state.profile?.rollNo;
+      if (!userRoll) return openProfileForm(true);
       const event = state.events.find((e) => e.id === eventId);
       if (!event) return toast('This event no longer exists.', 'error');
-      const leader = { name: state.profile.displayName, rollNo: state.profile.rollNo };
+      const leaderName = state.profile?.displayName || cleanDisplayName(state.user?.displayName || '');
+      const leader = { name: leaderName, rollNo: userRoll };
       const others = team ? (team.members || []).filter((m) => norm(m.rollNo) !== norm(leader.rollNo)) : [];
       const max = maxTeamSizeFor(event);
 
@@ -2335,12 +2351,19 @@
     function openProfileForm(required = false) {
       const s = state.settings;
       const p = state.profile || {};
+      const emailRoll = rollFromEmail(state.user?.email);
+      const defaultName = p.displayName || cleanDisplayName(state.user?.displayName || '') || '';
+      const defaultRoll = emailRoll || p.rollNo || '';
       const body = `
         <form id="profile-form" data-form="profile" novalidate>
           ${required ? `<p class="note info" style="margin-bottom:16px">Tell us a little about you before registering teams.</p>` : ''}
           <div class="form-grid">
-            <div class="field span-2"><label for="p-name">Full name <span class="req">*</span></label><input class="input" id="p-name" name="displayName" required value="${esc(p.displayName || state.user.displayName || '')}"></div>
-            <div class="field"><label for="p-roll">Roll number <span class="req">*</span></label><input class="input" id="p-roll" name="rollNo" required style="text-transform:uppercase" value="${esc(p.rollNo || '')}"></div>
+            <div class="field span-2"><label for="p-name">Full name <span class="req">*</span></label><input class="input" id="p-name" name="displayName" required value="${esc(defaultName)}"></div>
+            <div class="field">
+              <label for="p-roll">Roll number <span class="req">*</span></label>
+              <input class="input" id="p-roll" name="rollNo" required style="text-transform:uppercase" value="${esc(defaultRoll)}" ${emailRoll ? 'readonly' : ''}>
+              ${emailRoll ? '<span class="muted" style="font-size:11px">Auto-detected from college email</span>' : ''}
+            </div>
             <div class="field"><label for="p-dept">Department <span class="req">*</span></label><select class="select" id="p-dept" name="department" required><option value="">Select…</option>${selectOptions(s.departments || [], p.department)}</select></div>
             <div class="field"><label for="p-year">Year of study <span class="req">*</span></label><select class="select" id="p-year" name="year" required><option value="">Select…</option>${selectOptions(Object.fromEntries((s.yearsOfStudy || []).map((y) => [y, `Year ${y}`])), p.year)}</select></div>
             <div class="field"><label>College email</label><input class="input" readonly value="${esc(state.user.email)}"></div>
@@ -2354,9 +2377,10 @@
     }
 
     async function submitProfileForm(form) {
+      const emailRoll = rollFromEmail(state.user?.email);
       const data = {
         displayName: form.elements.displayName.value.trim(),
-        rollNo: form.elements.rollNo.value.trim().toUpperCase(),
+        rollNo: (emailRoll || form.elements.rollNo.value).trim().toUpperCase(),
         department: form.elements.department.value,
         year: Number(form.elements.year.value) || null,
       };
