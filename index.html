@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Hackathon and project competition tracker for the college.">
-  <meta name="theme-color" content="#1f3a93">
+  <meta name="theme-color" content="#ffffff">
   <title>Hackathon Portal</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f3a93'/%3E%3Cpath d='M9 11h14M9 16h10M9 21h12' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,18 +13,18 @@
 
   <style>
     /* =====================================================================
-       1. DESIGN TOKENS
+       1. DESIGN TOKENS (Clean White Default Theme)
        ===================================================================== */
     :root {
-      --bg: #f5f6fa;
+      --bg: #f8fafc;
       --surface: #ffffff;
-      --surface-2: #f0f2f7;
-      --surface-3: #e6e9f1;
-      --border: #dfe3ec;
-      --border-strong: #c8cedb;
-      --text: #151a2d;
-      --text-2: #4a5270;
-      --text-3: #7b8299;
+      --surface-2: #f1f5f9;
+      --surface-3: #e2e8f0;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text: #0f172a;
+      --text-2: #475569;
+      --text-3: #64748b;
       --ink: #1f3a93;          /* whiteboard blue marker */
       --ink-soft: #e8edfb;
       --marker: #d23f35;       /* whiteboard red marker */
@@ -35,44 +35,15 @@
       --amber-soft: #fff3de;
       --violet: #6b3fc2;
       --violet-soft: #f0e9fd;
-      --grey-soft: #eceef3;
-      --shadow-sm: 0 1px 2px rgba(20, 26, 45, .06);
-      --shadow: 0 1px 3px rgba(20, 26, 45, .06), 0 8px 24px rgba(20, 26, 45, .06);
-      --shadow-lg: 0 24px 64px rgba(20, 26, 45, .22);
+      --grey-soft: #f1f5f9;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, .05);
+      --shadow: 0 1px 3px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .06);
+      --shadow-lg: 0 20px 48px rgba(15, 23, 42, .12);
       --radius: 14px;
       --radius-sm: 9px;
       --focus: 0 0 0 3px rgba(31, 58, 147, .28);
       --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
       color-scheme: light;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #0e111b;
-        --surface: #161a28;
-        --surface-2: #1c2132;
-        --surface-3: #252b40;
-        --border: #2a3047;
-        --border-strong: #3a4260;
-        --text: #eceef6;
-        --text-2: #b3b9cf;
-        --text-3: #7f87a3;
-        --ink: #8aa6ff;
-        --ink-soft: #1d2745;
-        --marker: #ff7a70;
-        --marker-soft: #3a1d1d;
-        --green: #4cc98a;
-        --green-soft: #15301f;
-        --amber: #f0b454;
-        --amber-soft: #33270f;
-        --violet: #b89bff;
-        --violet-soft: #2a2143;
-        --grey-soft: #22273a;
-        --shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
-        --shadow-lg: 0 24px 64px rgba(0, 0, 0, .6);
-        --focus: 0 0 0 3px rgba(138, 166, 255, .35);
-        color-scheme: dark;
-      }
     }
 
     :root[data-theme="dark"] {
@@ -220,7 +191,6 @@
     .btn svg { width: 16px; height: 16px; flex: none; }
     .btn-primary { background: var(--ink); border-color: var(--ink); color: #fff; }
     :root[data-theme="dark"] .btn-primary { color: #0e111b; }
-    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn-primary { color: #0e111b; } }
     .btn-primary:hover { background: color-mix(in srgb, var(--ink) 88%, #000); }
     .btn-danger { color: var(--marker); border-color: color-mix(in srgb, var(--marker) 40%, var(--border)); }
     .btn-danger:hover { background: var(--marker-soft); }
@@ -2739,13 +2709,13 @@
     }
 
     function applyTheme(theme) {
-      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
-      else delete document.documentElement.dataset.theme;
+      const mode = theme === 'dark' ? 'dark' : 'light';
+      document.documentElement.dataset.theme = mode;
+      document.documentElement.style.colorScheme = mode;
     }
 
     function toggleTheme() {
-      const current = document.documentElement.dataset.theme
-        || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const current = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
       const next = current === 'dark' ? 'light' : 'dark';
       applyTheme(next);
       storage((s) => s.setItem(THEME_KEY, next));
@@ -2755,7 +2725,7 @@
        21. BOOT
        ===================================================================== */
     async function boot() {
-      applyTheme(storage((s) => s.getItem(THEME_KEY)));
+      applyTheme(storage((s) => s.getItem(THEME_KEY)) || 'light');
       readRoute();
 
       try {
