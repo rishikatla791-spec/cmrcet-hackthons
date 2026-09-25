@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" style="color-scheme: light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,33 +44,6 @@
       --focus: 0 0 0 3px rgba(31, 58, 147, .28);
       --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
       color-scheme: light;
-    }
-
-    :root[data-theme="dark"] {
-      --bg: #0e111b;
-      --surface: #161a28;
-      --surface-2: #1c2132;
-      --surface-3: #252b40;
-      --border: #2a3047;
-      --border-strong: #3a4260;
-      --text: #eceef6;
-      --text-2: #b3b9cf;
-      --text-3: #7f87a3;
-      --ink: #8aa6ff;
-      --ink-soft: #1d2745;
-      --marker: #ff7a70;
-      --marker-soft: #3a1d1d;
-      --green: #4cc98a;
-      --green-soft: #15301f;
-      --amber: #f0b454;
-      --amber-soft: #33270f;
-      --violet: #b89bff;
-      --violet-soft: #2a2143;
-      --grey-soft: #22273a;
-      --shadow: 0 1px 3px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
-      --shadow-lg: 0 24px 64px rgba(0, 0, 0, .6);
-      --focus: 0 0 0 3px rgba(138, 166, 255, .35);
-      color-scheme: dark;
     }
 
     /* =====================================================================
@@ -190,7 +163,6 @@
     .btn:disabled { opacity: .55; cursor: not-allowed; }
     .btn svg { width: 16px; height: 16px; flex: none; }
     .btn-primary { background: var(--ink); border-color: var(--ink); color: #fff; }
-    :root[data-theme="dark"] .btn-primary { color: #0e111b; }
     .btn-primary:hover { background: color-mix(in srgb, var(--ink) 88%, #000); }
     .btn-danger { color: var(--marker); border-color: color-mix(in srgb, var(--marker) 40%, var(--border)); }
     .btn-danger:hover { background: var(--marker-soft); }
@@ -287,48 +259,54 @@
     .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
     @media (max-width: 400px) { .event-grid { grid-template-columns: 1fr; } }
     .event-card {
-      position: relative; display: flex; flex-direction: column; gap: 12px; padding: 18px;
+      position: relative; display: flex; flex-direction: column; padding: 0;
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; text-align: left;
       overflow: hidden;
     }
-    .event-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); transform: translateY(-1px); }
+    .event-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow); transform: translateY(-2px); }
     .event-card.is-completed { opacity: .72; }
     .event-card.is-pinned { border-color: color-mix(in srgb, var(--ink) 45%, var(--border)); }
     .event-banner {
-      margin: -18px -18px 2px -18px;
-      height: 140px;
+      width: 100%;
+      height: 165px;
       background: var(--surface-2);
       position: relative;
       overflow: hidden;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      flex: none;
     }
     .event-banner img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center;
       display: block;
       transition: transform .25s ease;
     }
-    .event-card:hover .event-banner img { transform: scale(1.03); }
-    .event-detail-banner {
-      margin: -20px -22px 18px -22px;
-      max-height: 240px;
-      overflow: hidden;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface-2);
+    .event-card:hover .event-banner img { transform: scale(1.04); }
+    .event-body {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px 18px 18px;
+      flex: 1;
     }
-    .event-detail-banner img {
+    .event-card .event-body:only-child { padding: 18px; }
+    .modal-banner {
+      width: 100%;
+      height: 220px;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+      flex: none;
+    }
+    .modal-banner img {
       width: 100%;
       height: 100%;
-      max-height: 240px;
       object-fit: cover;
+      object-position: center;
       display: block;
     }
     .card-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -500,7 +478,6 @@
        ===================================================================== */
     const CONFIG_URL = 'config/app.config.json';
     const SHEETJS_URL = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs';
-    const THEME_KEY = 'hp-theme';
 
     const COL = {
       settings: 'settings', roles: 'roles', users: 'users', events: 'events',
@@ -1250,9 +1227,10 @@
       });
     }
 
-    function modalShell({ title, subtitle = '', body, footer = '', closable = true }) {
+    function modalShell({ title, subtitle = '', banner = '', body, footer = '', closable = true }) {
       return `
         <div class="modal-inner">
+          ${banner ? `<div class="modal-banner">${banner}</div>` : ''}
           <div class="modal-header">
             <div><h2>${esc(title)}</h2>${subtitle ? `<p>${subtitle}</p>` : ''}</div>
             ${closable ? `<button class="btn btn-ghost icon-btn" data-action="close-modal" aria-label="Close">${icon('close')}</button>` : ''}
@@ -1472,7 +1450,6 @@
                   <div style="margin-top:6px"><span class="chip">${esc(ROLES[state.role])}</span></div>
                 </div>
                 <button data-action="edit-profile">${icon('user', 'width="16" height="16"')} Edit profile</button>
-                <button data-action="toggle-theme">${icon('moon', 'width="16" height="16"')} Switch theme</button>
                 <button data-action="sign-out">${icon('logout', 'width="16" height="16"')} Sign out</button>
               </div>
             </div>
@@ -1502,29 +1479,31 @@
             <div class="event-banner">
               <img src="${esc(e.imageUrl)}" alt="${esc(e.name)}" loading="lazy" onerror="this.closest('.event-banner').style.display='none'">
             </div>` : ''}
-          <div class="card-top">
-            ${statusBadge(e._status)}
-            <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
-            ${isImported(e) ? `<span class="chip">via ${esc(sourceLabel(e))}</span>` : ''}
-            ${e.needsReview && isStaff() ? '<span class="chip chip-review">Needs review</span>' : ''}
-            ${e.pinned ? `<span class="pin" title="Pinned">${icon('pin')}</span>` : ''}
-          </div>
-          <div>
-            <h3 class="event-name">${esc(e.name)}</h3>
-            ${e.organizer ? `<p class="event-org">${esc(e.organizer)}</p>` : ''}
-          </div>
-          <div class="meta">
-            <div>${icon('place')}<span>${esc(placeOf(e))}</span></div>
-            <div>${icon('calendar')}<span>${esc(formatRange(e.startDate, e.endDate))}</span></div>
-            ${e.registrationDeadline ? `<div>${icon('clock')}<span>Deadline ${esc(formatDate(e.registrationDeadline))}</span></div>` : ''}
-          </div>
-          <div class="card-foot">
-            <span class="tally"><strong class="num">${e._teams}</strong> teams</span>
-            <span class="tally"><strong class="num">${e._students}</strong> students</span>
-            ${cd.text ? `<span class="countdown ${cd.urgent ? 'urgent' : ''}">${esc(cd.text)}</span>` : ''}
-            <button type="button" class="btn btn-ghost icon-btn" data-action="share-whatsapp" data-id="${esc(e.id)}" title="Share event to WhatsApp" aria-label="Share to WhatsApp" style="margin-left:auto;color:#25D366;padding:4px">
-              ${icon('whatsapp')}
-            </button>
+          <div class="event-body">
+            <div class="card-top">
+              ${statusBadge(e._status)}
+              <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
+              ${isImported(e) ? `<span class="chip">via ${esc(sourceLabel(e))}</span>` : ''}
+              ${e.needsReview && isStaff() ? '<span class="chip chip-review">Needs review</span>' : ''}
+              ${e.pinned ? `<span class="pin" title="Pinned">${icon('pin')}</span>` : ''}
+            </div>
+            <div>
+              <h3 class="event-name">${esc(e.name)}</h3>
+              ${e.organizer ? `<p class="event-org">${esc(e.organizer)}</p>` : ''}
+            </div>
+            <div class="meta">
+              <div>${icon('place')}<span>${esc(placeOf(e))}</span></div>
+              <div>${icon('calendar')}<span>${esc(formatRange(e.startDate, e.endDate))}</span></div>
+              ${e.registrationDeadline ? `<div>${icon('clock')}<span>Deadline ${esc(formatDate(e.registrationDeadline))}</span></div>` : ''}
+            </div>
+            <div class="card-foot">
+              <span class="tally"><strong class="num">${e._teams}</strong> teams</span>
+              <span class="tally"><strong class="num">${e._students}</strong> students</span>
+              ${cd.text ? `<span class="countdown ${cd.urgent ? 'urgent' : ''}">${esc(cd.text)}</span>` : ''}
+              <button type="button" class="btn btn-ghost icon-btn" data-action="share-whatsapp" data-id="${esc(e.id)}" title="Share event to WhatsApp" aria-label="Share to WhatsApp" style="margin-left:auto;color:#25D366;padding:4px">
+                ${icon('whatsapp')}
+              </button>
+            </div>
           </div>
         </article>`;
     }
@@ -1631,11 +1610,9 @@
         ? [e.teamSizeMin, e.teamSizeMax].filter(Boolean).join(' – ') + ' members'
         : '';
 
+      const banner = e.imageUrl ? `<img src="${esc(e.imageUrl)}" alt="${esc(e.name)}" onerror="this.closest('.modal-banner')?.remove()">` : '';
+
       const body = `
-        ${e.imageUrl ? `
-          <div class="event-detail-banner">
-            <img src="${esc(e.imageUrl)}" alt="${esc(e.name)}" onerror="this.closest('.event-detail-banner').style.display='none'">
-          </div>` : ''}
         <div class="card-top" style="margin-bottom:14px">
           ${statusBadge(e._status)}
           <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
@@ -1678,7 +1655,7 @@
         ${url ? `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${icon('link')} Registration page</a>` : ''}
         ${canRegister ? `<button class="btn btn-primary" data-action="register-team" data-id="${esc(e.id)}">${icon('plus')} Register our team</button>` : ''}`;
 
-      modal.open(modalShell({ title: e.name, subtitle: esc(e.organizer || ''), body, footer }), { size: 'wide' });
+      modal.open(modalShell({ banner, title: e.name, subtitle: esc(e.organizer || ''), body, footer }), { size: 'wide' });
     }
 
     /* =====================================================================
@@ -2628,7 +2605,6 @@
           if (errEl) errEl.textContent = 'Invalid config format: ' + err.message;
         }
       },
-      'toggle-theme': () => toggleTheme(),
       'toggle-menu': () => $('#user-menu')?.classList.toggle('open'),
       'edit-profile': () => openProfileForm(false),
       'close-modal': () => modal.close(),
@@ -2754,30 +2730,19 @@
     });
 
     /* =====================================================================
-       20. THEME
+       20. STORAGE HELPER
        ===================================================================== */
     function storage(fn) {
       try { return fn(window.localStorage); } catch { return null; }
-    }
-
-    function applyTheme(theme) {
-      const mode = theme === 'dark' ? 'dark' : 'light';
-      document.documentElement.dataset.theme = mode;
-      document.documentElement.style.colorScheme = mode;
-    }
-
-    function toggleTheme() {
-      const current = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
-      const next = current === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      storage((s) => s.setItem(THEME_KEY, next));
     }
 
     /* =====================================================================
        21. BOOT
        ===================================================================== */
     async function boot() {
-      applyTheme(storage((s) => s.getItem(THEME_KEY)) || 'light');
+      document.documentElement.dataset.theme = 'light';
+      document.documentElement.style.colorScheme = 'light';
+      storage((s) => s.removeItem('hp-theme'));
       readRoute();
 
       try {
