@@ -863,16 +863,416 @@
 
     /* Full-screen states (sign-in, setup) */
     .center-screen { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
-    .auth-card { width: min(460px, 100%); padding: 36px 32px; text-align: center; }
-    .auth-card .brand-mark { display: inline-grid; min-width: 56px; height: 56px; padding: 0 14px; border-radius: 14px; font-size: 18px; margin: 0 auto 18px; }
-    .auth-card h1 { font-size: 22px; font-weight: 800; }
-    .auth-card p { color: var(--text-2); margin-top: 8px; }
-    .auth-card .btn { width: 100%; margin-top: 24px; }
-    .auth-card .note { margin-top: 18px; text-align: left; }
-    .auth-foot { margin-top: 18px; font-size: 12px; color: var(--text-3); }
     .setup-card { width: min(640px, 100%); padding: 32px; }
     .setup-card ol { padding-left: 20px; color: var(--text-2); display: grid; gap: 8px; }
     .setup-card code { background: var(--surface-2); padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+
+    /* =====================================================================
+       HIGH-LEVEL AUTHENTICATION & LOGIN UI
+       ===================================================================== */
+    .auth-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      position: relative;
+      overflow: hidden;
+      background-color: #f8fafc;
+      background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1.2px, transparent 1.2px);
+      background-size: 28px 28px;
+    }
+    .auth-wrapper::before,
+    .auth-wrapper::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.65;
+      animation: floatGlow 14s ease-in-out infinite alternate;
+    }
+    .auth-wrapper::before {
+      width: 520px;
+      height: 520px;
+      top: -120px;
+      left: -90px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, rgba(192, 132, 252, 0.12) 60%, transparent 80%);
+    }
+    .auth-wrapper::after {
+      width: 580px;
+      height: 580px;
+      bottom: -140px;
+      right: -90px;
+      background: radial-gradient(circle, rgba(226, 249, 117, 0.35) 0%, rgba(56, 189, 248, 0.15) 60%, transparent 80%);
+      animation-delay: -7s;
+    }
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -40px) scale(1.08); }
+      100% { transform: translate(-20px, 30px) scale(0.95); }
+    }
+
+    .auth-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1020px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: 28px;
+      box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.12),
+                  0 4px 16px -2px rgba(15, 23, 42, 0.04),
+                  0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+      overflow: hidden;
+      animation: authPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes authPop {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .auth-main {
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .auth-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-2);
+      letter-spacing: 0.03em;
+      margin-bottom: 22px;
+      width: fit-content;
+    }
+    .auth-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #16a34a;
+      box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6);
+      animation: pulseGreen 1.8s infinite;
+    }
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6); }
+      70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+    }
+
+    .auth-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .auth-brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--ink);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 15px;
+      box-shadow: 0 8px 20px -4px rgba(31, 58, 147, 0.35);
+      flex: none;
+      overflow: hidden;
+    }
+    .auth-brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .auth-brand-titles h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+    .auth-brand-titles p {
+      font-size: 13px;
+      color: var(--text-3);
+      margin: 2px 0 0;
+    }
+
+    .auth-headline {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.22;
+      letter-spacing: -0.025em;
+      color: #0f172a;
+      margin: 0 0 10px;
+    }
+    .auth-headline span {
+      background: linear-gradient(135deg, #1f3a93, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .auth-subhead {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #475569;
+      margin: 0 0 26px;
+    }
+
+    .btn-google-sso {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+      height: 52px;
+      padding: 0 24px;
+      border-radius: 14px;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      cursor: pointer;
+      box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.22), 0 2px 6px -1px rgba(15, 23, 42, 0.1);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .btn-google-sso::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transform: skewX(-20deg);
+      transition: 0.6s;
+    }
+    .btn-google-sso:hover {
+      background: #1e293b;
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px -4px rgba(15, 23, 42, 0.28);
+    }
+    .btn-google-sso:hover::after {
+      left: 140%;
+    }
+    .btn-google-sso:active {
+      transform: scale(0.985);
+    }
+    .btn-google-sso:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .auth-security-card {
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12.5px;
+      color: var(--text-2);
+      line-height: 1.45;
+    }
+    .auth-security-card svg {
+      width: 17px;
+      height: 17px;
+      color: var(--ink);
+      flex: none;
+      margin-top: 1px;
+    }
+
+    .auth-pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+    .auth-pillar-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .auth-pillar-item strong {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .auth-pillar-item span {
+      font-size: 11.5px;
+      color: var(--text-3);
+      line-height: 1.35;
+    }
+
+    /* Right Showcase Panel */
+    .auth-showcase {
+      background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+      border-left: 1px solid var(--border);
+      padding: 44px 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .showcase-header h3 {
+      font-size: 12.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-3);
+      margin: 0 0 16px;
+    }
+    .showcase-stats-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .showcase-stat-box {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+    .showcase-stat-num {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .showcase-stat-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 2px;
+    }
+
+    .showcase-event-card {
+      padding: 18px;
+      border-radius: 18px;
+      background: #fff8f1;
+      border: 1.5px solid #fed7aa;
+      box-shadow: 0 10px 24px -6px rgba(234, 88, 12, 0.1);
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .showcase-event-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .showcase-pill-white {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      color: #c2410c;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .showcase-event-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 4px;
+    }
+    .showcase-event-desc {
+      font-size: 12px;
+      color: #78350f;
+      line-height: 1.4;
+      margin: 0 0 12px;
+    }
+    .showcase-event-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: #9a3412;
+      border-top: 1px dashed #fed7aa;
+      padding-top: 10px;
+    }
+
+    .showcase-ticker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      font-size: 12px;
+    }
+    .ticker-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent-lime);
+      color: var(--accent-lime-text);
+      font-weight: 800;
+      font-size: 12px;
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+    .ticker-content {
+      flex: 1;
+      min-width: 0;
+      line-height: 1.35;
+    }
+    .ticker-time {
+      font-size: 11px;
+      color: var(--text-3);
+      flex: none;
+    }
+
+    @media (max-width: 860px) {
+      .auth-container {
+        grid-template-columns: 1fr;
+        max-width: 460px;
+        border-radius: 24px;
+      }
+      .auth-main {
+        padding: 34px 24px;
+      }
+      .auth-showcase {
+        display: none;
+      }
+      .auth-headline {
+        font-size: 23px;
+      }
+      .auth-pillars {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .auth-pillar-item {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+      }
+    }
 
     /* Admin */
     .admin-tabs { margin-bottom: 18px; }
@@ -1856,19 +2256,112 @@
 
     function renderSignIn() {
       const s = state.settings;
+      const logo = safeUrl(s?.logoUrl);
+      const allowedDomain = s?.allowedDomain || 'cmrcet.ac.in';
+      const collegeTitle = s?.collegeName || 'CMR College of Engineering & Technology';
+      const portalTitle = s?.portalTitle || 'Hackathon Portal';
+      const shortName = s?.collegeShortName || 'CMRCET';
+
       return `
-        <div class="center-screen">
-          <div class="card auth-card">
-            ${brandMark()}
-            <h1>${esc(s.portalTitle)}</h1>
-            <p>${esc(s.collegeName)}</p>
-            <button class="btn btn-primary btn-lg" data-action="sign-in" ${state.signingIn ? 'disabled' : ''} style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:24px">
-              ${state.signingIn
-                ? '<div class="spinner" style="width:18px;height:18px;border-width:2px"></div><span>Connecting to Google…</span>'
-                : `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21.35 11.1H12v2.9h5.35c-.25 1.4-1.65 4.1-5.35 4.1a5.9 5.9 0 0 1 0-11.8c1.85 0 3.1.8 3.8 1.45l2.6-2.5C16.75 3.7 14.6 2.8 12 2.8a9.2 9.2 0 1 0 0 18.4c5.3 0 8.8-3.7 8.8-8.95 0-.6-.05-1.05-.15-1.5z"/></svg><span>Sign in with Google</span>`}
-            </button>
-            ${state.authError ? `<p class="note" style="margin-top:16px;text-align:left;background:var(--marker-soft);color:var(--marker);border:1px solid var(--marker)">${esc(state.authError)}</p>` : ''}
-            <p class="auth-foot">Sign in using your college <strong>@${esc(s.allowedDomain)}</strong> email account.</p>
+        <div class="auth-wrapper">
+          <div class="auth-container">
+            <!-- Left: Main Authentication Panel -->
+            <div class="auth-main">
+              <div class="auth-badge-pill">
+                <span class="auth-pulse-dot"></span>
+                <span>CAMPUS SSO ACTIVE &bull; 2025-26</span>
+              </div>
+
+              <div class="auth-brand-row">
+                <div class="auth-brand-logo">${logo ? `<img src="${esc(logo)}" alt="Logo">` : esc(shortName.slice(0, 8))}</div>
+                <div class="auth-brand-titles">
+                  <h2>${esc(portalTitle)}</h2>
+                  <p>${esc(collegeTitle)}</p>
+                </div>
+              </div>
+
+              <h1 class="auth-headline">Innovate, Build &amp; <span>Win Hackathons.</span></h1>
+              <p class="auth-subhead">Official competition hub for ${esc(shortName)}. Team up with peers, get faculty mentorship approvals, and submit project entries seamlessly.</p>
+
+              <button class="btn-google-sso" data-action="sign-in" ${state.signingIn ? 'disabled' : ''}>
+                ${state.signingIn
+                  ? '<div class="spinner" style="width:18px;height:18px;border-width:2px;border-top-color:#ffffff"></div><span>Authenticating with Google…</span>'
+                  : `
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="flex:none">
+                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span>Continue with College Google Account</span>
+                  `}
+              </button>
+
+              ${state.authError ? `<div class="note" style="margin-top:14px;background:#fef2f2;color:#991b1b;border:1px solid #fecaca;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600">${esc(state.authError)}</div>` : ''}
+
+              <div class="auth-security-card">
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/>
+                </svg>
+                <span>Institutional Access Only: Sign in using your official <strong>@${esc(allowedDomain)}</strong> email ID.</span>
+              </div>
+
+              <div class="auth-pillars">
+                <div class="auth-pillar-item">
+                  <strong>Verified Badges</strong>
+                  <span>Direct college verification</span>
+                </div>
+                <div class="auth-pillar-item">
+                  <strong>Auto Team Match</strong>
+                  <span>Join cross-branch squads</span>
+                </div>
+                <div class="auth-pillar-item">
+                  <strong>Instant OD Letters</strong>
+                  <span>Faculty approved leaves</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Campus Showcase Panel -->
+            <div class="auth-showcase">
+              <div>
+                <div class="showcase-header">
+                  <h3>Live Campus Highlights</h3>
+                </div>
+                <div class="showcase-stats-strip">
+                  <div class="showcase-stat-box">
+                    <div class="showcase-stat-num">317+</div>
+                    <div class="showcase-stat-lbl">Hackathons Tracked</div>
+                  </div>
+                  <div class="showcase-stat-box">
+                    <div class="showcase-stat-num">&#8377;50L+</div>
+                    <div class="showcase-stat-lbl">Student Prizes Won</div>
+                  </div>
+                </div>
+
+                <div class="showcase-event-card">
+                  <div class="showcase-event-badge-row">
+                    <span class="showcase-pill-white">HOT EVENT</span>
+                    <span style="font-size:11px;font-weight:700;color:#c2410c">National Level</span>
+                  </div>
+                  <div class="showcase-event-title">Smart India Hackathon 2025</div>
+                  <div class="showcase-event-desc">World's biggest open innovation competition. Build solutions for ministries &amp; enterprise challenges.</div>
+                  <div class="showcase-event-foot">
+                    <span>Team: 6 Members</span>
+                    <span>Registration Open</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="showcase-ticker">
+                <div class="ticker-avatar">&#9889;</div>
+                <div class="ticker-content">
+                  <div style="font-weight:700;color:var(--text);font-size:12px">Team CyberKnights registered</div>
+                  <div style="color:var(--text-3);font-size:11px">Smart India Hackathon &bull; 4 mins ago</div>
+                </div>
+                <div class="ticker-time">&#9679; Live</div>
+              </div>
+            </div>
           </div>
         </div>`;
     }
