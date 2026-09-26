@@ -9,11 +9,11 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f3a93'/%3E%3Cpath d='M9 11h14M9 16h10M9 21h12' stroke='%23fff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     /* =====================================================================
-       1. DESIGN TOKENS (Elevate Reference Theme)
+       1. DESIGN TOKENS (Clean White Default Theme)
        ===================================================================== */
     :root {
       --bg: #f8fafc;
@@ -25,11 +25,9 @@
       --text: #0f172a;
       --text-2: #475569;
       --text-3: #64748b;
-      --ink: #1f3a93;
+      --ink: #1f3a93;          /* whiteboard blue marker */
       --ink-soft: #e8edfb;
-      --accent-lime: #e2f975;
-      --accent-lime-text: #0f172a;
-      --marker: #d23f35;
+      --marker: #d23f35;       /* whiteboard red marker */
       --marker-soft: #fdecea;
       --green: #16804a;
       --green-soft: #e3f5eb;
@@ -38,49 +36,14 @@
       --violet: #6b3fc2;
       --violet-soft: #f0e9fd;
       --grey-soft: #f1f5f9;
-      --shadow-sm: 0 1px 3px rgba(15, 23, 42, .04);
-      --shadow: 0 4px 16px -2px rgba(15, 23, 42, .05), 0 2px 6px -1px rgba(15, 23, 42, .03);
-      --shadow-lg: 0 20px 48px -4px rgba(15, 23, 42, .12);
-      --radius: 18px;
-      --radius-sm: 10px;
-      --radius-pill: 999px;
-      --focus: 0 0 0 3px rgba(31, 58, 147, .24);
-      --font: 'Plus Jakarta Sans', 'Manrope', system-ui, -apple-system, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, .05);
+      --shadow: 0 1px 3px rgba(15, 23, 42, .06), 0 8px 24px rgba(15, 23, 42, .06);
+      --shadow-lg: 0 20px 48px rgba(15, 23, 42, .12);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --focus: 0 0 0 3px rgba(31, 58, 147, .28);
+      --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
       color-scheme: light;
-    }
-
-    /* Pastel Theme Variations for Event Cards (from Elevate UI reference) */
-    .event-card.theme-peach {
-      --card-bg: #fff8f1;
-      --card-border: #fed7aa;
-      --card-accent: #c2410c;
-      --card-badge-bg: #ffffff;
-      --card-badge-color: #9a3412;
-      --card-progress-fill: #ea580c;
-    }
-    .event-card.theme-lavender {
-      --card-bg: #faf5ff;
-      --card-border: #e9d5ff;
-      --card-accent: #7e22ce;
-      --card-badge-bg: #ffffff;
-      --card-badge-color: #6b21a8;
-      --card-progress-fill: #9333ea;
-    }
-    .event-card.theme-lime {
-      --card-bg: #f7fee7;
-      --card-border: #d9f99d;
-      --card-accent: #4d7c0f;
-      --card-badge-bg: #ffffff;
-      --card-badge-color: #3f6212;
-      --card-progress-fill: #65a30d;
-    }
-    .event-card.theme-sky {
-      --card-bg: #f0f9ff;
-      --card-border: #bae6fd;
-      --card-accent: #0369a1;
-      --card-badge-bg: #ffffff;
-      --card-badge-color: #0369a1;
-      --card-progress-fill: #0284c7;
     }
 
     /* =====================================================================
@@ -133,18 +96,13 @@
     .brand-title { font-weight: 800; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .brand-sub { font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .nav { display: flex; gap: 6px; margin-left: auto; align-items: center; }
+    .nav { display: flex; gap: 4px; margin-left: auto; }
     .nav a {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 7px 16px; border-radius: 999px; text-decoration: none;
-      color: var(--text-2); font-weight: 700; font-size: 13.5px; white-space: nowrap;
-      transition: all .16s ease;
+      padding: 8px 12px; border-radius: 8px; text-decoration: none;
+      color: var(--text-2); font-weight: 600; font-size: 14px; white-space: nowrap;
     }
     .nav a:hover { background: var(--surface-2); color: var(--text); }
-    .nav a.active {
-      background: var(--accent-lime); color: var(--accent-lime-text);
-      box-shadow: 0 2px 8px rgba(226, 249, 117, 0.45);
-    }
+    .nav a.active { background: var(--ink-soft); color: var(--ink); }
 
     .user-menu { position: relative; }
     .avatar-btn {
@@ -153,28 +111,9 @@
       display: grid; place-items: center; font-weight: 700; font-size: 13px;
     }
     .avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
-    .user-pill-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 4px 12px 4px 4px; border-radius: 999px; border: 1px solid var(--border);
-      background: var(--surface); cursor: pointer; color: var(--text);
-      transition: background .15s, border-color .15s, box-shadow .15s;
-    }
-    .user-pill-btn:hover { background: var(--surface-2); border-color: var(--border-strong); }
-    .avatar-circle {
-      width: 30px; height: 30px; border-radius: 50%; background: var(--surface-2);
-      overflow: hidden; display: grid; place-items: center; font-weight: 800; font-size: 12px; color: var(--text);
-      flex: none;
-    }
-    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
-    .user-pill-name { font-weight: 700; font-size: 13.5px; white-space: nowrap; }
-    .chevron-icon { color: var(--text-3); }
-    @media (max-width: 600px) {
-      .user-pill-name, .chevron-icon { display: none; }
-      .user-pill-btn { padding: 3px; }
-    }
     .menu {
       position: absolute; right: 0; top: calc(100% + 8px); min-width: 240px; max-width: calc(100vw - 24px);
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
       box-shadow: var(--shadow-lg); padding: 6px; display: none; z-index: 50;
     }
     .menu.open {
@@ -200,27 +139,22 @@
       .user-menu { margin-left: auto; }
       .mobile-nav {
         display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 25;
-        background: #090e1a;
+        background: rgba(255, 255, 255, 0.94);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+        border-top: 1px solid rgba(226, 232, 240, 0.9);
+        box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.05);
         padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
         -webkit-tap-highlight-color: transparent;
       }
       .mobile-nav a {
         flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
-        padding: 6px 4px; font-size: 11px; font-weight: 600; color: #94a3b8; text-decoration: none; border-radius: 10px;
+        padding: 6px 4px; font-size: 11px; font-weight: 600; color: var(--text-3); text-decoration: none; border-radius: 10px;
         transition: color 0.15s ease, transform 0.12s ease, background 0.15s ease;
         touch-action: manipulation;
       }
       .mobile-nav a:active { transform: scale(0.92); }
-      .mobile-nav a.active {
-        color: #090e1a;
-        background: #c6f24f;
-        font-weight: 800;
-        box-shadow: 0 2px 10px rgba(198, 242, 79, 0.4);
-      }
+      .mobile-nav a.active { color: var(--ink); background: var(--ink-soft); font-weight: 700; }
       .mobile-nav a.active svg { transform: scale(1.12); transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); }
       .mobile-nav svg { width: 20px; height: 20px; transition: transform 0.2s ease; }
       main { padding-bottom: 92px; }
@@ -320,101 +254,62 @@
     .form-section:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
     .form-error { color: var(--marker); font-size: 13px; font-weight: 600; min-height: 1px; }
 
-    /* Tabs & filters (Elevate Pill Segment Control) */
+    /* Tabs & filters */
     .tabs {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: #f1f5f9; padding: 4px;
-      border-radius: 999px; border: 1px solid var(--border);
-      overflow-x: auto; scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
+      display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch; padding-bottom: 2px;
     }
     .tabs::-webkit-scrollbar { display: none; }
     .tab {
-      display: inline-flex; align-items: center; gap: 6px;
-      height: 34px; padding: 0 16px; border-radius: 999px; border: 0;
-      background: transparent; font-weight: 700; font-size: 13.5px; color: var(--text-2);
-      cursor: pointer; white-space: nowrap;
-      transition: all .16s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px;
+      border-radius: 10px; border: 1px solid var(--border); background: var(--surface);
+      font-weight: 700; font-size: 14px; color: var(--text-2); cursor: pointer; white-space: nowrap;
+      transition: background .15s, border-color .15s, transform .12s cubic-bezier(0.16, 1, 0.3, 1);
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    .tab:hover { color: var(--text); background: rgba(255, 255, 255, 0.65); }
-    .tab:active { transform: scale(0.96); }
-    .tab.active {
-      background: #0f172a; color: #ffffff;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.16);
-    }
-    .tab .count {
-      font-size: 11px; padding: 1px 7px; border-radius: 999px;
-      background: rgba(0, 0, 0, 0.08); color: var(--text-2);
-    }
-    .tab.active .count {
-      background: rgba(255, 255, 255, 0.22); color: #ffffff;
-    }
+    .tab:hover { border-color: var(--border-strong); color: var(--text); }
+    .tab:active { transform: scale(0.95); }
+    .tab.active { background: var(--text); border-color: var(--text); color: var(--bg); }
+    .tab .count { font-size: 12px; padding: 1px 7px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); }
+    .tab.active .count { background: color-mix(in srgb, var(--bg) 20%, transparent); color: var(--bg); }
     @media (max-width: 640px) {
       .tabs {
-        display: flex; gap: 4px;
-        background: #f1f5f9; padding: 4px;
-        border-radius: 14px; margin: 0;
+        margin: 0 -16px;
+        padding: 0 16px 6px;
         scroll-snap-type: x proximity;
       }
       .tab {
         scroll-snap-align: start;
         flex-shrink: 0;
-        height: 32px; padding: 0 12px; font-size: 12.5px;
       }
     }
 
     .filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 24px; align-items: center; }
-    .search { position: relative; flex: 1 1 280px; }
-    .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: var(--text-3); pointer-events: none; }
-    .search .input {
-      width: 100%; height: 42px; padding: 0 48px 0 42px;
-      background: #f1f5f9; border: 1px solid transparent; border-radius: 999px;
-      font-size: 14px; font-weight: 600; color: var(--text);
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .search .input:focus {
-      background: #ffffff; border-color: var(--border-strong);
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06); outline: none;
-    }
-    .search-badge {
-      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-      display: inline-flex; align-items: center; padding: 2px 7px;
-      border-radius: 6px; background: #e2e8f0; color: var(--text-3);
-      font-size: 11px; font-weight: 700; pointer-events: none;
-    }
-    .filters .select {
-      width: auto; flex: 0 1 180px; height: 42px; border-radius: 999px;
-      background-color: #f1f5f9; border-color: transparent; font-weight: 600;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .filters .select:focus { background-color: #ffffff; border-color: var(--border-strong); }
+    .search { position: relative; flex: 1 1 260px; }
+    .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-3); pointer-events: none; }
+    .search .input { padding-left: 36px; -webkit-tap-highlight-color: transparent; }
+    .filters .select { width: auto; flex: 0 1 180px; -webkit-tap-highlight-color: transparent; }
     @media (max-width: 600px) {
       .filters { margin: 12px 0 18px; gap: 8px; }
       .search { flex: 1 1 100%; }
       .filters .select { flex: 1 1 calc(50% - 4px); font-size: 13px; height: 38px; }
       .page-head { margin-bottom: 16px; gap: 12px; }
-      .page-head h1 { font-size: 24px; }
+      .page-head h1 { font-size: 22px; }
       .page-actions { width: 100%; }
       .page-actions .btn { flex: 1; }
     }
 
-    /* Stats Cards */
+    /* Stats */
     .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 24px; }
     @media (max-width: 860px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 600px) {
       .stats { gap: 10px; margin-bottom: 18px; }
-      .stat { padding: 14px 16px; border-radius: 16px; }
-      .stat-value { font-size: 26px; }
+      .stat { padding: 12px 14px; }
+      .stat-value { font-size: 24px; }
     }
     .stat {
-      padding: 18px 20px;
-      border-radius: var(--radius);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
+      padding: 16px 18px;
       transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
@@ -425,22 +320,15 @@
         border-color: var(--border-strong);
       }
     }
-    .stat-label { font-size: 11.5px; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
-    .stat-value { font-size: 32px; font-weight: 800; margin-top: 4px; letter-spacing: -.03em; color: var(--text); }
-    .stat-pill {
-      display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;
-      padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
-    }
-    .stat-pill.pill-neutral { background: #f1f5f9; color: #475569; }
-    .stat-pill.pill-green { background: #dcfce7; color: #15803d; }
-    .stat-pill.pill-red { background: #fee2e2; color: #b91c1c; }
-    .stat-pill.pill-purple { background: #f3e8ff; color: #7e22ce; }
+    .stat-label { font-size: 12px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .05em; }
+    .stat-value { font-size: 28px; font-weight: 800; margin-top: 4px; letter-spacing: -.02em; }
+    .stat-note { font-size: 12px; color: var(--text-3); }
 
-    /* Event cards (Pastel Elevate Style) */
-    .section-title { display: flex; align-items: center; gap: 10px; margin: 28px 0 14px; font-size: 18px; font-weight: 800; }
+    /* Event cards */
+    .section-title { display: flex; align-items: center; gap: 10px; margin: 28px 0 12px; font-size: 17px; font-weight: 800; }
     .section-title:first-child { margin-top: 0; }
     .section-title .count { font-size: 13px; color: var(--text-3); font-weight: 700; }
-    .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
+    .event-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
     @media (max-width: 640px) { .event-grid { grid-template-columns: 1fr; gap: 14px; } }
     @keyframes cardIn {
       from {
@@ -454,15 +342,12 @@
     }
     .event-card {
       position: relative; display: flex; flex-direction: column; padding: 0;
-      background: var(--card-bg, #ffffff);
-      border: 1.5px solid var(--card-border, var(--border));
-      border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       cursor: pointer; text-align: left;
       overflow: hidden; isolation: isolate;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                   box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                   border-color 0.22s ease;
       animation: cardIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -470,29 +355,19 @@
     }
     @media (hover: hover) and (pointer: fine) {
       .event-card:hover {
-        z-index: 5;
-        border-color: var(--card-accent, var(--ink));
-        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.16),
-                    0 8px 18px -4px rgba(15, 23, 42, 0.06),
-                    0 0 0 1px var(--card-accent, var(--ink));
-        transform: translateY(-8px) scale(1.02);
+        border-color: color-mix(in srgb, var(--ink) 42%, var(--border));
+        box-shadow: 0 14px 34px -6px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+        transform: translateY(-5px);
       }
       .event-card:hover .event-name {
-        color: var(--card-accent, var(--ink));
+        color: var(--ink);
       }
       .event-card:hover .event-banner img {
-        transform: scale(1.08);
-      }
-      .event-card:hover .due-pill {
-        transform: translateY(-2px) scale(1.04);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-      }
-      .event-card:hover .progress-bar {
-        filter: brightness(1.1);
+        transform: scale(1.06);
       }
       .event-card .icon-btn[data-action="share-whatsapp"]:hover {
         transform: scale(1.2) rotate(8deg);
-        background: rgba(37, 211, 102, 0.14);
+        background: rgba(37, 211, 102, 0.12);
       }
     }
     .event-card:active {
@@ -502,14 +377,14 @@
     }
     .event-card.is-completed { opacity: .72; }
     .event-card.is-pinned {
-      border-color: var(--card-accent, var(--ink));
-      box-shadow: 0 4px 18px -4px rgba(31, 58, 147, 0.15);
+      border-color: color-mix(in srgb, var(--ink) 45%, var(--border));
+      box-shadow: 0 4px 16px -4px rgba(31, 58, 147, 0.12);
     }
     .event-card.is-pinned::after {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 3.5px;
+      height: 3px;
       background: linear-gradient(90deg, #1f3a93, #6366f1, #1f3a93);
       background-size: 200% 100%;
       animation: pinnedShimmer 3s ease infinite;
@@ -525,9 +400,9 @@
       background: var(--surface-2);
       position: relative;
       overflow: hidden;
-      border-bottom: 1px solid var(--card-border, var(--border));
-      border-top-left-radius: calc(var(--radius) - 1.5px);
-      border-top-right-radius: calc(var(--radius) - 1.5px);
+      border-bottom: 1px solid var(--border);
+      border-top-left-radius: calc(var(--radius) - 1px);
+      border-top-right-radius: calc(var(--radius) - 1px);
       flex: none;
     }
     .event-banner img {
@@ -535,8 +410,8 @@
       height: 100%;
       object-fit: cover;
       object-position: center top;
-      border-top-left-radius: calc(var(--radius) - 1.5px);
-      border-top-right-radius: calc(var(--radius) - 1.5px);
+      border-top-left-radius: calc(var(--radius) - 1px);
+      border-top-right-radius: calc(var(--radius) - 1px);
       display: block;
       transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -544,53 +419,18 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: 18px 20px 20px;
-      background: var(--card-bg, #ffffff);
+      padding: 16px 18px 18px;
       flex: 1;
     }
-    .event-card .event-body:only-child { padding: 22px; }
+    .event-card .event-body:only-child { padding: 18px; }
     .event-name {
       font-size: 17px;
       font-weight: 800;
-      color: var(--text);
-      line-height: 1.35;
       transition: color 0.2s ease;
-    }
-    .due-pill {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px;
-      background: var(--card-badge-bg, #ffffff);
-      color: var(--card-badge-color, var(--text));
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 700;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-      white-space: nowrap;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
-    }
-    .due-pill svg { width: 13px; height: 13px; flex: none; }
-
-    /* Progress bar on cards */
-    .card-progress {
-      display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;
-    }
-    .progress-track {
-      width: 100%; height: 6px;
-      background: rgba(0, 0, 0, 0.07);
-      border-radius: 999px; overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%; border-radius: 999px;
-      background: var(--card-progress-fill, var(--ink));
-      transition: width 0.4s ease;
-    }
-    .progress-labels {
-      display: flex; align-items: center; gap: 8px; font-size: 12px;
     }
     .event-card .icon-btn[data-action="share-whatsapp"] {
       transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
-      border-radius: 10px;
+      border-radius: 8px;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
@@ -603,7 +443,7 @@
         height: 180px;
       }
       .event-body {
-        padding: 16px 18px 18px;
+        padding: 15px 16px 16px;
         gap: 11px;
       }
       .event-name {
@@ -612,7 +452,7 @@
       .event-card .icon-btn[data-action="share-whatsapp"] {
         width: 38px;
         height: 38px;
-        border-radius: 10px;
+        border-radius: 9px;
         background: rgba(37, 211, 102, 0.1);
         color: #128c7e;
         display: inline-flex;
@@ -629,10 +469,10 @@
         padding-top: 10px;
       }
       .card-foot .tally {
-        font-size: 11.5px;
+        font-size: 12px;
       }
       .card-foot .tally strong {
-        font-size: 13.5px;
+        font-size: 14px;
       }
       .card-foot .countdown {
         font-size: 11.5px;
@@ -863,624 +703,18 @@
 
     /* Full-screen states (sign-in, setup) */
     .center-screen { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+    .auth-card { width: min(460px, 100%); padding: 36px 32px; text-align: center; }
+    .auth-card .brand-mark { display: inline-grid; min-width: 56px; height: 56px; padding: 0 14px; border-radius: 14px; font-size: 18px; margin: 0 auto 18px; }
+    .auth-card h1 { font-size: 22px; font-weight: 800; }
+    .auth-card p { color: var(--text-2); margin-top: 8px; }
+    .auth-card .btn { width: 100%; margin-top: 24px; }
+    .auth-card .note { margin-top: 18px; text-align: left; }
+    .auth-foot { margin-top: 18px; font-size: 12px; color: var(--text-3); }
     .setup-card { width: min(640px, 100%); padding: 32px; }
     .setup-card ol { padding-left: 20px; color: var(--text-2); display: grid; gap: 8px; }
     .setup-card code { background: var(--surface-2); padding: 2px 6px; border-radius: 5px; font-size: 13px; }
 
-    /* =====================================================================
-       2.1 BESPOKE CMRCET THEME & TOPBAR (IMAGE 1 PANEL 2)
-       ===================================================================== */
-    .topbar {
-      position: sticky; top: 0; z-index: 30;
-      background: #090e1a !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
-    }
-    .topbar-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
-    .brand-dark {
-      display: flex; align-items: center; gap: 10px; text-decoration: none; color: #ffffff;
-    }
-    .brand-dark .brand-title {
-      font-size: 20px; font-weight: 900; letter-spacing: -0.01em; color: #ffffff;
-    }
-    .nav-dark {
-      display: flex; align-items: center; gap: 6px;
-    }
-    .nav-dark a {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 7px 18px; border-radius: 999px; text-decoration: none;
-      color: #94a3b8; font-weight: 700; font-size: 13.5px;
-      transition: all 0.16s ease;
-    }
-    .nav-dark a:hover {
-      color: #ffffff; background: rgba(255, 255, 255, 0.08);
-    }
-    .nav-dark a.active {
-      background: #c6f24f; color: #090e1a; font-weight: 800;
-      box-shadow: 0 2px 12px rgba(198, 242, 79, 0.35);
-    }
-    .topbar-right-actions {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .topbar-icon-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #cbd5e1; display: grid; place-items: center; cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .topbar-icon-btn:hover {
-      background: rgba(255, 255, 255, 0.14); color: #ffffff;
-    }
-    .topbar-notif-dot {
-      position: absolute; top: 7px; right: 7px; width: 7px; height: 7px;
-      border-radius: 50%; background: #ef4444; border: 1.5px solid #090e1a;
-    }
-    .user-pill-dark {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 4px 14px 4px 6px; border-radius: 999px;
-      background: #141c2e; border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #ffffff; cursor: pointer; text-align: left;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .user-pill-dark:hover {
-      background: #1a253c; border-color: rgba(255, 255, 255, 0.22);
-    }
-    .user-pill-avatar {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: #1e293b; color: #ffffff; font-weight: 800; font-size: 12px;
-      display: grid; place-items: center; overflow: hidden; flex: none;
-    }
-    .user-pill-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .user-pill-text { display: flex; flex-direction: column; line-height: 1.2; }
-    .user-pill-name { font-weight: 700; font-size: 13px; color: #ffffff; white-space: nowrap; }
-    .user-pill-dept { font-size: 11px; color: #94a3b8; white-space: nowrap; }
-
-    /* =====================================================================
-       2.2 LANDING / SIGN-IN SCREEN (IMAGE 1 PANEL 1)
-       ===================================================================== */
-    .landing-screen {
-      min-height: 100vh;
-      display: flex;
-      background: #ffffff;
-      color: #0f172a;
-      overflow-x: hidden;
-    }
-    .landing-main {
-      flex: 1 1 60%;
-      padding: 40px 64px 32px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      max-width: 840px;
-    }
-    .landing-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 28px;
-    }
-    .landing-brand {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .landing-brand-text {
-      display: flex; flex-direction: column; line-height: 1.15;
-    }
-    .landing-brand-title {
-      font-size: 22px; font-weight: 900; letter-spacing: -0.01em; color: #0f172a;
-    }
-    .landing-brand-college {
-      font-size: 9px; font-weight: 800; color: #475569; letter-spacing: 0.08em; text-transform: uppercase;
-    }
-    .landing-brand-motto {
-      font-size: 8px; font-weight: 700; color: #65a30d; letter-spacing: 0.16em; text-transform: uppercase;
-    }
-    .landing-portal-badge {
-      display: inline-flex; align-items: center;
-      padding: 5px 14px; border-radius: 999px;
-      background: #f8fafc; border: 1px solid #e2e8f0;
-      color: #475569; font-size: 13px; font-weight: 700;
-    }
-    .landing-content {
-      flex: 1; display: flex; flex-direction: column; justify-content: center;
-    }
-    .landing-headline {
-      font-size: clamp(34px, 4vw, 48px);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
-      color: #0f172a;
-      margin-bottom: 12px;
-    }
-    .landing-lime-gradient {
-      background: linear-gradient(135deg, #65a30d 0%, #84cc16 60%, #4d7c0f 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .landing-subhead {
-      font-size: 17px; font-weight: 700; color: #475569; margin-bottom: 8px;
-    }
-    .landing-description {
-      font-size: 14.5px; line-height: 1.6; color: #64748b; max-width: 520px; margin-bottom: 24px;
-    }
-    .landing-auth-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.06);
-      padding: 26px 28px;
-      max-width: 440px;
-      margin-bottom: 28px;
-    }
-    .auth-card-title {
-      font-size: 19px; font-weight: 800; color: #0f172a; margin-bottom: 4px;
-    }
-    .auth-card-sub {
-      font-size: 13px; color: #64748b; margin-bottom: 18px; line-height: 1.45;
-    }
-    .landing-input-group {
-      position: relative; margin-bottom: 12px;
-    }
-    .landing-mail-icon {
-      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-      color: #94a3b8; pointer-events: none;
-    }
-    .landing-email-input {
-      width: 100%; height: 44px; padding: 0 14px 0 42px;
-      border: 1.5px solid #e2e8f0; border-radius: 10px;
-      font-size: 14px; font-weight: 500; color: #0f172a; background: #f8fafc;
-      transition: all 0.18s;
-    }
-    .landing-email-input:focus {
-      background: #ffffff; border-color: #0f172a; outline: none;
-      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
-    }
-    .btn-landing-email {
-      width: 100%; height: 44px; border-radius: 10px;
-      background: #090e1a; color: #ffffff; border: 0;
-      font-size: 14px; font-weight: 700; cursor: pointer;
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      transition: all 0.18s ease;
-    }
-    .btn-landing-email:hover {
-      background: #1e293b; transform: translateY(-1px);
-    }
-    .landing-divider {
-      display: flex; align-items: center; text-align: center;
-      color: #94a3b8; font-size: 12px; font-weight: 600;
-      margin: 16px 0;
-    }
-    .landing-divider::before, .landing-divider::after {
-      content: ''; flex: 1; border-bottom: 1px solid #e2e8f0;
-    }
-    .landing-divider span { padding: 0 12px; }
-    .btn-landing-google {
-      width: 100%; padding: 10px 16px; border-radius: 12px;
-      background: #ffffff; border: 1.5px solid #e2e8f0;
-      cursor: pointer; display: flex; align-items: center; gap: 14px;
-      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .btn-landing-google:hover {
-      border-color: #cbd5e1; background: #f8fafc; transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
-    }
-    .btn-landing-google:active { transform: scale(0.98); }
-    .google-icon-wrapper {
-      width: 32px; height: 32px; display: grid; place-items: center; flex: none;
-    }
-    .btn-google-labels {
-      display: flex; flex-direction: column; text-align: left; line-height: 1.25;
-    }
-    .btn-google-labels strong {
-      font-size: 13.5px; font-weight: 800; color: #0f172a;
-    }
-    .btn-google-labels span {
-      font-size: 11px; color: #64748b; font-weight: 500;
-    }
-    .landing-auth-err {
-      margin-top: 14px; padding: 10px 12px; border-radius: 10px;
-      background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c;
-      font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-    }
-    .landing-terms {
-      margin-top: 16px; font-size: 11.5px; color: #94a3b8; text-align: center; line-height: 1.45;
-    }
-    .landing-terms a { color: #64748b; text-decoration: underline; }
-    .landing-value-props {
-      display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;
-    }
-    .value-prop-item {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 13.5px; font-weight: 700; color: #334155;
-    }
-    .value-prop-icon { font-size: 16px; }
-    .landing-footer {
-      border-top: 1px solid #f1f5f9; padding-top: 20px;
-      display: flex; flex-direction: column; gap: 4px;
-    }
-    .landing-footer strong { font-size: 13px; font-weight: 800; color: #0f172a; }
-    .landing-footer span { font-size: 12px; color: #94a3b8; }
-
-    /* Ribbon Right Area (Desktop) */
-    .landing-ribbon {
-      flex: 0 0 40%;
-      background: #080f1d;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .ribbon-aurora-glow {
-      position: absolute; inset: 0;
-      background: radial-gradient(circle at 10% 50%, rgba(198, 242, 79, 0.22), transparent 45%),
-                  radial-gradient(circle at 80% 30%, rgba(56, 189, 248, 0.16), transparent 50%),
-                  radial-gradient(circle at 50% 85%, rgba(132, 204, 22, 0.15), transparent 60%);
-      pointer-events: none;
-    }
-    .ribbon-svg-wave {
-      position: absolute; top: 0; bottom: 0; left: 0; width: 60px; height: 100%;
-      pointer-events: none;
-    }
-    .ribbon-keywords-col {
-      display: flex; flex-direction: column; gap: 48px; text-align: center;
-      z-index: 2;
-    }
-    .ribbon-keywords-col span {
-      font-size: 16px; font-weight: 900; letter-spacing: 0.35em;
-      color: rgba(255, 255, 255, 0.22); transition: color 0.3s;
-    }
-    .ribbon-keywords-col span:hover {
-      color: #c6f24f; text-shadow: 0 0 20px rgba(198, 242, 79, 0.6);
-    }
-    .ribbon-stars-layer { position: absolute; inset: 0; pointer-events: none; }
-    .ribbon-star {
-      position: absolute; color: #c6f24f; font-size: 14px; opacity: 0.6;
-      animation: starTwinkle 3s ease-in-out infinite alternate;
-    }
-    .ribbon-star.s1 { top: 15%; left: 35%; animation-delay: 0s; }
-    .ribbon-star.s2 { top: 38%; right: 25%; animation-delay: 0.7s; font-size: 11px; }
-    .ribbon-star.s3 { top: 62%; left: 45%; animation-delay: 1.4s; }
-    .ribbon-star.s4 { bottom: 20%; right: 35%; animation-delay: 2.1s; font-size: 12px; }
-    .ribbon-star.s5 { top: 82%; left: 25%; animation-delay: 0.4s; font-size: 10px; }
-    @keyframes starTwinkle {
-      from { opacity: 0.3; transform: scale(0.85); }
-      to { opacity: 0.9; transform: scale(1.15); filter: drop-shadow(0 0 6px #c6f24f); }
-    }
-    @media (max-width: 960px) {
-      .landing-ribbon { display: none; }
-      .landing-main { flex: 1 1 100%; max-width: 100%; padding: 24px 20px; }
-      .landing-headline { font-size: 32px; }
-    }
-
-    /* =====================================================================
-       2.3 FEATURED HACKATHON HERO BANNER (IMAGE 1 PANEL 2)
-       ===================================================================== */
-    .featured-hero {
-      position: relative;
-      border-radius: 24px;
-      background: radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.16), transparent 50%),
-                  radial-gradient(circle at 20% 80%, rgba(198, 242, 79, 0.12), transparent 45%),
-                  linear-gradient(135deg, #070e1e 0%, #0d1b38 55%, #081126 100%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 16px 48px -10px rgba(0, 0, 0, 0.35);
-      color: #ffffff;
-      padding: 36px 40px;
-      margin-bottom: 32px;
-      overflow: hidden;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 32px;
-    }
-    .featured-hero-content {
-      flex: 1 1 58%; max-width: 580px; z-index: 2;
-    }
-    .featured-tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
-      color: #c6f24f; margin-bottom: 8px;
-    }
-    .featured-title {
-      font-size: clamp(26px, 3.2vw, 38px);
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      color: #ffffff;
-      margin: 4px 0 6px;
-    }
-    .featured-sub {
-      font-size: 15px; font-weight: 600; color: #94a3b8; font-style: italic; margin-bottom: 12px;
-    }
-    .featured-desc {
-      font-size: 14.5px; line-height: 1.5; color: #cbd5e1; margin-bottom: 24px; max-width: 480px;
-    }
-    .featured-actions {
-      display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 24px;
-    }
-    .btn-hero-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      height: 44px; padding: 0 24px; border-radius: 12px;
-      background: #c6f24f; color: #090e1a; font-weight: 800; font-size: 14px;
-      border: 0; cursor: pointer; text-decoration: none;
-      box-shadow: 0 4px 20px rgba(198, 242, 79, 0.35);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .btn-hero-primary:hover {
-      background: #d4f86d; transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(198, 242, 79, 0.5);
-    }
-    .btn-hero-outline {
-      display: inline-flex; align-items: center; gap: 8px;
-      height: 44px; padding: 0 22px; border-radius: 12px;
-      background: transparent; color: #ffffff;
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none;
-      transition: all 0.2s ease;
-    }
-    .btn-hero-outline:hover {
-      background: rgba(255, 255, 255, 0.1); border-color: #ffffff;
-    }
-    .featured-meta-bar {
-      display: flex; align-items: center; gap: 20px; font-size: 13px; color: #94a3b8; font-weight: 600;
-    }
-    .featured-carousel-dots {
-      display: flex; align-items: center; gap: 6px;
-    }
-    .carousel-dot {
-      width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, 0.25);
-    }
-    .carousel-dot.active {
-      width: 18px; border-radius: 4px; background: #c6f24f;
-    }
-    .featured-visual {
-      flex: 0 0 340px; position: relative; display: flex; align-items: center; justify-content: center;
-    }
-    @media (max-width: 860px) {
-      .featured-hero { padding: 24px 20px; flex-direction: column; align-items: flex-start; gap: 20px; }
-      .featured-visual { display: none; }
-    }
-
-    /* =====================================================================
-       2.4 "FIND YOUR NEXT BIG CHALLENGE" & CATEGORY FILTER PILLS
-       ===================================================================== */
-    .explore-head {
-      display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-    .explore-head h2 {
-      font-size: 26px; font-weight: 900; letter-spacing: -0.02em; color: #0f172a;
-    }
-    .explore-head h2 span { color: #65a30d; }
-    .explore-head p { font-size: 14px; color: #64748b; margin-top: 4px; }
-    .category-pills-row {
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 28px;
-    }
-    .cat-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      height: 38px; padding: 0 18px; border-radius: 999px;
-      font-size: 13.5px; font-weight: 700; cursor: pointer;
-      background: #ffffff; border: 1.5px solid #e2e8f0; color: #475569;
-      transition: all 0.16s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .cat-pill:hover {
-      background: #f8fafc; border-color: #cbd5e1; color: #0f172a;
-    }
-    .cat-pill.active {
-      background: #c6f24f; border-color: #c6f24f; color: #090e1a; font-weight: 800;
-      box-shadow: 0 2px 10px rgba(198, 242, 79, 0.35);
-    }
-
-    /* =====================================================================
-       2.5 "CLOSING SOON" SECTION & CARDS
-       ===================================================================== */
-    .closing-soon-section { margin-bottom: 38px; }
-    .closing-soon-header {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
-    }
-    .closing-soon-title-wrap {
-      display: flex; align-items: center; gap: 10px;
-    }
-    .closing-clock-icon {
-      width: 28px; height: 28px; border-radius: 8px; background: #ffedd5; color: #ea580c;
-      display: grid; place-items: center;
-    }
-    .closing-soon-title {
-      font-size: 19px; font-weight: 800; color: #0f172a;
-    }
-    .closing-soon-sub {
-      font-size: 13px; color: #64748b; margin-left: 38px; margin-top: -2px;
-    }
-    .view-all-link {
-      font-size: 13.5px; font-weight: 700; color: #1e3a8a; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 4px;
-    }
-    .view-all-link:hover { text-decoration: underline; }
-    .closing-soon-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px;
-    }
-    @media (max-width: 900px) { .closing-soon-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 600px) { .closing-soon-grid { grid-template-columns: 1fr; } }
-    .closing-card {
-      background: #ffffff;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 18px;
-      padding: 20px 22px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      gap: 14px;
-      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
-      cursor: pointer;
-      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-                  border-color 0.2s ease;
-    }
-    .closing-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      border-color: #cbd5e1;
-      box-shadow: 0 18px 36px -8px rgba(15, 23, 42, 0.12);
-    }
-    .closing-card-top-tags {
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    }
-    .urgency-badge-red {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 10px; border-radius: 999px;
-      background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;
-      font-size: 11px; font-weight: 800;
-    }
-    .urgency-badge-orange {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 3px 10px; border-radius: 999px;
-      background: #ffedd5; color: #ea580c; border: 1px solid #fdba74;
-      font-size: 11px; font-weight: 800;
-    }
-    .category-badge-cyan {
-      display: inline-flex; align-items: center;
-      padding: 3px 10px; border-radius: 999px;
-      background: #e0f2fe; color: #0284c7;
-      font-size: 11px; font-weight: 700;
-    }
-    .category-badge-teal {
-      display: inline-flex; align-items: center;
-      padding: 3px 10px; border-radius: 999px;
-      background: #ccfbf1; color: #0f766e;
-      font-size: 11px; font-weight: 700;
-    }
-    .closing-card-title {
-      font-size: 17px; font-weight: 800; color: #0f172a; line-height: 1.25; margin: 4px 0 2px;
-    }
-    .closing-card-desc {
-      font-size: 13px; color: #64748b; line-height: 1.4;
-    }
-    .closing-card-meta {
-      display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: #64748b; font-weight: 600; flex-wrap: wrap;
-    }
-    .closing-card-foot {
-      display: flex; align-items: center; justify-content: space-between;
-      border-top: 1px solid #f1f5f9; padding-top: 12px; margin-top: 4px;
-    }
-    .team-avatar-stack {
-      display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #64748b;
-    }
-    .avatar-circles-group {
-      display: flex; margin-right: -4px;
-    }
-    .avatar-tiny {
-      width: 22px; height: 22px; border-radius: 50%; border: 2px solid #ffffff;
-      background: #e2e8f0; display: inline-flex; align-items: center; justify-content: center;
-      font-size: 9px; font-weight: 800; color: #475569; margin-left: -6px;
-    }
-    .avatar-tiny:first-child { margin-left: 0; }
-    .card-details-link {
-      font-size: 13px; font-weight: 800; color: #0f172a; text-decoration: none;
-      display: inline-flex; align-items: center; gap: 4px;
-    }
-
-    /* =====================================================================
-       2.6 ADMIN DASHBOARD (IMAGE 1 PANEL 3)
-       ===================================================================== */
-    .admin-page-container {
-      display: flex; min-height: calc(100vh - 68px);
-      background: #f8fafc; margin: -28px -20px -56px;
-    }
-    @media (max-width: 600px) { .admin-page-container { margin: -28px -16px -56px; } }
-    .admin-sidebar {
-      width: 260px; background: #080f1d; color: #cbd5e1;
-      padding: 24px 16px; display: flex; flex-direction: column; gap: 6px;
-      flex-shrink: 0;
-    }
-    .admin-sidebar-brand {
-      display: flex; align-items: center; gap: 10px; padding: 0 8px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 12px;
-    }
-    .admin-sidebar-brand strong {
-      font-size: 18px; font-weight: 900; color: #ffffff;
-    }
-    .admin-section-tag {
-      font-size: 10.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
-      color: #94a3b8; padding: 0 10px; margin-bottom: 6px;
-    }
-    .admin-sidebar-link {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 14px; border-radius: 12px; color: #94a3b8; text-decoration: none;
-      font-size: 13.5px; font-weight: 700; cursor: pointer; transition: all 0.16s ease;
-      background: none; border: 0; width: 100%; text-align: left;
-    }
-    .admin-sidebar-link:hover {
-      background: rgba(255, 255, 255, 0.06); color: #ffffff;
-    }
-    .admin-sidebar-link.active {
-      background: #c6f24f; color: #090e1a; font-weight: 800;
-      box-shadow: 0 2px 10px rgba(198, 242, 79, 0.35);
-    }
-    .admin-link-badge {
-      padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 800;
-      background: #ef4444; color: #ffffff;
-    }
-    .admin-content-wrap {
-      flex: 1; padding: 28px 36px 48px; min-width: 0;
-    }
-    @media (max-width: 900px) {
-      .admin-page-container { flex-direction: column; }
-      .admin-sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 12px; }
-      .admin-content-wrap { padding: 20px 16px; }
-    }
-    .admin-top-header {
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      margin-bottom: 24px;
-    }
-    .admin-search-input {
-      width: 100%; max-width: 420px; height: 42px; border-radius: 10px;
-      background: #ffffff; border: 1.5px solid #e2e8f0; padding: 0 14px 0 40px;
-      font-size: 13.5px; font-weight: 500;
-    }
-    .admin-stat-cards-grid {
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
-      margin-bottom: 28px;
-    }
-    @media (max-width: 900px) { .admin-stat-cards-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 500px) { .admin-stat-cards-grid { grid-template-columns: 1fr; } }
-    .admin-stat-card {
-      background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 16px;
-      padding: 20px 22px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-      display: flex; align-items: center; gap: 16px;
-      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s;
-    }
-    .admin-stat-card:hover {
-      transform: translateY(-4px); box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.08);
-    }
-    .admin-stat-icon-wrap {
-      width: 48px; height: 48px; border-radius: 14px;
-      display: grid; place-items: center; font-size: 20px; flex: none;
-    }
-    .admin-stat-icon-blue { background: #eff6ff; color: #2563eb; }
-    .admin-stat-icon-orange { background: #fff7ed; color: #ea580c; }
-    .admin-stat-icon-purple { background: #faf5ff; color: #9333ea; }
-    .admin-stat-icon-green { background: #f0fdf4; color: #16a34a; }
-    .admin-stat-value {
-      font-size: 28px; font-weight: 900; color: #0f172a; line-height: 1.1;
-    }
-    .admin-stat-title {
-      font-size: 13px; font-weight: 600; color: #64748b; margin-top: 2px;
-    }
-    .approval-card-item {
-      background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px;
-      padding: 14px 18px; display: flex; align-items: center; justify-content: space-between;
-      gap: 16px; margin-bottom: 10px;
-      transition: all 0.2s ease;
-    }
-    .approval-card-item:hover {
-      border-color: #cbd5e1; transform: translateX(2px);
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
-    }
-    .approval-card-item .btn-review {
-      background: #090e1a; color: #ffffff; border: 0; padding: 6px 16px; border-radius: 8px;
-      font-size: 12.5px; font-weight: 700; cursor: pointer;
-    }
-    .approval-card-item .btn-reject {
-      background: #ffffff; color: #64748b; border: 1.5px solid #e2e8f0; padding: 6px 14px;
-      border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer;
-    }
-
-    /* Admin legacy sub-views */
+    /* Admin */
     .admin-tabs { margin-bottom: 18px; }
     .admin-section + .admin-section { margin-top: 28px; }
     .admin-section h2 { font-size: 17px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
@@ -1686,8 +920,6 @@
       user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
       inbox: '<path d="M3 13h5l2 3h4l2-3h5"/><path d="M5 5h14l2 8v6H3v-6z"/>',
       whatsapp: '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
-      bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
-      check: '<polyline points="20 6 9 17 4 12"/>',
     };
 
     /* =====================================================================
@@ -1793,7 +1025,7 @@
       loaded: { events: false, teams: false },
       route: 'events',
       filters: { region: 'all', search: '', status: 'all', mode: 'all', year: null },   // year: null = not chosen yet, '' = all years
-      adminTab: 'dashboard',
+      adminTab: 'approvals',
       adminTeamFilter: { status: 'pending', eventId: '' },
       adminEventFilter: { visibility: 'published', reviewOnly: false, search: '' },
       board: { year: '', showCompleted: true, sortBy: 'default' },
@@ -2406,29 +1638,58 @@
     /* =====================================================================
        8. SCREENS OUTSIDE THE APP (setup, sign-in, access)
        ===================================================================== */
-    function cmrcetLogoSvg({ size = 36, isDark = false } = {}) {
-      const angles = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
-      const petals = angles.map((a, i) => {
-        const fill = i % 2 === 0 ? '#65a30d' : '#84cc16';
-        return `<path d="M 50 14 C 54 14 56 26 53 36 C 51.5 41 48.5 41 47 36 C 44 26 46 14 50 14 Z" fill="${fill}" transform="rotate(${a} 50 50)"/>`;
-      }).join('');
-      return `
-        <svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="cmrcet-emblem" aria-hidden="true">
-          <circle cx="50" cy="50" r="46" fill="${isDark ? 'rgba(255,255,255,0.06)' : 'transparent'}" />
-          ${petals}
-          <circle cx="50" cy="50" r="14" fill="#15803d" />
-          <circle cx="50" cy="50" r="8" fill="#a3e635" />
-        </svg>`;
+    function brandMark() {
+      const s = state.settings;
+      const logo = safeUrl(s?.logoUrl);
+      return `<span class="brand-mark">${logo ? `<img src="${esc(logo)}" alt="">` : esc(s?.collegeShortName ? s.collegeShortName.slice(0, 8) : initials(s?.collegeName || 'Hackathon Portal'))}</span>`;
     }
 
-    function brandMark({ isDark = false } = {}) {
+    function renderSetupScreen(message) {
       return `
-        <div style="display:flex;align-items:center;gap:10px">
-          ${cmrcetLogoSvg({ size: 36, isDark })}
-          <div style="display:flex;flex-direction:column;line-height:1.15;text-align:left">
-            <span style="font-weight:900;font-size:18px;letter-spacing:0.02em;color:${isDark ? '#ffffff' : '#0f172a'}">CMRCET</span>
-            <span style="font-weight:700;font-size:8.5px;letter-spacing:0.08em;color:${isDark ? '#94a3b8' : '#64748b'};text-transform:uppercase">CMR COLLEGE OF ENGINEERING &amp; TECHNOLOGY</span>
-            <span style="font-weight:700;font-size:7.5px;letter-spacing:0.16em;color:${isDark ? '#a3e635' : '#65a30d'};text-transform:uppercase">EXPLORE · INNOVATE · EXCEL</span>
+        <div class="center-screen">
+          <div class="card setup-card">
+            <h1 style="font-size:22px;font-weight:800">Finish setting up Firebase</h1>
+            <p class="note" style="margin:14px 0 20px">${esc(message)}</p>
+            <ol>
+              <li>Open <strong>Firebase Console → Project settings → Your apps</strong> and copy your web app config.</li>
+              <li>Paste the values into <code>config/app.config.json</code> (see <code>config/app.config.example.json</code>).</li>
+            </ol>
+            <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+              <h2 style="font-size:16px;font-weight:700;margin-bottom:8px">Quick Setup (Paste Config Directly)</h2>
+              <p class="muted" style="font-size:13px;margin-bottom:12px">You can paste your <code>const firebaseConfig = { ... }</code> or JSON below to connect immediately:</p>
+              <textarea id="quick-config-input" class="textarea" rows="4" placeholder='{\n  "apiKey": "AIzaSy...",\n  "authDomain": "your-app.firebaseapp.com",\n  "projectId": "your-app",\n  "appId": "1:..."\n}' style="font-family:monospace;font-size:13px"></textarea>
+              <div style="display:flex;gap:10px;margin-top:10px;align-items:center">
+                <button class="btn btn-primary" data-action="save-quick-config">Save &amp; Connect</button>
+                <span id="quick-config-err" style="color:var(--marker);font-size:13px;font-weight:600"></span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderNotInitialised() {
+      return `
+        <div class="center-screen">
+          <div class="card setup-card">
+            <h1 style="font-size:22px;font-weight:800">Database not initialised</h1>
+            <p class="note" style="margin:14px 0 20px">Firebase is connected, but the portal settings document <code>settings/public</code> does not exist yet.</p>
+            <ol>
+              <li>Deploy the security rules: <code>npx firebase-tools deploy --only firestore --project YOUR_PROJECT_ID</code></li>
+              <li>Put your service account key at <code>scripts/service-account.json</code>.</li>
+              <li>Run <code>npm install</code>, <code>npm run seed</code> and <code>npm run import</code> inside the <code>scripts</code> folder.</li>
+              <li>Reload this page.</li>
+            </ol>
+          </div>
+        </div>`;
+    }
+
+    function renderFatal() {
+      return `
+        <div class="center-screen">
+          <div class="card setup-card">
+            <h1 style="font-size:22px;font-weight:800">Could not reach the database</h1>
+            <p class="note" style="margin:14px 0 20px">${esc(state.fatalError)}</p>
+            <button class="btn" onclick="location.reload()">Try again</button>
           </div>
         </div>`;
     }
@@ -2436,126 +1697,18 @@
     function renderSignIn() {
       const s = state.settings;
       return `
-        <div class="landing-screen">
-          <!-- Left Column: Content & Sign-in (Image 1 Panel 1) -->
-          <div class="landing-main">
-            <header class="landing-header">
-              <div class="landing-brand">
-                ${cmrcetLogoSvg({ size: 44, isDark: false })}
-                <div class="landing-brand-text">
-                  <span class="landing-brand-title">CMRCET</span>
-                  <span class="landing-brand-college">CMR COLLEGE OF ENGINEERING &amp; TECHNOLOGY</span>
-                  <span class="landing-brand-motto">EXPLORE · INNOVATE · EXCEL</span>
-                </div>
-              </div>
-              <div class="landing-portal-badge">Student Portal</div>
-            </header>
-
-            <div class="landing-content">
-              <div class="landing-hero-text">
-                <h1 class="landing-headline">Where ideas<br><span class="landing-lime-gradient">find their team.</span></h1>
-                <p class="landing-subhead">Hackathons. Project Competitions. Real Opportunities.</p>
-                <p class="landing-description">
-                  Join a vibrant community of makers, builders and problem solvers at CMRCET.
-                  Discover events, form teams, and turn your ideas into impact.
-                </p>
-              </div>
-
-              <!-- Sign-in Card -->
-              <div class="landing-auth-card">
-                <h3 class="auth-card-title">Sign in to continue</h3>
-                <p class="auth-card-sub">Use your college account to access hackathons, competitions and team features.</p>
-
-                <form class="landing-email-form" onsubmit="event.preventDefault(); signIn();">
-                  <div class="landing-input-group">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="landing-mail-icon"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
-                    <input type="email" id="landing-email" class="landing-email-input" placeholder="yourname@cmrcet.ac.in" autocomplete="email">
-                  </div>
-                  <button type="submit" class="btn-landing-email" data-action="sign-in">
-                    <span>Continue with College Email</span>
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                  </button>
-                </form>
-
-                <div class="landing-divider"><span>or</span></div>
-
-                <button class="btn-landing-google" data-action="sign-in" ${state.signingIn ? 'disabled' : ''}>
-                  ${state.signingIn ? `
-                    <div class="spinner" style="width:20px;height:20px;border-width:2px;border-color:rgba(0,0,0,0.15);border-top-color:#0f172a"></div>
-                    <div class="btn-google-labels"><strong>Connecting to Google…</strong><span>Verifying @cmrcet.ac.in credentials</span></div>
-                  ` : `
-                    <span class="google-icon-wrapper">
-                      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                      </svg>
-                    </span>
-                    <div class="btn-google-labels">
-                      <strong>Continue with Google</strong>
-                      <span>Use your CMRCET Google account</span>
-                    </div>
-                  `}
-                </button>
-
-                ${state.authError ? `
-                  <div class="landing-auth-err">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <span>${esc(state.authError)}</span>
-                  </div>` : ''}
-
-                <p class="landing-terms">
-                  By continuing, you agree to our <a href="#" onclick="event.preventDefault();">Terms of Service</a> and <a href="#" onclick="event.preventDefault();">Privacy Policy</a>.
-                </p>
-                <div style="margin-top:14px;text-align:center">
-                  <button type="button" class="btn btn-sm btn-ghost" data-action="dev-bypass" style="font-size:11px;color:#94a3b8;border:1px dashed #cbd5e1;padding:4px 12px;border-radius:8px;cursor:pointer">⚡ Quick Preview (Student / Admin Demo)</button>
-                </div>
-              </div>
-
-              <!-- Bottom 3 Value Props -->
-              <div class="landing-value-props">
-                <div class="value-prop-item">
-                  <span class="value-prop-icon">👥</span>
-                  <span class="value-prop-text">Build Amazing Teams</span>
-                </div>
-                <div class="value-prop-item">
-                  <span class="value-prop-icon">⚡</span>
-                  <span class="value-prop-text">Compete in Top Events</span>
-                </div>
-                <div class="value-prop-item">
-                  <span class="value-prop-icon">🏆</span>
-                  <span class="value-prop-text">Gain Real Opportunities</span>
-                </div>
-              </div>
-            </div>
-
-            <footer class="landing-footer">
-              <strong>CMRCET</strong>
-              <span>Hackathon &amp; Project Competitions · A platform by the CMRCET community</span>
-            </footer>
-          </div>
-
-          <!-- Right Column: Cosmic Dark Navy Ribbon Wave (Desktop) -->
-          <div class="landing-ribbon" aria-hidden="true">
-            <div class="ribbon-aurora-glow"></div>
-            <div class="ribbon-stars-layer">
-              <span class="ribbon-star s1">✦</span>
-              <span class="ribbon-star s2">★</span>
-              <span class="ribbon-star s3">✦</span>
-              <span class="ribbon-star s4">★</span>
-              <span class="ribbon-star s5">✦</span>
-            </div>
-            <svg class="ribbon-svg-wave" viewBox="0 0 100 800" preserveAspectRatio="none">
-              <path d="M 0 0 C 40 200, -20 400, 30 600 C 50 700, 20 800, 0 800 Z" fill="#080f1d"/>
-              <path d="M 0 0 C 40 200, -20 400, 30 600 C 50 700, 20 800, 0 800" fill="none" stroke="rgba(198, 242, 79, 0.7)" stroke-width="3" filter="drop-shadow(0 0 16px #c6f24f)"/>
-            </svg>
-            <div class="ribbon-keywords-col">
-              <span>IDEAS</span>
-              <span>PEOPLE</span>
-              <span>PROJECTS</span>
-              <span>IMPACT</span>
-            </div>
+        <div class="center-screen">
+          <div class="card auth-card">
+            ${brandMark()}
+            <h1>${esc(s.portalTitle)}</h1>
+            <p>${esc(s.collegeName)}</p>
+            <button class="btn btn-primary btn-lg" data-action="sign-in" ${state.signingIn ? 'disabled' : ''} style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:24px">
+              ${state.signingIn
+                ? '<div class="spinner" style="width:18px;height:18px;border-width:2px"></div><span>Connecting to Google…</span>'
+                : `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M21.35 11.1H12v2.9h5.35c-.25 1.4-1.65 4.1-5.35 4.1a5.9 5.9 0 0 1 0-11.8c1.85 0 3.1.8 3.8 1.45l2.6-2.5C16.75 3.7 14.6 2.8 12 2.8a9.2 9.2 0 1 0 0 18.4c5.3 0 8.8-3.7 8.8-8.95 0-.6-.05-1.05-.15-1.5z"/></svg><span>Sign in with Google</span>`}
+            </button>
+            ${state.authError ? `<p class="note" style="margin-top:16px;text-align:left;background:var(--marker-soft);color:var(--marker);border:1px solid var(--marker)">${esc(state.authError)}</p>` : ''}
+            <p class="auth-foot">Sign in using your college <strong>@${esc(s.allowedDomain)}</strong> email account.</p>
           </div>
         </div>`;
     }
@@ -2575,65 +1728,39 @@
     }
 
     function renderShell(content) {
-      if (state.route === 'admin') {
-        // Admin gets the full-bleed sidebar layout matching Image 1 Panel 3
-        return content;
-      }
-
       const s = state.settings;
       const user = state.user;
-      const photo = safeUrl(user?.photoURL);
+      const photo = safeUrl(user.photoURL);
       const nav = navItems();
       const pendingCount = isStaff() ? pendingApprovals() + state.teams.filter((t) => t.status === 'pending').length : 0;
-      const displayName = state.profile?.displayName || user?.displayName || 'Ananya S';
-      const roleOrDept = state.profile?.department ? `B.Tech ${state.profile.department}` : (state.profile?.rollNo ? state.profile.rollNo : 'B.Tech CSE');
-
       const navLink = (item, mobile) => `
         <a href="#/${item.route}" class="${state.route === item.route ? 'active' : ''}">
-          ${mobile ? icon(item.icon) : ''}${esc(item.label)}${!mobile && item.route === 'admin' && pendingCount ? ` <span class="badge b-closing plain" style="height:18px;padding:0 6px;margin-left:4px">${pendingCount}</span>` : ''}
+          ${mobile ? icon(item.icon) : ''}${esc(item.label)}${!mobile && item.route === 'admin' && pendingCount ? ` <span class="badge b-closing plain" style="height:18px;padding:0 6px">${pendingCount}</span>` : ''}
         </a>`;
 
       return `
         <header class="topbar">
           <div class="container topbar-inner">
-            <a class="brand-dark" href="#/events">
-              ${cmrcetLogoSvg({ size: 34, isDark: true })}
-              <span class="brand-title">CMRCET</span>
+            <a class="brand" href="#/events">
+              ${brandMark()}
+              <span class="brand-text">
+                <span class="brand-title">${esc(s.portalTitle)}</span>
+                <span class="brand-sub">${esc(s.collegeName)}</span>
+              </span>
             </a>
-
-            <nav class="nav-dark" aria-label="Main">
-              ${nav.map((i) => navLink(i, false)).join('')}
-            </nav>
-
-            <div class="topbar-right-actions">
-              <button class="topbar-icon-btn" aria-label="Search" onclick="const input = $('input[data-filter=search]'); if(input){ input.focus(); input.scrollIntoView({behavior:'smooth'}); }">
-                ${icon('search')}
+            <nav class="nav" aria-label="Main">${nav.map((i) => navLink(i, false)).join('')}</nav>
+            <div class="user-menu">
+              <button class="avatar-btn" data-action="toggle-menu" aria-label="Account menu" aria-haspopup="true">
+                ${photo ? `<img src="${esc(photo)}" alt="" referrerpolicy="no-referrer">` : esc(initials(user.displayName))}
               </button>
-              <button class="topbar-icon-btn" aria-label="Notifications" style="position:relative" onclick="toast('No new notifications', 'info')">
-                ${icon('bell')}
-                <span class="topbar-notif-dot"></span>
-              </button>
-
-              <div class="user-menu">
-                <button class="user-pill-dark" data-action="toggle-menu" aria-label="Account menu" aria-haspopup="true">
-                  <span class="user-pill-avatar">
-                    ${photo ? `<img src="${esc(photo)}" alt="" referrerpolicy="no-referrer">` : esc(initials(displayName))}
-                  </span>
-                  <div class="user-pill-text">
-                    <span class="user-pill-name">${esc(displayName)}</span>
-                    <span class="user-pill-dept">${esc(roleOrDept)}</span>
-                  </div>
-                  <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor" width="13" height="13" style="color:#94a3b8"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
-                </button>
-                <div class="menu" id="user-menu">
-                  <div class="menu-head">
-                    <strong>${esc(displayName)}</strong>
-                    <span>${esc(user?.email || '')}</span>
-                    <div style="margin-top:6px"><span class="chip">${esc(ROLES[state.role])}</span></div>
-                  </div>
-                  <button data-action="edit-profile">${icon('user', 'width="16" height="16"')} Edit profile</button>
-                  <button data-action="sign-out">${icon('logout', 'width="16" height="16"')} Sign out</button>
+              <div class="menu" id="user-menu">
+                <div class="menu-head">
+                  <strong>${esc(state.profile?.displayName || user.displayName || '')}</strong>
+                  <span>${esc(user.email)}</span>
+                  <div style="margin-top:6px"><span class="chip">${esc(ROLES[state.role])}</span></div>
                 </div>
+                <button data-action="edit-profile">${icon('user', 'width="16" height="16"')} Edit profile</button>
+                <button data-action="sign-out">${icon('logout', 'width="16" height="16"')} Sign out</button>
               </div>
             </div>
           </div>
@@ -2656,13 +1783,8 @@
     function eventCard(e, index = 0) {
       const cd = countdownOf(e);
       const delay = Math.min(index, 12) * 35;
-      const themes = ['theme-peach', 'theme-lavender', 'theme-lime', 'theme-sky'];
-      const themeClass = themes[index % themes.length];
-      const dueBadge = e.registrationDeadline ? `<span class="due-pill">${icon('calendar')} Due ${esc(formatDate(e.registrationDeadline))}</span>` : '';
-      const progressPercent = e._status === 'completed' ? 100 : (e._status === 'closing' ? 85 : Math.min(100, Math.max(25, (e._teams || 1) * 18)));
-
       return `
-        <article class="event-card ${themeClass} ${e._status === 'completed' ? 'is-completed' : ''} ${e.pinned ? 'is-pinned' : ''}"
+        <article class="event-card ${e._status === 'completed' ? 'is-completed' : ''} ${e.pinned ? 'is-pinned' : ''}"
                  data-action="open-event" data-id="${esc(e.id)}" tabindex="0" role="button" aria-label="${esc(e.name)}"
                  style="--delay:${delay}ms">
           ${e.imageUrl ? `
@@ -2671,8 +1793,7 @@
             </div>` : ''}
           <div class="event-body">
             <div class="card-top">
-              ${dueBadge || statusBadge(e._status)}
-              ${dueBadge ? statusBadge(e._status) : ''}
+              ${statusBadge(e._status)}
               <span class="chip ${e._region === 'home' ? 'chip-home' : ''}">${esc(regionLabel(e._region))}</span>
               ${isImported(e) ? `<span class="chip">via ${esc(sourceLabel(e))}</span>` : ''}
               ${e.needsReview && isStaff() ? '<span class="chip chip-review">Needs review</span>' : ''}
@@ -2685,17 +1806,13 @@
             <div class="meta">
               <div>${icon('place')}<span>${esc(placeOf(e))}</span></div>
               <div>${icon('calendar')}<span>${esc(formatRange(e.startDate, e.endDate))}</span></div>
+              ${e.registrationDeadline ? `<div>${icon('clock')}<span>Deadline ${esc(formatDate(e.registrationDeadline))}</span></div>` : ''}
             </div>
             <div class="card-foot">
-              <div class="card-progress">
-                <div class="progress-track"><div class="progress-bar" style="width:${progressPercent}%"></div></div>
-                <div class="progress-labels">
-                  <span class="tally"><strong class="num">${e._teams}</strong> teams</span>
-                  <span class="tally"><strong class="num">${e._students}</strong> students</span>
-                  ${cd.text ? `<span class="countdown ${cd.urgent ? 'urgent' : ''}" style="margin-left:auto">${esc(cd.text)}</span>` : ''}
-                </div>
-              </div>
-              <button type="button" class="btn btn-ghost icon-btn" data-action="share-whatsapp" data-id="${esc(e.id)}" title="Share event to WhatsApp" aria-label="Share to WhatsApp" style="margin-left:8px;color:#128c7e">
+              <span class="tally"><strong class="num">${e._teams}</strong> teams</span>
+              <span class="tally"><strong class="num">${e._students}</strong> students</span>
+              ${cd.text ? `<span class="countdown ${cd.urgent ? 'urgent' : ''}">${esc(cd.text)}</span>` : ''}
+              <button type="button" class="btn btn-ghost icon-btn" data-action="share-whatsapp" data-id="${esc(e.id)}" title="Share event to WhatsApp" aria-label="Share to WhatsApp" style="margin-left:auto;color:#25D366;padding:4px">
                 ${icon('whatsapp')}
               </button>
             </div>
@@ -2703,256 +1820,96 @@
         </article>`;
     }
 
-    function featuredHackathonHero() {
-      const all = enrichEvents();
-      const featured = all.find(e => e.pinned || e._status === 'closing' || e.name.toLowerCase().includes('hackverse')) || all[0];
-      const title = featured ? featured.name : 'CMRCET HackVerse 2026';
-      const dates = featured ? formatRange(featured.startDate, featured.endDate) : 'Feb 14 – 15, 2026';
-      const venue = featured ? placeOf(featured) : 'CMRCET Campus';
-      const eventId = featured?.id || '';
-
-      return `
-        <section class="featured-hero" aria-label="Featured Hackathon">
-          <div class="featured-hero-content">
-            <div class="featured-tag">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2l2.4 7.4h7.6l-6.1 4.5 2.3 7.1-6.2-4.5-6.2 4.5 2.3-7.1-6.1-4.5h7.6z"/></svg>
-              <span>FEATURED HACKATHON</span>
-            </div>
-            <h1 class="featured-title">${esc(title)}</h1>
-            <p class="featured-sub">Ideate · Build · Collaborate</p>
-            <p class="featured-desc">
-              ${featured?.description ? esc(featured.description.slice(0, 140)) + '…' : 'A 36-hour college hackathon to solve real world problems and showcase your ideas.'}
-            </p>
-
-            <div class="featured-actions">
-              ${eventId ? `
-                <button class="btn-hero-primary" data-action="open-event" data-id="${esc(eventId)}">
-                  <span>View Details</span>
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-                <button class="btn-hero-outline" data-action="register-team" data-id="${esc(eventId)}">
-                  ${icon('team', 'width="16" height="16"')}
-                  <span>Form a Team</span>
-                </button>
-              ` : `
-                <button class="btn-hero-primary" onclick="toast('CMRCET HackVerse 2026: Feb 14-15 at CMRCET Campus', 'info')">
-                  <span>View Details</span>
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-                <button class="btn-hero-outline" onclick="toast('Team registration opening soon!', 'info')">
-                  ${icon('team', 'width="16" height="16"')}
-                  <span>Form a Team</span>
-                </button>
-              `}
-            </div>
-
-            <div class="featured-meta-bar">
-              <div class="featured-carousel-dots">
-                <span class="carousel-dot active"></span>
-                <span class="carousel-dot"></span>
-                <span class="carousel-dot"></span>
-              </div>
-              <div>📅 ${esc(dates)} · 📍 ${esc(venue)}</div>
-            </div>
-          </div>
-
-          <!-- 3D Cyber-Globe Graphic (Image 1 Panel 2) -->
-          <div class="featured-visual" aria-hidden="true">
-            <svg width="280" height="240" viewBox="0 0 280 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="160" cy="110" r="85" fill="url(#globeGlow)" />
-              <!-- Orbital Rings -->
-              <ellipse cx="160" cy="110" rx="90" ry="34" stroke="rgba(198, 242, 79, 0.75)" stroke-width="1.8" transform="rotate(-18 160 110)" stroke-dasharray="4 3"/>
-              <ellipse cx="160" cy="110" rx="92" ry="46" stroke="rgba(56, 189, 248, 0.6)" stroke-width="1.5" transform="rotate(25 160 110)"/>
-              <ellipse cx="160" cy="110" rx="80" ry="80" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.2"/>
-              <!-- Latitude/Longitude grid -->
-              <path d="M 80 110 Q 160 70 240 110" stroke="rgba(198, 242, 79, 0.4)" stroke-width="1.2" fill="none"/>
-              <path d="M 80 110 Q 160 150 240 110" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.2" fill="none"/>
-              <path d="M 160 30 Q 120 110 160 190" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.2" fill="none"/>
-              <path d="M 160 30 Q 200 110 160 190" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.2" fill="none"/>
-              <!-- Campus Architecture Silhouette -->
-              <path d="M 100 170 L 100 155 L 120 155 L 120 145 L 135 145 L 140 135 L 145 145 L 160 145 L 160 140 L 175 140 L 180 130 L 185 140 L 200 140 L 200 155 L 220 155 L 220 170 Z" fill="rgba(198, 242, 79, 0.3)" stroke="#c6f24f" stroke-width="1.5"/>
-              <defs>
-                <radialGradient id="globeGlow" cx="0.5" cy="0.5" r="0.5">
-                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"/>
-                  <stop offset="60%" stop-color="#c6f24f" stop-opacity="0.2"/>
-                  <stop offset="100%" stop-color="#070e1e" stop-opacity="0"/>
-                </radialGradient>
-              </defs>
-            </svg>
-            <div style="position:absolute;right:8px;bottom:10px;display:flex;gap:6px">
-              <button class="topbar-icon-btn" style="width:28px;height:28px;font-size:12px;color:#94a3b8" onclick="toast('Previous featured event', 'info')">‹</button>
-              <button class="topbar-icon-btn" style="width:28px;height:28px;font-size:12px;color:#94a3b8" onclick="toast('Next featured event', 'info')">›</button>
-            </div>
-          </div>
-        </section>`;
-    }
-
-    function closingSoonSection() {
-      const all = enrichEvents();
-      const liveClosing = all.filter((e) => e._status === 'closing' || (e.registrationDeadline && new Date(e.registrationDeadline) > new Date())).slice(0, 3);
-
-      const cards = [
-        {
-          id: liveClosing[0]?.id || '',
-          urgency: 'Closes in 2 days',
-          urgencyClass: 'urgency-badge-red',
-          category: 'Hackathon',
-          catClass: 'category-badge-cyan',
-          title: liveClosing[0]?.name || 'Code for a Cleaner Tomorrow',
-          sub: liveClosing[0]?.organizer || 'Build tech solutions for a sustainable planet.',
-          date: liveClosing[0] ? formatDate(liveClosing[0].startDate) : 'Jan 25, 2026',
-          venue: liveClosing[0] ? placeOf(liveClosing[0]) : 'CMRCET Campus',
-          participants: liveClosing[0] ? `${liveClosing[0]._students || 120}+` : '120+',
-          teams: liveClosing[0] ? `${liveClosing[0]._teams || 48} teams registered` : '48 teams registered',
-        },
-        {
-          id: liveClosing[1]?.id || '',
-          urgency: 'Closes in 4 days',
-          urgencyClass: 'urgency-badge-orange',
-          category: 'Project Competition',
-          catClass: 'category-badge-teal',
-          title: liveClosing[1]?.name || 'Innovate India Challenge',
-          sub: liveClosing[1]?.organizer || 'Create solutions for real community problems.',
-          date: liveClosing[1] ? formatDate(liveClosing[1].startDate) : 'Jan 27, 2026',
-          venue: liveClosing[1] ? placeOf(liveClosing[1]) : 'Hybrid (Online + Offline)',
-          participants: liveClosing[1] ? `${liveClosing[1]._students || 200}+` : '200+',
-          teams: liveClosing[1] ? `${liveClosing[1]._teams || 81} teams registered` : '81 teams registered',
-        },
-        {
-          id: liveClosing[2]?.id || '',
-          urgency: 'Closes in 6 days',
-          urgencyClass: 'urgency-badge-red',
-          category: 'Hackathon',
-          catClass: 'category-badge-cyan',
-          title: liveClosing[2]?.name || 'AI for Social Good',
-          sub: liveClosing[2]?.organizer || 'Leverage AI for a better, more inclusive world.',
-          date: liveClosing[2] ? formatDate(liveClosing[2].startDate) : 'Jan 29, 2026',
-          venue: liveClosing[2] ? placeOf(liveClosing[2]) : 'CMRCET Campus',
-          participants: liveClosing[2] ? `${liveClosing[2]._students || 150}+` : '150+',
-          teams: liveClosing[2] ? `${liveClosing[2]._teams || 65} teams registered` : '65 teams registered',
-        },
-      ];
-
-      return `
-        <section class="closing-soon-section">
-          <div class="closing-soon-header">
-            <div>
-              <div class="closing-soon-title-wrap">
-                <div class="closing-clock-icon">${icon('clock', 'width="18" height="18"')}</div>
-                <h3 class="closing-soon-title">Closing soon</h3>
-              </div>
-              <p class="closing-soon-sub">Don't miss these opportunities. Deadlines are near.</p>
-            </div>
-            <a href="javascript:void(0)" class="view-all-link" onclick="state.filters.status='closing'; updateEventsView();">View all →</a>
-          </div>
-
-          <div class="closing-soon-grid">
-            ${cards.map((c) => `
-              <article class="closing-card" ${c.id ? `data-action="open-event" data-id="${esc(c.id)}"` : `onclick="toast('${esc(c.title)}: Registration closing soon', 'info')"`} tabindex="0" role="button">
-                <div>
-                  <div class="closing-card-top-tags">
-                    <span class="${c.urgencyClass}">
-                      <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-                      ${c.urgency}
-                    </span>
-                    <span class="${c.catClass}">${c.category}</span>
-                  </div>
-                  <h4 class="closing-card-title">${esc(c.title)}</h4>
-                  <p class="closing-card-desc">${esc(c.sub)}</p>
-                </div>
-
-                <div>
-                  <div class="closing-card-meta">
-                    <span>📅 ${esc(c.date)}</span>
-                    <span>📍 ${esc(c.venue)}</span>
-                    <span>👥 ${esc(c.participants)}</span>
-                  </div>
-
-                  <div class="closing-card-foot">
-                    <div class="team-avatar-stack">
-                      <div class="avatar-circles-group">
-                        <span class="avatar-tiny">RK</span>
-                        <span class="avatar-tiny">AS</span>
-                        <span class="avatar-tiny">+3</span>
-                      </div>
-                      <span>${esc(c.teams)}</span>
-                    </div>
-                    <span class="card-details-link">View Details →</span>
-                  </div>
-                </div>
-              </article>
-            `).join('')}
-          </div>
-        </section>`;
-    }
-
     function renderEventsView() {
       if (!state.loaded.events) {
         return `
+          <div class="page-head"><div><h1>Events</h1></div></div>
           <div class="stats">${'<div class="skeleton" style="height:96px"></div>'.repeat(4)}</div>
           <div class="event-grid">${'<div class="skeleton" style="height:220px"></div>'.repeat(6)}</div>`;
       }
 
       const all = enrichEvents();
       if (state.filters.year === null) state.filters.year = defaultYear(all);
+      const years = availableYears(all);
+      if (state.filters.year && !years.includes(state.filters.year)) years.unshift(state.filters.year);
 
       return `
-        <!-- Hero Hackathon Banner (Image 1 Panel 2) -->
-        ${featuredHackathonHero()}
-
-        <!-- Section: Find your next big challenge -->
-        <div class="explore-head">
+        <div class="page-head">
           <div>
-            <h2>Find your next big <span>challenge.</span></h2>
-            <p>Explore hackathons, project competitions and tech events at CMRCET.</p>
+            <h1>Events</h1>
+            <p>${esc(regionLabel('home'))} events come first, followed by the rest of ${esc(state.settings.homeState)}, other states and virtual events.</p>
           </div>
-
-          <div style="position:relative;flex:1 1 300px;max-width:380px">
-            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <input class="input" type="search" placeholder="Search events, domains or keywords…" data-filter="search" value="${esc(state.filters.search)}" style="width:100%;height:42px;border-radius:999px;padding-left:42px;background:#ffffff;border:1.5px solid #e2e8f0;font-size:13.5px">
-          </div>
-        </div>
-
-        <!-- Category Filter Pills -->
-        <div class="category-pills-row">
-          <button class="cat-pill active" data-action="cat-filter" data-cat="all">All Events</button>
-          <button class="cat-pill" data-action="cat-filter" data-cat="hackathon">Hackathons</button>
-          <button class="cat-pill" data-action="cat-filter" data-cat="project competition">Project Competitions</button>
-          <button class="cat-pill" data-action="cat-filter" data-cat="workshop">Workshops</button>
-          <button class="cat-pill" data-action="cat-filter" data-cat="seminar">Seminars</button>
-          <button class="cat-pill" data-action="cat-filter" data-cat="online">Online</button>
-          <button class="cat-pill" data-action="cat-filter" data-cat="offline">Offline</button>
-        </div>
-
-        <!-- Closing Soon Section -->
-        ${closingSoonSection()}
-
-        <!-- All Events Section -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin:32px 0 16px;flex-wrap:wrap;gap:12px">
-          <div>
-            <h3 style="font-size:20px;font-weight:900;color:#0f172a">All Events</h3>
-            <p style="font-size:13.5px;color:#64748b;margin-top:2px">Discover more hackathons, competitions and learning opportunities.</p>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="font-size:13px;font-weight:700;color:#64748b">Sort by:</span>
-            <select class="select" data-filter="status" style="width:auto;height:36px;border-radius:999px;font-size:13px;font-weight:700">${selectOptions(STATUS_FILTERS, state.filters.status)}</select>
+          <div class="page-actions">
+            ${isStaff() ? `<button class="btn" data-action="export-events">${icon('download')} Export</button>` : ''}
+            ${isStaff()
+              ? `<button class="btn btn-primary" data-action="new-event">${icon('plus')} Add event</button>`
+              : `<a class="btn btn-primary" href="#/suggest">${icon('bulb')} Suggest an event</a>`}
           </div>
         </div>
-
+        <div id="events-stats"></div>
+        <div class="tabs" id="region-tabs" role="tablist"></div>
+        <div class="filters">
+          <label class="search">
+            <span class="sr-only">Search events</span>
+            ${icon('search')}
+            <input class="input" type="search" placeholder="Search by event, organizer, city, theme…" data-filter="search" value="${esc(state.filters.search)}">
+          </label>
+          <select class="select" data-filter="status" aria-label="Status">${selectOptions(STATUS_FILTERS, state.filters.status)}</select>
+          <select class="select" data-filter="mode" aria-label="Mode">${selectOptions({ all: 'All modes', ...MODES }, state.filters.mode)}</select>
+          <select class="select" data-filter="year" aria-label="Academic year">${selectOptions({ ...Object.fromEntries(years.map((y) => [y, `AY ${y}`])), '': 'All years' }, state.filters.year)}</select>
+        </div>
         <div id="event-results"></div>`;
     }
 
     function updateEventsView() {
       if (!$('#event-results')) return;
       const all = enrichEvents();
+      const f = state.filters;
+
+      // Stats for the selected year
+      const yearEvents = all.filter((e) => !f.year || e._year === f.year);
+      const active = yearEvents.filter((e) => ['open', 'closing'].includes(e._status)).length;
+      const closing = yearEvents.filter((e) => e._status === 'closing').length;
+      const teams = yearEvents.reduce((sum, e) => sum + e._teams, 0);
+      const students = yearEvents.reduce((sum, e) => sum + e._students, 0);
+      $('#events-stats').innerHTML = `
+        <div class="stats">
+          <div class="card stat"><div class="stat-label">Events</div><div class="stat-value num">${yearEvents.length}</div><div class="stat-note">${f.year ? `AY ${esc(f.year)}` : 'All years'}</div></div>
+          <div class="card stat"><div class="stat-label">Open for registration</div><div class="stat-value num">${active}</div><div class="stat-note">${closing ? `<span style="color:var(--marker);font-weight:700">${closing} closing soon</span>` : 'None closing soon'}</div></div>
+          <div class="card stat"><div class="stat-label">Teams registered</div><div class="stat-value num">${teams}</div><div class="stat-note">Verified + recorded</div></div>
+          <div class="card stat"><div class="stat-label">Students participating</div><div class="stat-value num">${students}</div><div class="stat-note">Across all events</div></div>
+        </div>`;
+
+      // Region tabs with counts that respect the other filters
+      const base = filterEvents(all, { ignoreRegion: true });
+      const tabs = [{ key: 'all', label: 'All' }, ...REGIONS.map((r) => ({ key: r.key, label: r.label(state.settings) }))];
+      $('#region-tabs').innerHTML = tabs.map((t) => {
+        const count = t.key === 'all' ? base.length : base.filter((e) => e._region === t.key).length;
+        return `<button class="tab ${f.region === t.key ? 'active' : ''}" role="tab" aria-selected="${f.region === t.key}" data-action="set-region" data-region="${t.key}">${esc(t.label)} <span class="count num">${count}</span></button>`;
+      }).join('');
+
+      // Results
       const list = filterEvents(all).sort(compareEvents);
       const results = $('#event-results');
       if (!list.length) {
-        results.innerHTML = emptyState('No events match', 'Try another search keyword, mode or status.', 'search');
+        results.innerHTML = emptyState('No events match', 'Try another region, status or academic year.', 'search');
         return;
       }
 
-      results.innerHTML = `<div class="event-grid">${list.map(eventCard).join('')}</div>`;
+      if (f.region !== 'all') {
+        results.innerHTML = `<div class="event-grid">${list.map(eventCard).join('')}</div>`;
+        return;
+      }
+
+      const pinned = list.filter((e) => e.pinned);
+      const sections = [
+        ...(pinned.length ? [{ title: 'Pinned', items: pinned }] : []),
+        ...REGIONS.map((r) => ({ title: r.label(state.settings), items: list.filter((e) => !e.pinned && e._region === r.key) })),
+      ].filter((section) => section.items.length);
+
+      results.innerHTML = sections.map((section) => `
+        <h2 class="section-title">${esc(section.title)} <span class="count num">${section.items.length}</span></h2>
+        <div class="event-grid">${section.items.map(eventCard).join('')}</div>`).join('');
     }
 
     function openEventDetail(id) {
@@ -3498,294 +2455,31 @@
        ===================================================================== */
     function adminTabs() {
       const tabs = [
-        { key: 'dashboard', label: 'Dashboard', icon: 'grid' },
-        { key: 'approvals', label: 'Event Approvals', count: pendingApprovals() || 5, icon: 'check' },
-        { key: 'imports', label: 'Import Events', count: pendingImports().length, icon: 'download' },
-        { key: 'events', label: 'Manage Events', count: state.events.filter((e) => e.needsReview).length, icon: 'calendar' },
-        { key: 'teams', label: 'Users & Teams', count: state.teams.filter((t) => t.status === 'pending').length, icon: 'team' },
-        { key: 'announcements', label: 'Announcements', icon: 'bulb' },
-        { key: 'analytics', label: 'Analytics', icon: 'tv' },
+        { key: 'approvals', label: 'Approvals', count: pendingApprovals() },
+        { key: 'teams', label: 'Teams', count: state.teams.filter((t) => t.status === 'pending').length },
+        { key: 'events', label: 'Events', count: state.events.filter((e) => e.needsReview).length },
       ];
-      if (isAdmin()) tabs.push({ key: 'roles', label: 'Roles', icon: 'shield' }, { key: 'settings', label: 'Settings', icon: 'shield' });
+      if (isAdmin()) tabs.push({ key: 'roles', label: 'Roles' }, { key: 'settings', label: 'Settings' });
       return tabs;
-    }
-
-    function renderAdminDashboard() {
-      const all = enrichEvents({ includeUnpublished: true });
-      const totalEvents = all.length || 12;
-      const pendingCount = pendingApprovals() || 5;
-      const registeredUsers = state.roles.length ? Math.max(320, state.roles.length * 15) : 320;
-      const activeTeams = state.teams.length || 48;
-
-      // Event Approvals list (showcase 5 items from Panel 3 or live suggestions/imports)
-      const defaultApprovals = [
-        { name: 'TechNova 2026', type: 'Hackathon', author: 'Rohan Mishra', date: 'Jan 20, 2026' },
-        { name: 'Design for Impact', type: 'Project Competition', author: 'Sneha Reddy', date: 'Jan 19, 2026' },
-        { name: 'AI Security Challenge', type: 'Hackathon', author: 'Karthik V', date: 'Jan 18, 2026' },
-        { name: 'Green Tech Solutions', type: 'Project Competition', author: 'Priya Sharma', date: 'Jan 17, 2026' },
-        { name: 'NextGen Developers', type: 'Workshop', author: 'Aditya Kulkarni', date: 'Jan 16, 2026' },
-      ];
-
-      // External imported sources
-      const defaultImports = [
-        { name: 'Smart India Hackathon 2026', source: 'SIH Portal', date: 'Mar 5, 2026', status: 'ready' },
-        { name: 'HackMIT 2026', source: 'Devpost', date: 'Feb 28, 2026', status: 'review' },
-        { name: 'Google Solution Challenge', source: 'Google', date: 'Mar 12, 2026', status: 'ready' },
-        { name: 'Microsoft Learn Challenge', source: 'Microsoft', date: 'Mar 1, 2026', status: 'review' },
-        { name: 'IEEE Xtreme 19.0', source: 'IEEE', date: 'Oct 24, 2026', status: 'draft' },
-      ];
-
-      return `
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px">
-          <div>
-            <h1 style="font-size:24px;font-weight:900;color:#0f172a;letter-spacing:-0.02em">Admin Dashboard</h1>
-            <p style="font-size:13.5px;color:#64748b;margin-top:2px">Manage events, approvals and platform activity.</p>
-          </div>
-          <div style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:#ffffff;border:1.5px solid #e2e8f0;font-size:12.5px;font-weight:700;color:#475569">
-            <span>Jan 1, 2026 – Jan 31, 2026</span>
-            <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
-          </div>
-        </div>
-
-        <!-- 4 Metric KPI Cards (Image 1 Panel 3) -->
-        <div class="admin-stat-cards-grid">
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon-wrap admin-stat-icon-blue">${icon('calendar', 'width="22" height="22"')}</div>
-            <div>
-              <div class="admin-stat-value">${totalEvents}</div>
-              <div class="admin-stat-title">Total Events</div>
-            </div>
-          </div>
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon-wrap admin-stat-icon-orange">${icon('clock', 'width="22" height="22"')}</div>
-            <div>
-              <div class="admin-stat-value">${pendingCount}</div>
-              <div class="admin-stat-title">Pending Approvals</div>
-            </div>
-          </div>
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon-wrap admin-stat-icon-purple">${icon('users', 'width="22" height="22"')}</div>
-            <div>
-              <div class="admin-stat-value">${registeredUsers}</div>
-              <div class="admin-stat-title">Registered Users</div>
-            </div>
-          </div>
-          <div class="admin-stat-card">
-            <div class="admin-stat-icon-wrap admin-stat-icon-green">${icon('team', 'width="22" height="22"')}</div>
-            <div>
-              <div class="admin-stat-value">${activeTeams}</div>
-              <div class="admin-stat-title">Active Teams</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Event Approvals Section -->
-        <div style="background:#ffffff;border:1.5px solid #e2e8f0;border-radius:18px;padding:22px;margin-bottom:26px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-            <div style="display:flex;align-items:center;gap:10px">
-              <h2 style="font-size:18px;font-weight:800;color:#0f172a">Event Approvals</h2>
-              <span class="badge b-closing plain" style="border-radius:999px;font-size:11.5px">${pendingCount}</span>
-            </div>
-            <a href="javascript:void(0)" class="view-all-link" data-action="admin-tab" data-tab="approvals">View all →</a>
-          </div>
-
-          <div style="display:flex;flex-direction:column;gap:8px">
-            ${defaultApprovals.map((appr, idx) => `
-              <div class="approval-card-item">
-                <div style="display:flex;align-items:center;gap:12px;min-width:0">
-                  <div style="width:36px;height:36px;border-radius:10px;background:#f1f5f9;display:grid;place-items:center;font-size:16px;flex:none">
-                    ${idx % 2 === 0 ? '💻' : '⚡'}
-                  </div>
-                  <div style="min-width:0">
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-                      <strong style="font-size:14px;color:#0f172a">${esc(appr.name)}</strong>
-                      <span class="chip" style="font-size:11px;height:20px;padding:0 7px">${esc(appr.type)}</span>
-                    </div>
-                    <div style="font-size:12px;color:#64748b;margin-top:2px">by ${esc(appr.author)} · ${esc(appr.date)}</div>
-                  </div>
-                </div>
-
-                <div style="display:flex;align-items:center;gap:8px;flex:none">
-                  <span class="badge b-pending plain" style="font-size:11px">Pending Review</span>
-                  <button class="btn-review" data-action="admin-tab" data-tab="approvals">Review</button>
-                  <button class="btn-reject" onclick="this.closest('.approval-card-item').remove(); toast('Submission rejected', 'info');">Reject</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- Import Events from External Sources Table -->
-        <div style="background:#ffffff;border:1.5px solid #e2e8f0;border-radius:18px;padding:22px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:12px">
-            <div>
-              <h2 style="font-size:18px;font-weight:800;color:#0f172a">Import Events from External Sources</h2>
-              <p style="font-size:13px;color:#64748b;margin-top:2px">Review and publish events imported from hackathon platforms.</p>
-            </div>
-            <button class="btn btn-primary" data-action="admin-tab" data-tab="imports" style="background:#090e1a;border-color:#090e1a;font-weight:800;font-size:13px">
-              ${icon('plus')} Import New Events
-            </button>
-          </div>
-
-          <div class="table-wrap" style="margin-top:16px">
-            <table class="table" style="font-size:13.5px">
-              <thead>
-                <tr>
-                  <th style="width:36px"><input type="checkbox" style="cursor:pointer"></th>
-                  <th>Event Name</th>
-                  <th>Source</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th style="text-align:right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${defaultImports.map((imp) => `
-                  <tr>
-                    <td><input type="checkbox" style="cursor:pointer"></td>
-                    <td><strong>${esc(imp.name)}</strong></td>
-                    <td><span class="chip" style="font-size:11.5px">${esc(imp.source)}</span></td>
-                    <td>${esc(imp.date)}</td>
-                    <td>
-                      ${imp.status === 'ready' ? '<span class="badge b-open plain" style="font-size:11px">Ready to Publish</span>'
-                        : imp.status === 'review' ? '<span class="badge b-closing plain" style="font-size:11px;background:#fef3c7;color:#d97706">Review Required</span>'
-                        : '<span class="badge b-completed plain" style="font-size:11px">Draft</span>'}
-                    </td>
-                    <td style="text-align:right">
-                      <div class="actions" style="justify-content:flex-end">
-                        <button class="btn btn-sm btn-primary" style="background:#090e1a;border-color:#090e1a;font-size:12px" onclick="toast('Event published successfully!', 'success');">Publish</button>
-                        <button class="btn btn-sm" style="font-size:12px" data-action="admin-tab" data-tab="imports">Edit</button>
-                      </div>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>`;
-    }
-
-    function renderAdminImports() {
-      const imports = enrichEvents({ includeUnpublished: true }).filter((e) => e.visibility === 'pending');
-      return `
-        <div style="margin-bottom:20px">
-          <h1 style="font-size:22px;font-weight:800">Import Events</h1>
-          <p class="muted" style="font-size:13.5px">Sync and manage events aggregated from external platforms.</p>
-        </div>
-        ${renderImportStatus()}
-        <div class="admin-section">
-          <h2>Imported from platforms <span class="badge b-info plain">${imports.length}</span>
-            ${imports.some((e) => !e.needsReview) ? `<button class="btn btn-sm btn-primary" data-action="publish-all" style="margin-left:auto">Publish all ready</button>` : ''}</h2>
-          ${imports.length ? `
-            <div class="table-wrap"><table class="table">
-              <thead><tr><th>Event</th><th>Source</th><th>Region</th><th>Dates</th><th></th></tr></thead>
-              <tbody>${imports.map((e) => `
-                <tr>
-                  <td><strong>${esc(e.name)}</strong><div class="muted" style="font-size:13px">${esc(e.organizer || '')}</div></td>
-                  <td>${esc(sourceLabel(e))}</td>
-                  <td>${esc(regionLabel(e._region))}</td>
-                  <td>${esc(formatRange(e.startDate, e.endDate))}</td>
-                  <td><div class="actions">
-                    <button class="btn btn-sm btn-primary" data-action="set-visibility" data-visibility="published" data-id="${esc(e.id)}">Publish</button>
-                  </div></td>
-                </tr>`).join('')}
-              </tbody></table></div>`
-            : emptyState('No imported events waiting', 'Run npm run import to fetch new events from Devpost, Devfolio, Unstop.', 'download')}
-        </div>`;
-    }
-
-    function renderAdminAnnouncements() {
-      return `
-        <div style="margin-bottom:20px">
-          <h1 style="font-size:22px;font-weight:800">Announcements</h1>
-          <p class="muted" style="font-size:13.5px">Broadcast notices, registration alerts and results to all students.</p>
-        </div>
-        <div class="card card-pad" style="max-width:680px">
-          <div class="field" style="margin-bottom:14px"><label>Subject / Title</label><input class="input" placeholder="e.g. CMRCET HackVerse registrations closing tonight!"></div>
-          <div class="field" style="margin-bottom:14px"><label>Message</label><textarea class="textarea" rows="4" placeholder="Write announcement details for WhatsApp and portal broadcast..."></textarea></div>
-          <button class="btn btn-primary" onclick="toast('Announcement scheduled for broadcast', 'success')">Post Announcement</button>
-        </div>`;
-    }
-
-    function renderAdminAnalytics() {
-      return `
-        <div style="margin-bottom:20px">
-          <h1 style="font-size:22px;font-weight:800">Analytics</h1>
-          <p class="muted" style="font-size:13.5px">Student engagement, team conversion and event participation metrics.</p>
-        </div>
-        <div class="admin-stat-cards-grid">
-          <div class="admin-stat-card"><div class="admin-stat-value">94.2%</div><div class="admin-stat-title">Team Fill Rate</div></div>
-          <div class="admin-stat-card"><div class="admin-stat-value">1,420</div><div class="admin-stat-title">Portal Views / Month</div></div>
-          <div class="admin-stat-card"><div class="admin-stat-value">18</div><div class="admin-stat-title">Winning Teams (AY 25-26)</div></div>
-          <div class="admin-stat-card"><div class="admin-stat-value">3.4</div><div class="admin-stat-title">Avg Team Size</div></div>
-        </div>`;
     }
 
     function renderAdminView() {
       if (!isStaff()) return emptyState('Staff only', 'You need a coordinator or admin role to open this page.', 'shield');
       const tabs = adminTabs();
-      if (!tabs.some((t) => t.key === state.adminTab)) state.adminTab = 'dashboard';
+      if (!tabs.some((t) => t.key === state.adminTab)) state.adminTab = 'approvals';
       const panels = {
-        dashboard: renderAdminDashboard,
-        approvals: renderAdminApprovals,
-        imports: renderAdminImports,
-        events: renderAdminEvents,
-        teams: renderAdminTeams,
-        announcements: renderAdminAnnouncements,
-        analytics: renderAdminAnalytics,
-        roles: renderAdminRoles,
-        settings: renderAdminSettings,
+        approvals: renderAdminApprovals, teams: renderAdminTeams, events: renderAdminEvents,
+        roles: renderAdminRoles, settings: renderAdminSettings,
       };
-
       return `
-        <div class="admin-page-container">
-          <!-- Dark Left Sidebar (Image 1 Panel 3) -->
-          <aside class="admin-sidebar">
-            <div class="admin-sidebar-brand">
-              ${cmrcetLogoSvg({ size: 32, isDark: true })}
-              <strong>CMRCET</strong>
-            </div>
-            <div class="admin-section-tag">ADMIN PANEL</div>
-            <nav style="display:flex;flex-direction:column;gap:4px">
-              ${tabs.map((t) => `
-                <button class="admin-sidebar-link ${state.adminTab === t.key ? 'active' : ''}" data-action="admin-tab" data-tab="${t.key}">
-                  <span style="display:flex;align-items:center;gap:10px">
-                    ${icon(t.icon || 'grid', 'width="16" height="16"')}
-                    <span>${esc(t.label)}</span>
-                  </span>
-                  ${t.count ? `<span class="admin-link-badge">${t.count}</span>` : ''}
-                </button>
-              `).join('')}
-            </nav>
-          </aside>
-
-          <!-- Main Admin Content Area -->
-          <main class="admin-content-wrap">
-            <header class="admin-top-header">
-              <div style="position:relative;flex:1;max-width:440px">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                <input class="admin-search-input" type="search" placeholder="Search events, users, or submissions..." data-admin-event="search" value="${esc(state.adminEventFilter.search)}">
-              </div>
-
-              <div style="display:flex;align-items:center;gap:14px">
-                <button class="topbar-icon-btn" aria-label="Notifications" style="position:relative;background:#ffffff;border:1.5px solid #e2e8f0;color:#0f172a" onclick="toast('5 pending approvals require review', 'info')">
-                  ${icon('bell')}
-                  <span class="topbar-notif-dot" style="top:5px;right:5px"></span>
-                </button>
-
-                <div class="user-pill-dark" style="background:#090e1a;border-color:transparent;padding:4px 12px 4px 6px">
-                  <span class="user-pill-avatar" style="background:#22c55e;color:#090e1a">A</span>
-                  <div class="user-pill-text">
-                    <span class="user-pill-name">Admin</span>
-                    <span class="user-pill-dept" style="color:#a3e635">Super Admin</span>
-                  </div>
-                </div>
-              </div>
-            </header>
-
-            ${(panels[state.adminTab] || panels.dashboard)()}
-          </main>
-        </div>`;
+        <div class="page-head">
+          <div><h1>Admin</h1><p>Signed in as ${esc(ROLES[state.role])}.</p></div>
+          <button class="btn btn-primary" data-action="new-event">${icon('plus')} Add event</button>
+        </div>
+        <div class="tabs admin-tabs" role="tablist">
+          ${tabs.map((t) => `<button class="tab ${state.adminTab === t.key ? 'active' : ''}" data-action="admin-tab" data-tab="${t.key}">${esc(t.label)}${t.count ? ` <span class="count num">${t.count}</span>` : ''}</button>`).join('')}
+        </div>
+        ${panels[state.adminTab]()}`;
     }
 
     function timeAgo(date) {
@@ -4261,41 +2955,6 @@
       'share-whatsapp': (el, e) => {
         if (e && e.stopPropagation) e.stopPropagation();
         shareToWhatsApp(el.dataset.id);
-      },
-      'cat-filter': (el) => {
-        const cat = el.dataset.cat;
-        $$('.cat-pill').forEach(p => p.classList.remove('active'));
-        el.classList.add('active');
-        if (cat === 'all') {
-          state.filters.mode = 'all';
-          state.filters.search = '';
-        } else if (['online', 'offline', 'hybrid'].includes(cat)) {
-          state.filters.mode = cat;
-          state.filters.search = '';
-        } else {
-          state.filters.search = cat;
-        }
-        updateEventsView();
-      },
-      'dev-bypass': () => {
-        state.user = {
-          uid: 'dev-user-01',
-          email: 'ananya.s@cmrcet.ac.in',
-          displayName: 'Ananya S',
-          photoURL: '',
-        };
-        state.profile = {
-          displayName: 'Ananya S',
-          rollNo: '23H51A0501',
-          department: 'CSE',
-          year: 3,
-          section: 'A',
-          phone: '',
-          isAdmin: true,
-        };
-        state.role = 'admin';
-        state.authError = '';
-        render();
       },
     };
 
