@@ -41,9 +41,11 @@
       --shadow-sm: 0 1px 3px rgba(15, 23, 42, .04);
       --shadow: 0 4px 16px -2px rgba(15, 23, 42, .05), 0 2px 6px -1px rgba(15, 23, 42, .03);
       --shadow-lg: 0 20px 48px -4px rgba(15, 23, 42, .12);
-      --radius: 18px;
-      --radius-sm: 10px;
+      --radius: 24px;
+      --radius-sm: 14px;
       --radius-pill: 999px;
+      --clay-inner-light: inset 2px 2px 4px rgba(255, 255, 255, 0.95);
+      --clay-inner-dark: inset -2.5px -2.5px 6px rgba(15, 23, 42, 0.04);
       --focus: 0 0 0 3px rgba(31, 58, 147, .24);
       --font: 'Plus Jakarta Sans', 'Manrope', system-ui, -apple-system, sans-serif;
       color-scheme: light;
@@ -248,8 +250,25 @@
     .btn:hover { background: var(--surface-2); }
     .btn:disabled { opacity: .55; cursor: not-allowed; }
     .btn svg { width: 16px; height: 16px; flex: none; }
-    .btn-primary { background: var(--ink); border-color: var(--ink); color: #fff; }
-    .btn-primary:hover { background: color-mix(in srgb, var(--ink) 88%, #000); }
+    .btn-primary {
+      background: linear-gradient(135deg, #1f3a93 0%, #1e40af 100%);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      box-shadow: 0 4px 14px -2px rgba(31, 58, 147, 0.32),
+                  inset 1.5px 1.5px 2px rgba(255, 255, 255, 0.35),
+                  inset -1.5px -1.5px 2px rgba(0, 0, 0, 0.2);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1a3280 0%, #1c399b 100%);
+      box-shadow: 0 6px 18px -2px rgba(31, 58, 147, 0.4),
+                  inset 1.5px 1.5px 2px rgba(255, 255, 255, 0.45);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active {
+      transform: scale(0.97) translateY(1.5px);
+      box-shadow: 0 2px 6px rgba(31, 58, 147, 0.2),
+                  inset 2px 2px 4px rgba(0, 0, 0, 0.25);
+    }
     .btn-danger { color: var(--marker); border-color: color-mix(in srgb, var(--marker) 40%, var(--border)); }
     .btn-danger:hover { background: var(--marker-soft); }
     .btn-ghost { border-color: transparent; background: transparent; }
@@ -257,7 +276,15 @@
     .btn-lg { height: 48px; padding: 0 22px; font-size: 15px; border-radius: 11px; }
     .icon-btn { width: 36px; padding: 0; }
 
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+    .card {
+      background: var(--surface);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      border-radius: var(--radius);
+      box-shadow: 10px 14px 28px -6px rgba(15, 23, 42, 0.07),
+                  -6px -6px 20px rgba(255, 255, 255, 0.95),
+                  var(--clay-inner-light),
+                  var(--clay-inner-dark);
+    }
     .card-pad { padding: 20px; }
 
     .badge {
@@ -320,29 +347,34 @@
     .form-section:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
     .form-error { color: var(--marker); font-size: 13px; font-weight: 600; min-height: 1px; }
 
-    /* Tabs & filters (Elevate Pill Segment Control) */
+    /* Tabs & filters (Clay Pill Segment Control) */
     .tabs {
       display: inline-flex; align-items: center; gap: 4px;
-      background: #f1f5f9; padding: 4px;
-      border-radius: 999px; border: 1px solid var(--border);
+      background: #f1f5f9; padding: 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      box-shadow: inset 3px 3px 6px rgba(15, 23, 42, 0.06),
+                  inset -3px -3px 6px rgba(255, 255, 255, 0.95);
       overflow-x: auto; scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
     }
     .tabs::-webkit-scrollbar { display: none; }
     .tab {
       display: inline-flex; align-items: center; gap: 6px;
-      height: 34px; padding: 0 16px; border-radius: 999px; border: 0;
+      height: 36px; padding: 0 16px; border-radius: 999px; border: 0;
       background: transparent; font-weight: 700; font-size: 13.5px; color: var(--text-2);
       cursor: pointer; white-space: nowrap;
       transition: all .16s cubic-bezier(0.16, 1, 0.3, 1);
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
-    .tab:hover { color: var(--text); background: rgba(255, 255, 255, 0.65); }
+    .tab:hover { color: var(--text); background: rgba(255, 255, 255, 0.7); }
     .tab:active { transform: scale(0.96); }
     .tab.active {
       background: #0f172a; color: #ffffff;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.16);
+      box-shadow: 4px 6px 14px rgba(15, 23, 42, 0.18),
+                  inset 1.5px 1.5px 2px rgba(255, 255, 255, 0.35),
+                  inset -1.5px -1.5px 2px rgba(0, 0, 0, 0.2);
     }
     .tab .count {
       font-size: 11px; padding: 1px 7px; border-radius: 999px;
@@ -355,13 +387,13 @@
       .tabs {
         display: flex; gap: 4px;
         background: #f1f5f9; padding: 4px;
-        border-radius: 14px; margin: 0;
+        border-radius: 18px; margin: 0;
         scroll-snap-type: x proximity;
       }
       .tab {
         scroll-snap-align: start;
         flex-shrink: 0;
-        height: 32px; padding: 0 12px; font-size: 12.5px;
+        height: 34px; padding: 0 13px; font-size: 12.5px;
       }
     }
 
@@ -369,15 +401,19 @@
     .search { position: relative; flex: 1 1 280px; }
     .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: var(--text-3); pointer-events: none; }
     .search .input {
-      width: 100%; height: 42px; padding: 0 48px 0 42px;
-      background: #f1f5f9; border: 1px solid transparent; border-radius: 999px;
+      width: 100%; height: 44px; padding: 0 48px 0 44px;
+      background: #f1f5f9; border: 1px solid rgba(226, 232, 240, 0.85); border-radius: 999px;
       font-size: 14px; font-weight: 600; color: var(--text);
+      box-shadow: inset 2.5px 2.5px 5px rgba(15, 23, 42, 0.06),
+                  inset -2.5px -2.5px 5px rgba(255, 255, 255, 0.9);
       transition: all 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
     .search .input:focus {
-      background: #ffffff; border-color: var(--border-strong);
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06); outline: none;
+      background: #ffffff; border-color: var(--ink);
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08),
+                  inset 1.5px 1.5px 2px rgba(255, 255, 255, 0.95);
+      outline: none;
     }
     .search-badge {
       position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
@@ -386,11 +422,16 @@
       font-size: 11px; font-weight: 700; pointer-events: none;
     }
     .filters .select {
-      width: auto; flex: 0 1 180px; height: 42px; border-radius: 999px;
-      background-color: #f1f5f9; border-color: transparent; font-weight: 600;
+      width: auto; flex: 0 1 180px; height: 44px; border-radius: 999px;
+      background-color: #f1f5f9; border: 1px solid rgba(226, 232, 240, 0.85); font-weight: 600;
+      box-shadow: inset 2px 2px 4px rgba(15, 23, 42, 0.05),
+                  inset -2px -2px 4px rgba(255, 255, 255, 0.9);
       -webkit-tap-highlight-color: transparent;
     }
-    .filters .select:focus { background-color: #ffffff; border-color: var(--border-strong); }
+    .filters .select:focus {
+      background-color: #ffffff; border-color: var(--ink);
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+    }
     @media (max-width: 600px) {
       .filters { margin: 12px 0 18px; gap: 8px; }
       .search { flex: 1 1 100%; }
@@ -410,19 +451,24 @@
       .stat-value { font-size: 26px; }
     }
     .stat {
-      padding: 18px 20px;
+      padding: 20px 22px;
       border-radius: var(--radius);
       background: var(--surface);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 10px 14px 28px -6px rgba(15, 23, 42, 0.07),
+                  -6px -6px 20px rgba(255, 255, 255, 0.95),
+                  var(--clay-inner-light),
+                  var(--clay-inner-dark);
       transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
     @media (hover: hover) and (pointer: fine) {
       .stat:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.08);
-        border-color: var(--border-strong);
+        transform: translateY(-4px);
+        box-shadow: 14px 20px 36px -6px rgba(15, 23, 42, 0.1),
+                    -8px -8px 24px rgba(255, 255, 255, 0.98),
+                    var(--clay-inner-light);
+        border-color: rgba(255, 255, 255, 1);
       }
     }
     .stat-label { font-size: 11.5px; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
@@ -430,13 +476,14 @@
     .stat-pill {
       display: inline-flex; align-items: center; gap: 4px; margin-top: 6px;
       padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
+      box-shadow: 1px 2px 4px rgba(15, 23, 42, 0.05), inset 1px 1px 1.5px rgba(255, 255, 255, 0.9);
     }
     .stat-pill.pill-neutral { background: #f1f5f9; color: #475569; }
     .stat-pill.pill-green { background: #dcfce7; color: #15803d; }
     .stat-pill.pill-red { background: #fee2e2; color: #b91c1c; }
     .stat-pill.pill-purple { background: #f3e8ff; color: #7e22ce; }
 
-    /* Event cards (Pastel Elevate Style) */
+    /* Event cards (Claymorphic Style) */
     .section-title { display: flex; align-items: center; gap: 10px; margin: 28px 0 14px; font-size: 18px; font-weight: 800; }
     .section-title:first-child { margin-top: 0; }
     .section-title .count { font-size: 13px; color: var(--text-3); font-weight: 700; }
@@ -455,13 +502,16 @@
     .event-card {
       position: relative; display: flex; flex-direction: column; padding: 0;
       background: var(--card-bg, #ffffff);
-      border: 1.5px solid var(--card-border, var(--border));
+      border: 1.5px solid var(--card-border, rgba(226, 232, 240, 0.85));
       border-radius: var(--radius);
       cursor: pointer; text-align: left;
       overflow: hidden; isolation: isolate;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 12px 18px 36px -8px rgba(15, 23, 42, 0.08),
+                  -8px -8px 24px rgba(255, 255, 255, 0.92),
+                  var(--clay-inner-light),
+                  var(--clay-inner-dark);
       transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
                   box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
                   border-color 0.22s ease;
@@ -472,8 +522,10 @@
       .event-card:hover {
         z-index: 5;
         border-color: var(--card-accent, var(--ink));
-        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.16),
-                    0 8px 18px -4px rgba(15, 23, 42, 0.06),
+        box-shadow: 18px 28px 48px -10px rgba(15, 23, 42, 0.14),
+                    -10px -10px 28px rgba(255, 255, 255, 0.95),
+                    inset 2px 2px 4px rgba(255, 255, 255, 1),
+                    inset -2px -2px 6px rgba(15, 23, 42, 0.03),
                     0 0 0 1px var(--card-accent, var(--ink));
         transform: translateY(-8px) scale(1.02);
       }
@@ -485,7 +537,7 @@
       }
       .event-card:hover .due-pill {
         transform: translateY(-2px) scale(1.04);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1), inset 1px 1px 2px rgba(255, 255, 255, 0.95);
       }
       .event-card:hover .progress-bar {
         filter: brightness(1.1);
@@ -496,8 +548,10 @@
       }
     }
     .event-card:active {
-      transform: scale(0.978);
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07);
+      transform: scale(0.976) translateY(2px);
+      box-shadow: 4px 6px 16px rgba(15, 23, 42, 0.08),
+                  inset 3px 3px 6px rgba(15, 23, 42, 0.06),
+                  inset -2px -2px 4px rgba(255, 255, 255, 0.6);
       transition: transform 0.08s ease, box-shadow 0.08s ease;
     }
     .event-card.is-completed { opacity: .72; }
@@ -558,14 +612,16 @@
     }
     .due-pill {
       display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px;
+      padding: 4px 11px;
       background: var(--card-badge-bg, #ffffff);
       color: var(--card-badge-color, var(--text));
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.85);
       border-radius: 999px;
       font-size: 11.5px;
       font-weight: 700;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      box-shadow: 2px 3px 8px rgba(15, 23, 42, 0.06),
+                  inset 1px 1px 2px rgba(255, 255, 255, 0.95),
+                  inset -1px -1px 2px rgba(15, 23, 42, 0.04);
       white-space: nowrap;
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
     }
@@ -576,9 +632,10 @@
       display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;
     }
     .progress-track {
-      width: 100%; height: 6px;
-      background: rgba(0, 0, 0, 0.07);
+      width: 100%; height: 7px;
+      background: rgba(15, 23, 42, 0.06);
       border-radius: 999px; overflow: hidden;
+      box-shadow: inset 1px 1px 2px rgba(15, 23, 42, 0.08);
     }
     .progress-bar {
       height: 100%; border-radius: 999px;
@@ -700,8 +757,8 @@
     dialog.modal:not([open]) { display: none !important; }
     dialog.modal {
       width: min(640px, calc(100vw - 24px)); max-height: calc(100vh - 32px); padding: 0;
-      border: 1px solid var(--border); border-radius: 18px; background: var(--surface); color: var(--text);
-      box-shadow: var(--shadow-lg); overflow: hidden;
+      border: 1.5px solid rgba(255, 255, 255, 0.95); border-radius: 28px; background: var(--surface); color: var(--text);
+      box-shadow: 20px 28px 60px -10px rgba(15, 23, 42, 0.18), -12px -12px 30px rgba(255, 255, 255, 0.95), var(--clay-inner-light); overflow: hidden;
     }
     dialog.modal[open] {
       animation: modalPop 0.26s cubic-bezier(0.16, 1, 0.3, 1);
@@ -735,7 +792,7 @@
         margin: 0;
         width: 100vw;
         max-width: 100vw;
-        border-radius: 22px 22px 0 0;
+        border-radius: 28px 28px 0 0;
         border-bottom: 0;
         border-left: 0;
         border-right: 0;
@@ -863,415 +920,310 @@
 
     /* Full-screen states (sign-in, setup) */
     .center-screen { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
-    .setup-card { width: min(640px, 100%); padding: 32px; }
+    .auth-card {
+      width: min(480px, 100%); padding: 40px 32px; text-align: center;
+      background: var(--surface); border-radius: 32px;
+      border: 1.5px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 16px 24px 48px -10px rgba(15, 23, 42, 0.12),
+                  -12px -12px 32px rgba(255, 255, 255, 0.95),
+                  var(--clay-inner-light),
+                  var(--clay-inner-dark);
+    }
+    .auth-card .brand-mark { display: inline-grid; min-width: 56px; height: 56px; padding: 0 14px; border-radius: 18px; font-size: 18px; margin: 0 auto 18px; }
+    .auth-card h1 { font-size: 24px; font-weight: 800; color: var(--text); }
+    .auth-card p { color: var(--text-2); margin-top: 8px; }
+    .auth-card .btn { width: 100%; margin-top: 24px; }
+    .auth-card .note { margin-top: 18px; text-align: left; }
+    .auth-foot { margin-top: 18px; font-size: 12px; color: var(--text-3); }
+    .setup-card { width: min(640px, 100%); padding: 32px; border-radius: 28px; }
     .setup-card ol { padding-left: 20px; color: var(--text-2); display: grid; gap: 8px; }
     .setup-card code { background: var(--surface-2); padding: 2px 6px; border-radius: 5px; font-size: 13px; }
 
     /* =====================================================================
-       HIGH-LEVEL AUTHENTICATION & LOGIN UI
+       CLAYMORPHISM AUTH & LOGIN SHOWCASE
        ===================================================================== */
-    .auth-wrapper {
+    .auth-screen-container {
       min-height: 100vh;
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px 20px;
-      position: relative;
+      padding: 36px 16px;
       overflow: hidden;
-      background-color: #f8fafc;
-      background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1.2px, transparent 1.2px);
-      background-size: 28px 28px;
+      background: radial-gradient(120% 120% at 50% 0%, #f1f5f9 0%, #e2e8f0 100%);
     }
-    .auth-wrapper::before,
-    .auth-wrapper::after {
-      content: '';
+
+    /* 3D Floating Clay Spheres */
+    .clay-bg-sphere {
       position: absolute;
       border-radius: 50%;
       pointer-events: none;
-      filter: blur(80px);
-      opacity: 0.65;
-      animation: floatGlow 14s ease-in-out infinite alternate;
+      filter: blur(0.5px);
+      z-index: 0;
+      will-change: transform;
     }
-    .auth-wrapper::before {
-      width: 520px;
-      height: 520px;
-      top: -120px;
-      left: -90px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.22) 0%, rgba(192, 132, 252, 0.12) 60%, transparent 80%);
+    .clay-bg-sphere-1 {
+      width: 290px; height: 290px;
+      top: -70px; left: calc(50% - 330px);
+      background: radial-gradient(circle at 35% 30%, #ffffff 0%, #dbeafe 30%, #93c5fd 80%, #3b82f6 100%);
+      box-shadow: 20px 28px 56px rgba(59, 130, 246, 0.24), inset 8px 8px 16px rgba(255, 255, 255, 0.9);
+      animation: floatClay1 9s ease-in-out infinite alternate;
     }
-    .auth-wrapper::after {
-      width: 580px;
-      height: 580px;
-      bottom: -140px;
-      right: -90px;
-      background: radial-gradient(circle, rgba(226, 249, 117, 0.35) 0%, rgba(56, 189, 248, 0.15) 60%, transparent 80%);
-      animation-delay: -7s;
+    .clay-bg-sphere-2 {
+      width: 230px; height: 230px;
+      bottom: -50px; right: calc(50% - 310px);
+      background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fed7aa 35%, #fb923c 85%, #ea580c 100%);
+      box-shadow: 18px 24px 50px rgba(234, 88, 12, 0.2), inset 6px 6px 12px rgba(255, 255, 255, 0.9);
+      animation: floatClay2 11s ease-in-out infinite alternate;
     }
-    @keyframes floatGlow {
+    .clay-bg-sphere-3 {
+      width: 150px; height: 150px;
+      top: 38%; right: calc(50% - 380px);
+      background: radial-gradient(circle at 35% 30%, #ffffff 0%, #f3e8ff 35%, #d8b4fe 80%, #a855f7 100%);
+      box-shadow: 14px 18px 40px rgba(168, 85, 247, 0.2), inset 5px 5px 10px rgba(255, 255, 255, 0.9);
+      animation: floatClay3 8.5s ease-in-out infinite alternate;
+    }
+    .clay-bg-sphere-4 {
+      width: 170px; height: 170px;
+      bottom: 12%; left: calc(50% - 380px);
+      background: radial-gradient(circle at 35% 30%, #ffffff 0%, #dcfce7 35%, #86efac 80%, #22c55e 100%);
+      box-shadow: 16px 20px 44px rgba(34, 197, 94, 0.18), inset 5px 5px 10px rgba(255, 255, 255, 0.9);
+      animation: floatClay1 10.5s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes floatClay1 {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-28px) rotate(8deg); }
+    }
+    @keyframes floatClay2 {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(26px) rotate(-6deg); }
+    }
+    @keyframes floatClay3 {
       0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(30px, -40px) scale(1.08); }
-      100% { transform: translate(-20px, 30px) scale(0.95); }
+      100% { transform: translate(-20px, -22px) scale(1.06); }
     }
 
-    .auth-container {
+    /* Showcase Clay Card */
+    .auth-clay-card {
       position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 1020px;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(226, 232, 240, 0.95);
-      border-radius: 28px;
-      box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.12),
-                  0 4px 16px -2px rgba(15, 23, 42, 0.04),
-                  0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-      overflow: hidden;
-      animation: authPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+      z-index: 1;
+      width: min(500px, 100%);
+      padding: 44px 38px;
+      background: #ffffff;
+      border-radius: 36px;
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 20px 30px 60px -12px rgba(15, 23, 42, 0.14),
+                  -16px -16px 36px rgba(255, 255, 255, 0.95),
+                  inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+                  inset -4px -4px 10px rgba(15, 23, 42, 0.04);
+      text-align: center;
+      animation: authCardPop 0.48s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
-    @keyframes authPop {
-      from { opacity: 0; transform: translateY(20px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    @media (max-width: 520px) {
+      .auth-clay-card {
+        padding: 32px 22px;
+        border-radius: 28px;
+      }
+    }
+    @keyframes authCardPop {
+      0% { opacity: 0; transform: scale(0.92) translateY(24px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    .auth-main {
-      padding: 48px 44px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .auth-badge-pill {
+    .clay-pill-tag {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
+      gap: 6px;
+      padding: 5px 14px;
       border-radius: 999px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
+      background: #f1f5f9;
       font-size: 11.5px;
-      font-weight: 700;
-      color: var(--text-2);
-      letter-spacing: 0.03em;
-      margin-bottom: 22px;
-      width: fit-content;
-    }
-    .auth-pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #16a34a;
-      box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6);
-      animation: pulseGreen 1.8s infinite;
-    }
-    @keyframes pulseGreen {
-      0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6); }
-      70% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #1f3a93;
+      box-shadow: inset 1.5px 1.5px 3px rgba(15, 23, 42, 0.06),
+                  inset -1.5px -1.5px 3px rgba(255, 255, 255, 0.9);
+      margin-bottom: 14px;
     }
 
-    .auth-brand-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-    .auth-brand-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: var(--ink);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      font-size: 15px;
-      box-shadow: 0 8px 20px -4px rgba(31, 58, 147, 0.35);
-      flex: none;
-      overflow: hidden;
-    }
-    .auth-brand-logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .auth-brand-titles h2 {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.01em;
-      margin: 0;
-    }
-    .auth-brand-titles p {
-      font-size: 13px;
-      color: var(--text-3);
-      margin: 2px 0 0;
-    }
-
-    .auth-headline {
-      font-size: 28px;
-      font-weight: 800;
-      line-height: 1.22;
-      letter-spacing: -0.025em;
-      color: #0f172a;
-      margin: 0 0 10px;
-    }
-    .auth-headline span {
-      background: linear-gradient(135deg, #1f3a93, #6366f1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .auth-subhead {
-      font-size: 14px;
-      line-height: 1.55;
-      color: #475569;
-      margin: 0 0 26px;
-    }
-
-    .btn-google-sso {
-      position: relative;
-      display: flex;
+    .clay-brand-badge {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 14px;
-      width: 100%;
-      height: 52px;
-      padding: 0 24px;
-      border-radius: 14px;
-      background: #0f172a;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #1f3a93 0%, #1e40af 100%);
       color: #ffffff;
-      font-size: 15px;
-      font-weight: 700;
-      border: 1px solid transparent;
-      cursor: pointer;
-      box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.22), 0 2px 6px -1px rgba(15, 23, 42, 0.1);
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
-    .btn-google-sso::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%; width: 50%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-      transform: skewX(-20deg);
-      transition: 0.6s;
-    }
-    .btn-google-sso:hover {
-      background: #1e293b;
-      transform: translateY(-2px);
-      box-shadow: 0 16px 32px -4px rgba(15, 23, 42, 0.28);
-    }
-    .btn-google-sso:hover::after {
-      left: 140%;
-    }
-    .btn-google-sso:active {
-      transform: scale(0.985);
-    }
-    .btn-google-sso:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-      transform: none;
+      font-weight: 800;
+      font-size: 14.5px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 24px -4px rgba(31, 58, 147, 0.38),
+                  inset 2px 2px 4px rgba(255, 255, 255, 0.4),
+                  inset -2px -2px 5px rgba(0, 0, 0, 0.25);
+      margin-bottom: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
     }
 
-    .auth-security-card {
-      margin-top: 18px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 12.5px;
-      color: var(--text-2);
+    .auth-clay-card h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }
+    .auth-clay-card .college-sub {
+      color: #64748b;
+      font-size: 14.5px;
+      font-weight: 600;
+      margin-top: 8px;
       line-height: 1.45;
     }
-    .auth-security-card svg {
-      width: 17px;
-      height: 17px;
-      color: var(--ink);
-      flex: none;
-      margin-top: 1px;
-    }
 
-    .auth-pillars {
+    /* 3-Tile Feature Preview Cushions */
+    .clay-features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-top: 26px;
-      padding-top: 22px;
-      border-top: 1px solid var(--border);
+      margin: 26px 0;
     }
-    .auth-pillar-item {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+    @media (max-width: 440px) {
+      .clay-features-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
     }
-    .auth-pillar-item strong {
+    .clay-feature-tile {
+      padding: 12px 10px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1.5px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 4px 6px 14px rgba(15, 23, 42, 0.04),
+                  -3px -3px 10px rgba(255, 255, 255, 0.95),
+                  inset 2px 2px 4px rgba(255, 255, 255, 0.95),
+                  inset -2px -2px 4px rgba(15, 23, 42, 0.03);
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .clay-feature-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 10px 18px rgba(15, 23, 42, 0.06),
+                  -4px -4px 12px rgba(255, 255, 255, 0.98);
+    }
+    .clay-feature-icon {
+      font-size: 20px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .clay-feature-title {
       font-size: 12.5px;
       font-weight: 800;
-      color: var(--text);
+      color: #0f172a;
     }
-    .auth-pillar-item span {
-      font-size: 11.5px;
-      color: var(--text-3);
-      line-height: 1.35;
-    }
-
-    /* Right Showcase Panel */
-    .auth-showcase {
-      background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
-      border-left: 1px solid var(--border);
-      padding: 44px 34px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-    }
-    .showcase-header h3 {
-      font-size: 12.5px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-3);
-      margin: 0 0 16px;
-    }
-    .showcase-stats-strip {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-bottom: 22px;
-    }
-    .showcase-stat-box {
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-    }
-    .showcase-stat-num {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-    .showcase-stat-lbl {
+    .clay-feature-desc {
       font-size: 11px;
-      font-weight: 700;
-      color: var(--text-3);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+      font-weight: 600;
+      color: #64748b;
       margin-top: 2px;
     }
 
-    .showcase-event-card {
-      padding: 18px;
-      border-radius: 18px;
-      background: #fff8f1;
-      border: 1.5px solid #fed7aa;
-      box-shadow: 0 10px 24px -6px rgba(234, 88, 12, 0.1);
-      margin-bottom: 20px;
-      position: relative;
-    }
-    .showcase-event-badge-row {
+    /* 3D Tactile Clay Google Button */
+    .clay-btn-google {
+      width: 100%;
+      height: 54px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-    .showcase-pill-white {
-      padding: 3px 9px;
+      justify-content: center;
+      gap: 12px;
       border-radius: 999px;
-      background: #fff;
-      font-size: 11px;
-      font-weight: 800;
-      color: #c2410c;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-    }
-    .showcase-event-title {
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: linear-gradient(135deg, #1f3a93 0%, #1e40af 100%);
+      color: #ffffff;
       font-size: 15.5px;
       font-weight: 800;
-      color: #0f172a;
-      margin: 0 0 4px;
+      letter-spacing: .01em;
+      cursor: pointer;
+      box-shadow: 0 12px 26px -4px rgba(31, 58, 147, 0.42),
+                  0 4px 10px rgba(31, 58, 147, 0.2),
+                  inset 2px 2px 4px rgba(255, 255, 255, 0.35),
+                  inset -3px -3px 6px rgba(0, 0, 0, 0.24);
+      transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
-    .showcase-event-desc {
-      font-size: 12px;
-      color: #78350f;
-      line-height: 1.4;
-      margin: 0 0 12px;
+    .clay-btn-google:hover {
+      transform: translateY(-2px) scale(1.015);
+      box-shadow: 0 16px 32px -4px rgba(31, 58, 147, 0.48),
+                  0 6px 14px rgba(31, 58, 147, 0.25),
+                  inset 2px 2px 4px rgba(255, 255, 255, 0.45),
+                  inset -3px -3px 6px rgba(0, 0, 0, 0.24);
     }
-    .showcase-event-foot {
-      display: flex;
+    .clay-btn-google:active {
+      transform: translateY(3px) scale(0.975);
+      box-shadow: 0 4px 12px rgba(31, 58, 147, 0.3),
+                  inset 3px 3px 6px rgba(0, 0, 0, 0.35);
+      transition: transform 0.06s ease, box-shadow 0.06s ease;
+    }
+    .clay-btn-google:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .clay-google-icon-cushion {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 700;
-      color: #9a3412;
-      border-top: 1px dashed #fed7aa;
-      padding-top: 10px;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.95),
+                  inset -1.5px -1.5px 3px rgba(15, 23, 42, 0.12),
+                  0 2px 6px rgba(0, 0, 0, 0.15);
+      flex-shrink: 0;
     }
 
-    .showcase-ticker {
+    /* Inset Carved Clay Domain Security Banner */
+    .clay-domain-banner {
+      margin-top: 22px;
+      padding: 14px 18px;
+      border-radius: 20px;
+      background: #f1f5f9;
+      border: 1px solid rgba(226, 232, 240, 0.85);
+      box-shadow: inset 2.5px 2.5px 5px rgba(15, 23, 42, 0.06),
+                  inset -2.5px -2.5px 5px rgba(255, 255, 255, 0.95);
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 10px 14px;
+      text-align: left;
+    }
+    .clay-domain-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
       border-radius: 12px;
       background: #ffffff;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      font-size: 12px;
+      color: #1f3a93;
+      box-shadow: 2px 3px 8px rgba(15, 23, 42, 0.08),
+                  inset 1.5px 1.5px 2px rgba(255, 255, 255, 0.9),
+                  inset -1.5px -1.5px 2px rgba(15, 23, 42, 0.04);
+      flex-shrink: 0;
     }
-    .ticker-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--accent-lime);
-      color: var(--accent-lime-text);
+    .clay-domain-text {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #475569;
+      line-height: 1.45;
+    }
+    .clay-domain-text strong {
+      color: #0f172a;
       font-weight: 800;
-      font-size: 12px;
-      display: grid;
-      place-items: center;
-      flex: none;
-    }
-    .ticker-content {
-      flex: 1;
-      min-width: 0;
-      line-height: 1.35;
-    }
-    .ticker-time {
-      font-size: 11px;
-      color: var(--text-3);
-      flex: none;
-    }
-
-    @media (max-width: 860px) {
-      .auth-container {
-        grid-template-columns: 1fr;
-        max-width: 460px;
-        border-radius: 24px;
-      }
-      .auth-main {
-        padding: 34px 24px;
-      }
-      .auth-showcase {
-        display: none;
-      }
-      .auth-headline {
-        font-size: 23px;
-      }
-      .auth-pillars {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      .auth-pillar-item {
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-      }
     }
 
     /* Admin */
@@ -2256,110 +2208,76 @@
 
     function renderSignIn() {
       const s = state.settings;
-      const logo = safeUrl(s?.logoUrl);
-      const allowedDomain = s?.allowedDomain || 'cmrcet.ac.in';
-      const collegeTitle = s?.collegeName || 'CMR College of Engineering & Technology';
-      const portalTitle = s?.portalTitle || 'Hackathon Portal';
-      const shortName = s?.collegeShortName || 'CMRCET';
-
       return `
-        <div class="auth-wrapper">
-          <div class="auth-container">
-            <!-- Left: Main Authentication Panel -->
-            <div class="auth-main">
-              <div class="auth-badge-pill">
-                <span class="auth-pulse-dot"></span>
-                <span>CAMPUS SSO ACTIVE &bull; 2025-26</span>
+        <div class="auth-screen-container">
+          <!-- 3D Floating Clay Ambient Spheres -->
+          <div class="clay-bg-sphere clay-bg-sphere-1" aria-hidden="true"></div>
+          <div class="clay-bg-sphere clay-bg-sphere-2" aria-hidden="true"></div>
+          <div class="clay-bg-sphere clay-bg-sphere-3" aria-hidden="true"></div>
+          <div class="clay-bg-sphere clay-bg-sphere-4" aria-hidden="true"></div>
+
+          <!-- Showcase Claymorphic Card -->
+          <div class="auth-clay-card">
+            <!-- 3D Pill Tag -->
+            <div class="clay-pill-tag">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>Official Student Portal</span>
+            </div>
+
+            <!-- Plush Brand Emblem -->
+            <div>
+              <div class="clay-brand-badge">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                <span>${esc(s.collegeName || 'CMRCET')}</span>
               </div>
+            </div>
 
-              <div class="auth-brand-row">
-                <div class="auth-brand-logo">${logo ? `<img src="${esc(logo)}" alt="Logo">` : esc(shortName.slice(0, 8))}</div>
-                <div class="auth-brand-titles">
-                  <h2>${esc(portalTitle)}</h2>
-                  <p>${esc(collegeTitle)}</p>
-                </div>
+            <h1>${esc(s.portalTitle || 'Hackathon Portal')}</h1>
+            <p class="college-sub">Discover, track, and win collegiate hackathons & technical innovation competitions</p>
+
+            <!-- 3 Clay Feature Tiles -->
+            <div class="clay-features-grid">
+              <div class="clay-feature-tile">
+                <div class="clay-feature-icon">🏆</div>
+                <div class="clay-feature-title">Verified</div>
+                <div class="clay-feature-desc">Curated events</div>
               </div>
+              <div class="clay-feature-tile">
+                <div class="clay-feature-icon">👥</div>
+                <div class="clay-feature-title">Teams</div>
+                <div class="clay-feature-desc">Auto-roster</div>
+              </div>
+              <div class="clay-feature-tile">
+                <div class="clay-feature-icon">⚡</div>
+                <div class="clay-feature-title">WhatsApp</div>
+                <div class="clay-feature-desc">1-tap share</div>
+              </div>
+            </div>
 
-              <h1 class="auth-headline">Innovate, Build &amp; <span>Win Hackathons.</span></h1>
-              <p class="auth-subhead">Official competition hub for ${esc(shortName)}. Team up with peers, get faculty mentorship approvals, and submit project entries seamlessly.</p>
-
-              <button class="btn-google-sso" data-action="sign-in" ${state.signingIn ? 'disabled' : ''}>
-                ${state.signingIn
-                  ? '<div class="spinner" style="width:18px;height:18px;border-width:2px;border-top-color:#ffffff"></div><span>Authenticating with Google…</span>'
-                  : `
-                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="flex:none">
+            <!-- Tactile 3D Google Sign-in Clay Button -->
+            <button class="clay-btn-google" data-action="sign-in" ${state.signingIn ? 'disabled' : ''}>
+              ${state.signingIn
+                ? '<div class="spinner" style="width:20px;height:20px;border-width:2.5px;border-color:rgba(255,255,255,0.3);border-top-color:#ffffff"></div><span>Connecting to Google…</span>'
+                : `<span class="clay-google-icon-cushion">
+                    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                       <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
                       <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
                     </svg>
-                    <span>Continue with College Google Account</span>
-                  `}
-              </button>
+                  </span>
+                  <span>Continue with Google</span>`}
+            </button>
 
-              ${state.authError ? `<div class="note" style="margin-top:14px;background:#fef2f2;color:#991b1b;border:1px solid #fecaca;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600">${esc(state.authError)}</div>` : ''}
+            ${state.authError ? `<div class="clay-domain-banner" style="margin-top:16px;background:var(--marker-soft);border-color:var(--marker);color:var(--marker)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="font-size:12.5px;font-weight:700">${esc(state.authError)}</span></div>` : ''}
 
-              <div class="auth-security-card">
-                <svg viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/>
-                </svg>
-                <span>Institutional Access Only: Sign in using your official <strong>@${esc(allowedDomain)}</strong> email ID.</span>
+            <!-- Inset Carved Security Domain Banner -->
+            <div class="clay-domain-banner">
+              <div class="clay-domain-badge">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               </div>
-
-              <div class="auth-pillars">
-                <div class="auth-pillar-item">
-                  <strong>Verified Badges</strong>
-                  <span>Direct college verification</span>
-                </div>
-                <div class="auth-pillar-item">
-                  <strong>Auto Team Match</strong>
-                  <span>Join cross-branch squads</span>
-                </div>
-                <div class="auth-pillar-item">
-                  <strong>Instant OD Letters</strong>
-                  <span>Faculty approved leaves</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right: Campus Showcase Panel -->
-            <div class="auth-showcase">
-              <div>
-                <div class="showcase-header">
-                  <h3>Live Campus Highlights</h3>
-                </div>
-                <div class="showcase-stats-strip">
-                  <div class="showcase-stat-box">
-                    <div class="showcase-stat-num">317+</div>
-                    <div class="showcase-stat-lbl">Hackathons Tracked</div>
-                  </div>
-                  <div class="showcase-stat-box">
-                    <div class="showcase-stat-num">&#8377;50L+</div>
-                    <div class="showcase-stat-lbl">Student Prizes Won</div>
-                  </div>
-                </div>
-
-                <div class="showcase-event-card">
-                  <div class="showcase-event-badge-row">
-                    <span class="showcase-pill-white">HOT EVENT</span>
-                    <span style="font-size:11px;font-weight:700;color:#c2410c">National Level</span>
-                  </div>
-                  <div class="showcase-event-title">Smart India Hackathon 2025</div>
-                  <div class="showcase-event-desc">World's biggest open innovation competition. Build solutions for ministries &amp; enterprise challenges.</div>
-                  <div class="showcase-event-foot">
-                    <span>Team: 6 Members</span>
-                    <span>Registration Open</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="showcase-ticker">
-                <div class="ticker-avatar">&#9889;</div>
-                <div class="ticker-content">
-                  <div style="font-weight:700;color:var(--text);font-size:12px">Team CyberKnights registered</div>
-                  <div style="color:var(--text-3);font-size:11px">Smart India Hackathon &bull; 4 mins ago</div>
-                </div>
-                <div class="ticker-time">&#9679; Live</div>
+              <div class="clay-domain-text">
+                Restricted to authorized college accounts. Please sign in with your official <strong>@${esc(s.allowedDomain)}</strong> email.
               </div>
             </div>
           </div>
